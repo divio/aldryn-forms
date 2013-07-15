@@ -1,0 +1,5 @@
+include LICENSE.txt
+recursive-include aldryn_forms/templates *
+recursive-include aldryn_forms/locale *
+recursive-include aldryn_forms/migrations *
+recursive-exclude * *.pyc

@@ -1,0 +1,10 @@
+{% load cms_tags %}
+
+<form class="aldryn-forms-form" action="{% url 'send' pk=instance.pk %}" method="POST">
+	{% csrf_token %}
+	<ul>
+		{% for plugin in instance.child_plugin_instances %}
+			{% render_plugin plugin %}
+		{% endfor %}
+	</ul>
+</form>
