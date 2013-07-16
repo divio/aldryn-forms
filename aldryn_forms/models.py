@@ -31,7 +31,7 @@ class FieldPlugin(CMSPlugin):
 
     def copy_relations(self, oldinstance):
         for option in oldinstance.option_set.all():
-            option.pk = None
+            option.pk = None  # copy on save
             option.field = self
             option.save()
 

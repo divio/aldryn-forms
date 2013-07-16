@@ -87,9 +87,11 @@ class TextField(Field):
     name = _('TextField')
 
     def get_form_fields(self, instance):
-        field = forms.CharField(max_length=100, label=instance.label,
-                                help_text=instance.help_text,
-                                required=instance.required)
+        field = forms.CharField(
+            max_length=100,
+            label=instance.label,
+            help_text=instance.help_text,
+            required=instance.required)
         if instance.placeholder_text:
             field.widget.attrs['placeholder'] = instance.placeholder_text
         return {self.get_field_name(instance): field}
@@ -103,9 +105,10 @@ class BooleanField(Field):
     form = BooleanFieldForm
 
     def get_form_fields(self, instance):
-        field = forms.BooleanField(label=instance.label,
-                                   help_text=instance.help_text,
-                                   required=instance.required)
+        field = forms.BooleanField(
+            label=instance.label,
+            help_text=instance.help_text,
+            required=instance.required)
         return {self.get_field_name(instance): field}
 
 plugin_pool.register_plugin(BooleanField)
@@ -123,13 +126,30 @@ class SelectField(Field):
     inlines = [SelectOptionInline]
 
     def get_form_fields(self, instance):
-        field = forms.ModelChoiceField(queryset=instance.option_set.all(),
-                                       label=instance.label,
-                                       help_text=instance.help_text,
-                                       required=instance.required)
+        field = forms.ModelChoiceField(
+            queryset=instance.option_set.all(),
+            label=instance.label,
+            help_text=instance.help_text,
+            required=instance.required)
         return {self.get_field_name(instance): field}
 
 plugin_pool.register_plugin(SelectField)
+
+
+class MultipleSelectField(SelectField):
+
+    name = _('Multiple Select Field')
+
+    def get_form_fields(self, instance):
+        field = forms.ModelMultipleChoiceField(
+            queryset=instance.option_set.all(),
+            label=instance.label,
+            help_text=instance.help_text,
+            required=instance.required,
+            widget=forms.CheckboxSelectMultiple)
+        return {self.get_field_name(instance): field}
+
+plugin_pool.register_plugin(MultipleSelectField)
 
 
 class SubmitButton(FormElement):
