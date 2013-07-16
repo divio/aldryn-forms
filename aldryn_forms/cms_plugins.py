@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 from django import forms
+from django.contrib.admin import TabularInline
 from django.core.urlresolvers import reverse
 from django.utils.translation import ugettext_lazy as _
 
@@ -7,6 +8,7 @@ from cms.plugin_base import CMSPluginBase
 from cms.plugin_pool import plugin_pool
 
 from aldryn_forms import models
+from aldryn_forms.forms import BooleanFieldForm, SelectFieldForm
 
 
 class FormElement(CMSPluginBase):
@@ -75,7 +77,8 @@ class Field(FormElement):
 
     def render(self, context, instance, placeholder):
         context = super(Field, self).render(context, instance, placeholder)
-        context['field'] = context['form'][self.get_field_name(instance)]
+        if 'form' in context:
+            context['field'] = context['form'][self.get_field_name(instance)]
         return context
 
 
@@ -92,6 +95,41 @@ class TextField(Field):
         return {self.get_field_name(instance): field}
 
 plugin_pool.register_plugin(TextField)
+
+
+class BooleanField(Field):
+
+    name = _('Yes/No Field')
+    form = BooleanFieldForm
+
+    def get_form_fields(self, instance):
+        field = forms.BooleanField(label=instance.label,
+                                   help_text=instance.help_text,
+                                   required=instance.required)
+        return {self.get_field_name(instance): field}
+
+plugin_pool.register_plugin(BooleanField)
+
+
+class SelectOptionInline(TabularInline):
+
+    model = models.Option
+
+
+class SelectField(Field):
+
+    name = _('Select Field')
+    form = SelectFieldForm
+    inlines = [SelectOptionInline]
+
+    def get_form_fields(self, instance):
+        field = forms.ModelChoiceField(queryset=instance.option_set.all(),
+                                       label=instance.label,
+                                       help_text=instance.help_text,
+                                       required=instance.required)
+        return {self.get_field_name(instance): field}
+
+plugin_pool.register_plugin(SelectField)
 
 
 class SubmitButton(FormElement):

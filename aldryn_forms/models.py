@@ -13,6 +13,14 @@ class FormPlugin(CMSPlugin):
         return self.name
 
 
+class FieldsetPlugin(CMSPlugin):
+
+    legend = models.CharField(_('Legend'), max_length=50, blank=True)
+
+    def __unicode__(self):
+        return self.legend or str(self.pk)
+
+
 class FieldPlugin(CMSPlugin):
 
     label = models.CharField(_('Label'), max_length=50)
@@ -21,16 +29,23 @@ class FieldPlugin(CMSPlugin):
     help_text = models.TextField(_('Help text'), blank=True, null=True,
                                  help_text=_('Explanatory text displayed next to input field. Just like this one.'))
 
+    def copy_relations(self, oldinstance):
+        for option in oldinstance.option_set.all():
+            option.pk = None
+            option.field = self
+            option.save()
+
     def __unicode__(self):
         return self.label
 
 
-class FieldsetPlugin(CMSPlugin):
+class Option(models.Model):
 
-    legend = models.CharField(_('Legend'), max_length=50, blank=True)
+    value = models.CharField(_('Value'), max_length=50)
+    field = models.ForeignKey(FieldPlugin, editable=False)
 
     def __unicode__(self):
-        return self.legend or str(self.pk)
+        return self.value
 
 
 class ButtonPlugin(CMSPlugin):
