@@ -31,7 +31,8 @@ class SendView(FormView):
         return super(SendView, self).form_valid(form)
 
     def get_success_url(self):
-        return self.object.get_success_url()
+        plugin_instance = self.object.get_plugin_instance()[1]
+        return plugin_instance.get_success_url(instance=self.object)
 
     def get_context_data(self, **kwargs):
         context = super(SendView, self).get_context_data(**kwargs)

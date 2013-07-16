@@ -1,7 +1,5 @@
 {% for error in field.errors %}
-	<li class="aldryn-forms-error">
-		{{ error }}
-	</li>
+	<li class="aldryn-forms-error">{{ error }}</li>
 {% endfor %}
 <li class="aldryn-forms-field {% if instance.required %}required{% endif %}">
 	<label for="{{ field.auto_id }}">{{ field.label }}:</label> {{ field }}

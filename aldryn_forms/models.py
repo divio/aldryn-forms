@@ -25,6 +25,14 @@ class FieldPlugin(CMSPlugin):
         return self.label
 
 
+class FieldsetPlugin(CMSPlugin):
+
+    legend = models.CharField(_('Legend'), max_length=50, blank=True)
+
+    def __unicode__(self):
+        return self.legend or str(self.pk)
+
+
 class ButtonPlugin(CMSPlugin):
 
     label = models.CharField(_('Label'), max_length=50)

@@ -9,17 +9,33 @@ from cms.plugin_pool import plugin_pool
 from aldryn_forms import models
 
 
-class AldrynFormsPluginBase(CMSPluginBase):
+class FormElement(CMSPluginBase):
 
     module = _('Forms')
 
+    def get_form_fields(self, instance):
+        raise NotImplementedError()
 
-class FormPlugin(AldrynFormsPluginBase):
+
+class FieldContainer(FormElement):
+
+    allow_children = True
+
+    def get_form_fields(self, instance):
+        form_fields = {}
+        for child_plugin_instance in instance.child_plugin_instances:
+            child_plugin = child_plugin_instance.get_plugin_instance()[1]
+            if hasattr(child_plugin, 'get_form_fields'):
+                fields = child_plugin.get_form_fields(instance=child_plugin_instance)
+                form_fields.update(fields)
+        return form_fields
+
+
+class FormPlugin(FieldContainer):
 
     render_template = 'aldryn_forms/form.html'
     name = _('Form')
     model = models.FormPlugin
-    allow_children = True
 
     def render(self, context, instance, placeholder):
         context = super(FormPlugin, self).render(context, instance, placeholder)
@@ -34,26 +50,22 @@ class FormPlugin(AldrynFormsPluginBase):
         fields = self.get_form_fields(instance)
         return forms.forms.DeclarativeFieldsMetaclass('AldrynDynamicForm', (forms.Form,), fields)
 
-    def get_form_fields(self, instance):
-        form_fields = {}
-        for child_plugin_instance in instance.child_plugin_instances:
-            child_plugin = child_plugin_instance.get_plugin_instance()[1]
-            try:
-                fields = child_plugin.get_form_fields(instance=child_plugin_instance)
-            except AttributeError:  # neither field nor fieldset
-                fields = {}
-            else:
-                form_fields.update(fields)
-        return form_fields
-
     def get_success_url(self, instance):
-        return reverse('send', kwargs={'pk': self.instance.pk})
-
+        return reverse('send', kwargs={'pk': instance.pk})
 
 plugin_pool.register_plugin(FormPlugin)
 
 
-class Field(AldrynFormsPluginBase):
+class Fieldset(FieldContainer):
+
+    render_template = 'aldryn_forms/fieldset.html'
+    name = _('Fieldset')
+    model = models.FieldsetPlugin
+
+plugin_pool.register_plugin(Fieldset)
+
+
+class Field(FormElement):
 
     render_template = 'aldryn_forms/field.html'
     model = models.FieldPlugin
@@ -63,7 +75,6 @@ class Field(AldrynFormsPluginBase):
 
     def render(self, context, instance, placeholder):
         context = super(Field, self).render(context, instance, placeholder)
-        # get bound field
         context['field'] = context['form'][self.get_field_name(instance)]
         return context
 
@@ -80,14 +91,16 @@ class TextField(Field):
             field.widget.attrs['placeholder'] = instance.placeholder_text
         return {self.get_field_name(instance): field}
 
-
 plugin_pool.register_plugin(TextField)
 
 
-class SubmitButton(AldrynFormsPluginBase):
+class SubmitButton(FormElement):
 
     render_template = 'aldryn_forms/submit_button.html'
     name = _('Submit Button')
     model = models.ButtonPlugin
+
+    def get_form_fields(self, instance):
+        return {}
 
 plugin_pool.register_plugin(SubmitButton)
