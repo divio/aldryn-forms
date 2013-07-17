@@ -4,12 +4,15 @@ from django import forms
 
 class BooleanFieldForm(forms.ModelForm):
 
-    class Meta:
-        fields = ['label', 'help_text']
+    def __init__(self, *args, **kwargs):
+        initial = kwargs.pop('initial', {})
+        if 'instance' not in kwargs:
+            initial['required'] = False
+        kwargs['initial'] = initial
+        super(BooleanFieldForm, self).__init__(*args, **kwargs)
 
-    def save(self, commit=True):
-        self.instance.required = False
-        return super(BooleanFieldForm, self).save(commit)
+    class Meta:
+        fields = ['label', 'required', 'help_text']
 
 
 class SelectFieldForm(forms.ModelForm):
