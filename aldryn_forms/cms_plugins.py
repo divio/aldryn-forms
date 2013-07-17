@@ -2,13 +2,15 @@
 from django import forms
 from django.contrib.admin import TabularInline
 from django.core.urlresolvers import reverse
+from django.core.validators import MinLengthValidator
 from django.utils.translation import ugettext_lazy as _
 
 from cms.plugin_base import CMSPluginBase
 from cms.plugin_pool import plugin_pool
 
 from aldryn_forms import models
-from aldryn_forms.forms import BooleanFieldForm, SelectFieldForm
+from aldryn_forms.forms import TextFieldForm, BooleanFieldForm, SelectFieldForm, MultipleSelectFieldForm
+from aldryn_forms.validators import MinChoicesValidator, MaxChoicesValidator
 
 
 class FormElement(CMSPluginBase):
@@ -47,7 +49,7 @@ class FormPlugin(FieldContainer):
 
     def get_form_class(self, instance):
         """
-        Constructs form class basing on content's field plugin instances.
+        Constructs form class basing on children plugin instances.
         """
         fields = self.get_form_fields(instance)
         return forms.forms.DeclarativeFieldsMetaclass('AldrynDynamicForm', (forms.Form,), fields)
@@ -85,13 +87,18 @@ class Field(FormElement):
 class TextField(Field):
 
     name = _('TextField')
+    form = TextFieldForm
 
     def get_form_fields(self, instance):
+        validators = []
+        if instance.min_value:
+            validators.append(MinLengthValidator(instance.min_value))
         field = forms.CharField(
-            max_length=100,
+            max_length=instance.max_value,
             label=instance.label,
             help_text=instance.help_text,
-            required=instance.required)
+            required=instance.required,
+            validators=validators)
         if instance.placeholder_text:
             field.widget.attrs['placeholder'] = instance.placeholder_text
         return {self.get_field_name(instance): field}
@@ -138,15 +145,22 @@ plugin_pool.register_plugin(SelectField)
 
 class MultipleSelectField(SelectField):
 
+    form = MultipleSelectFieldForm
     name = _('Multiple Select Field')
 
     def get_form_fields(self, instance):
+        validators = []
+        if instance.min_value:
+            validators.append(MinChoicesValidator(limit_value=instance.min_value))
+        if instance.max_value:
+            validators.append(MaxChoicesValidator(limit_value=instance.min_value))
         field = forms.ModelMultipleChoiceField(
             queryset=instance.option_set.all(),
             label=instance.label,
             help_text=instance.help_text,
-            required=instance.required,
-            widget=forms.CheckboxSelectMultiple)
+            required=instance.min_value,
+            widget=forms.CheckboxSelectMultiple,
+            validators=validators)
         return {self.get_field_name(instance): field}
 
 plugin_pool.register_plugin(MultipleSelectField)

@@ -22,12 +22,25 @@ class FieldsetPlugin(CMSPlugin):
 
 
 class FieldPlugin(CMSPlugin):
+    """
+    A general field model.
+
+    The reason it's flat instead of having a nice structure is, as we read in
+    CMSPlugin docs:
+
+    > 1. subclasses of CMSPlugin *cannot be further subclassed*
+    """
 
     label = models.CharField(_('Label'), max_length=50)
     required = models.BooleanField(_('Field is required'), default=True)
     placeholder_text = models.CharField(_('Placeholder text'), max_length=50)
     help_text = models.TextField(_('Help text'), blank=True, null=True,
                                  help_text=_('Explanatory text displayed next to input field. Just like this one.'))
+
+    # for text field those are min and max length
+    # for multiple select those are min and max number of choices
+    min_value = models.PositiveIntegerField(_('Min value'), blank=True, null=True)
+    max_value = models.PositiveIntegerField(_('Max value'), blank=True, null=True)
 
     def copy_relations(self, oldinstance):
         for option in oldinstance.option_set.all():
