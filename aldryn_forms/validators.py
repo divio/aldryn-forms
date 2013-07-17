@@ -12,5 +12,5 @@ class MinChoicesValidator(MinLengthValidator):
 
 class MaxChoicesValidator(MaxLengthValidator):
 
-    message = _('You can\'t choose more then %(limit_value)d options (chosen %(show_value)d).')
+    message = _('You can\'t choose more than %(limit_value)d options (chosen %(show_value)d).')
     code = 'max_choices'
