@@ -3,22 +3,6 @@ from django import forms
 from django.utils.translation import ugettext_lazy as _
 
 
-class TextFieldForm(forms.ModelForm):
-
-    def __init__(self, *args, **kwargs):
-        super(TextFieldForm, self).__init__(*args, **kwargs)
-
-        self.fields['min_value'].label = _(u'Min length')
-        self.fields['min_value'].help_text = _(u'Required number of characters to type.')
-
-        self.fields['max_value'].label = _(u'Max length')
-        self.fields['max_value'].help_text = _(u'Maximum number of characters to type.')
-        self.fields['max_value'].required = True
-
-    class Meta:
-        fields = ['label', 'placeholder_text', 'required', 'help_text', 'min_value', 'max_value']
-
-
 class BooleanFieldForm(forms.ModelForm):
 
     def __init__(self, *args, **kwargs):
@@ -38,7 +22,39 @@ class SelectFieldForm(forms.ModelForm):
         fields = ['label', 'required', 'help_text']
 
 
-class MultipleSelectFieldForm(forms.ModelForm):
+class MinMaxValueForm(forms.ModelForm):
+
+    def clean(self):
+        min_value = self.cleaned_data.get('min_value')
+        max_value = self.cleaned_data.get('max_value')
+        if min_value and max_value and min_value > max_value:
+            self.append_to_errors('min_value', _(u'Min value can not be greater then max value.'))
+        return self.cleaned_data
+
+    def append_to_errors(self, field, message):
+        try:
+            self._errors[field].append(message)
+        except KeyError:
+            self._errors[field] = self.error_class([message])
+
+
+class TextFieldForm(MinMaxValueForm):
+
+    def __init__(self, *args, **kwargs):
+        super(TextFieldForm, self).__init__(*args, **kwargs)
+
+        self.fields['min_value'].label = _(u'Min length')
+        self.fields['min_value'].help_text = _(u'Required number of characters to type.')
+
+        self.fields['max_value'].label = _(u'Max length')
+        self.fields['max_value'].help_text = _(u'Maximum number of characters to type.')
+        self.fields['max_value'].required = True
+
+    class Meta:
+        fields = ['label', 'placeholder_text', 'required', 'help_text', 'min_value', 'max_value']
+
+
+class MultipleSelectFieldForm(MinMaxValueForm):
 
     def __init__(self, *args, **kwargs):
         super(MultipleSelectFieldForm, self).__init__(*args, **kwargs)
@@ -51,16 +67,3 @@ class MultipleSelectFieldForm(forms.ModelForm):
 
     class Meta:
         fields = ['label', 'help_text', 'min_value', 'max_value']
-
-    def clean(self):
-        min_value = self.cleaned_data.get('min_value')
-        max_value = self.cleaned_data.get('max_value')
-        if min_value and max_value and min_value > max_value:
-            self.append_to_errors('min_value', _(u'Min choices value can not be greater then max choices value.'))
-        return self.cleaned_data
-
-    def append_to_errors(self, field, message):
-        try:
-            self._errors[field].append(message)
-        except KeyError:
-            self._errors[field] = self.error_class([message])
