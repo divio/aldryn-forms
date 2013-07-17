@@ -23,8 +23,8 @@ Manuall Installation
 
 Run `pip install aldryn-forms`.
 
-Creating a Polll
-================
+Creating a Form
+===============
 
 You can create forms in the admin interface now. Search for the label ``Aldryn_Forms``.
 
