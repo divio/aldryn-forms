@@ -8,6 +8,9 @@ from cms.models.pluginmodel import CMSPlugin
 class FormPlugin(CMSPlugin):
 
     name = models.CharField(_('Name'), max_length=50, help_text=_('Used to filter out form submissions.'))
+    error_message = models.TextField(_('Error message'), blank=True, null=True,
+                                     help_text=_('An error message that will be displayed if the form doesn\'t '
+                                                 'validate.'))
 
     def __unicode__(self):
         return self.name

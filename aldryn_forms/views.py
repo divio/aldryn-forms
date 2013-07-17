@@ -7,6 +7,13 @@ from aldryn_forms.models import FormPlugin
 from aldryn_forms.utils import get_plugin_tree
 
 
+def append_non_field_form_error(form, message):
+    try:
+        form._errors['__all__'].append(message)
+    except KeyError:
+        form._errors['__all__'] = form.error_class([message])
+
+
 class SendView(FormView):
 
     template_name = 'aldryn_forms/send.html'
@@ -29,6 +36,11 @@ class SendView(FormView):
     def form_valid(self, form):
         messages.success(self.request, _('The form has been sent.'))
         return super(SendView, self).form_valid(form)
+
+    def form_invalid(self, form):
+        if self.object.error_message:
+            append_non_field_form_error(form, self.object.error_message)
+        return super(SendView, self).form_invalid(form)
 
     def get_success_url(self):
         plugin_instance = self.object.get_plugin_instance()[1]
