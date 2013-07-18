@@ -12,15 +12,6 @@ class BooleanFieldForm(forms.ModelForm):
             kwargs['initial'] = initial
         super(BooleanFieldForm, self).__init__(*args, **kwargs)
 
-    class Meta:
-        fields = ['label', 'required', 'help_text']
-
-
-class SelectFieldForm(forms.ModelForm):
-
-    class Meta:
-        fields = ['label', 'required', 'help_text']
-
 
 class MinMaxValueForm(forms.ModelForm):
 
@@ -50,9 +41,6 @@ class TextFieldForm(MinMaxValueForm):
         self.fields['max_value'].help_text = _(u'Maximum number of characters to type.')
         self.fields['max_value'].required = True
 
-    class Meta:
-        fields = ['label', 'placeholder_text', 'required', 'help_text', 'min_value', 'max_value']
-
 
 class MultipleSelectFieldForm(MinMaxValueForm):
 
@@ -64,6 +52,3 @@ class MultipleSelectFieldForm(MinMaxValueForm):
 
         self.fields['max_value'].label = _(u'Max choices')
         self.fields['max_value'].help_text = _(u'Maximum amount of elements to chose.')
-
-    class Meta:
-        fields = ['label', 'help_text', 'min_value', 'max_value']

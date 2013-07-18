@@ -36,7 +36,12 @@ class FieldPlugin(CMSPlugin):
 
     label = models.CharField(_('Label'), max_length=50)
     required = models.BooleanField(_('Field is required'), default=True)
-    placeholder_text = models.CharField(_('Placeholder text'), max_length=50)
+    required_message = models.TextField(_('Error message'), blank=True, null=True,
+                                        help_text=_('Error message displayed if the required field is left '
+                                                    'empty. Default: "This field is required".'))
+    placeholder_text = models.CharField(_('Placeholder text'), max_length=50, blank=True,
+                                        help_text=_('Default text in a form. Disapears when user starts typing. '
+                                                    'Example: "email@exmaple.com"'))
     help_text = models.TextField(_('Help text'), blank=True, null=True,
                                  help_text=_('Explanatory text displayed next to input field. Just like this one.'))
 

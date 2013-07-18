@@ -9,7 +9,7 @@ from cms.plugin_base import CMSPluginBase
 from cms.plugin_pool import plugin_pool
 
 from aldryn_forms import models
-from aldryn_forms.forms import TextFieldForm, BooleanFieldForm, SelectFieldForm, MultipleSelectFieldForm
+from aldryn_forms.forms import TextFieldForm, BooleanFieldForm, MultipleSelectFieldForm
 from aldryn_forms.validators import MinChoicesValidator, MaxChoicesValidator
 
 
@@ -73,6 +73,9 @@ class Field(FormElement):
 
     render_template = 'aldryn_forms/field.html'
     model = models.FieldPlugin
+    general_fields = ['label', 'help_text']
+    boundries_fields = []
+    required_fields = ['required', 'required_message']
 
     def get_field_name(self, instance):
         return u'aldryn-forms-field-%d' % (instance.pk,)
@@ -83,11 +86,31 @@ class Field(FormElement):
             context['field'] = context['form'][self.get_field_name(instance)]
         return context
 
+    def get_fieldsets(self, request, obj=None):
+        fieldsets = [
+            (_('General field options'), {'fields': self.general_fields}),
+        ]
+        if self.boundries_fields:
+            fieldsets.append(
+                (_('Field boundries'), {'fields': self.boundries_fields}))
+        if self.required_fields:
+            fieldsets.append(
+                (_('Required'), {'fields': self.required_fields}))
+        return fieldsets
+
+    def get_error_messages(self, instance):
+        if instance.required_message:
+            return {'required': instance.required_message}
+        else:
+            return None
+
 
 class TextField(Field):
 
     name = _('TextField')
     form = TextFieldForm
+    general_fields = ['label', 'placeholder_text', 'help_text']
+    boundries_fields = ['min_value', 'max_value']
 
     def get_form_fields(self, instance):
         validators = []
@@ -98,6 +121,7 @@ class TextField(Field):
             label=instance.label,
             help_text=instance.help_text,
             required=instance.required,
+            error_messages=self.get_error_messages(instance=instance),
             validators=validators)
         if instance.placeholder_text:
             field.widget.attrs['placeholder'] = instance.placeholder_text
@@ -115,6 +139,7 @@ class BooleanField(Field):
         field = forms.BooleanField(
             label=instance.label,
             help_text=instance.help_text,
+            error_messages=self.get_error_messages(instance=instance),
             required=instance.required)
         return {self.get_field_name(instance): field}
 
@@ -129,7 +154,6 @@ class SelectOptionInline(TabularInline):
 class SelectField(Field):
 
     name = _('Select Field')
-    form = SelectFieldForm
     inlines = [SelectOptionInline]
 
     def get_form_fields(self, instance):
@@ -137,6 +161,7 @@ class SelectField(Field):
             queryset=instance.option_set.all(),
             label=instance.label,
             help_text=instance.help_text,
+            error_messages=self.get_error_messages(instance=instance),
             required=instance.required)
         return {self.get_field_name(instance): field}
 
@@ -147,6 +172,8 @@ class MultipleSelectField(SelectField):
 
     form = MultipleSelectFieldForm
     name = _('Multiple Select Field')
+    boundries_fields = ['min_value', 'max_value']
+    required_fields = []
 
     def get_form_fields(self, instance):
         validators = []
