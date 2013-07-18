@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+from django.forms.forms import NON_FIELD_ERRORS
 from django.shortcuts import get_object_or_404
 
 from cms.utils.moderator import get_cmsplugin_queryset
@@ -28,3 +29,10 @@ def get_plugin_tree(model, **kwargs):
 def get_next_level(current_level):
     all_plugins = get_cmsplugin_queryset()
     return all_plugins.filter(parent__in=[x.pk for x in current_level])
+
+
+def append_non_field_form_error(form, message):
+    try:
+        form._errors[NON_FIELD_ERRORS].append(message)
+    except KeyError:
+        form._errors[NON_FIELD_ERRORS] = form.error_class([message])
