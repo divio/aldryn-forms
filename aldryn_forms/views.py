@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 from django.contrib import messages
+from django.forms.forms import NON_FIELD_ERRORS
 from django.views.generic import FormView
 from django.utils.translation import ugettext_lazy as _
 
@@ -9,9 +10,9 @@ from aldryn_forms.utils import get_plugin_tree
 
 def append_non_field_form_error(form, message):
     try:
-        form._errors['__all__'].append(message)
+        form._errors[NON_FIELD_ERRORS].append(message)
     except KeyError:
-        form._errors['__all__'] = form.error_class([message])
+        form._errors[NON_FIELD_ERRORS] = form.error_class([message])
 
 
 class SendView(FormView):
