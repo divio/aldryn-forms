@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 from django import forms
 from django.contrib.admin import TabularInline
-from django.core.urlresolvers import reverse
 from django.core.validators import MinLengthValidator
 from django.utils.translation import ugettext_lazy as _
 
@@ -9,7 +8,7 @@ from cms.plugin_base import CMSPluginBase
 from cms.plugin_pool import plugin_pool
 
 from aldryn_forms import models
-from aldryn_forms.forms import TextFieldForm, BooleanFieldForm, MultipleSelectFieldForm
+from aldryn_forms.forms import FormPluginForm, TextFieldForm, BooleanFieldForm, MultipleSelectFieldForm
 from aldryn_forms.validators import MinChoicesValidator, MaxChoicesValidator
 
 
@@ -40,11 +39,12 @@ class FormPlugin(FieldContainer):
     render_template = 'aldryn_forms/form.html'
     name = _('Form')
     model = models.FormPlugin
+    form = FormPluginForm
 
     def render(self, context, instance, placeholder):
         context = super(FormPlugin, self).render(context, instance, placeholder)
         if 'form' not in context:  # the context not from form processing view
-            context['form'] = self.get_form_class(instance)()
+            context['form'] = self.get_form_class(instance=instance)()
         return context
 
     def get_form_class(self, instance):
@@ -55,7 +55,12 @@ class FormPlugin(FieldContainer):
         return forms.forms.DeclarativeFieldsMetaclass('AldrynDynamicForm', (forms.Form,), fields)
 
     def get_success_url(self, instance):
-        return reverse('send', kwargs={'pk': instance.pk})
+        if instance.redirect_type == models.FormPlugin.REDIRECT_TO_PAGE:
+            return instance.page.get_absolute_url()
+        elif instance.redirect_type == models.FormPlugin.REDIRECT_TO_URL:
+            return instance.url
+        else:
+            raise RuntimeError('Form is not configured properly.')
 
 plugin_pool.register_plugin(FormPlugin)
 

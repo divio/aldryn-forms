@@ -7,10 +7,22 @@ from cms.models.pluginmodel import CMSPlugin
 
 class FormPlugin(CMSPlugin):
 
+    REDIRECT_TO_PAGE = 'redirect_to_page'
+    REDIRECT_TO_URL = 'redirect_to_url'
+    REDIRECT_CHOICES = [
+        (REDIRECT_TO_PAGE, _('CMS Page')),
+        (REDIRECT_TO_URL, _('Absolute URL')),
+    ]
+
     name = models.CharField(_('Name'), max_length=50, help_text=_('Used to filter out form submissions.'))
     error_message = models.TextField(_('Error message'), blank=True, null=True,
                                      help_text=_('An error message that will be displayed if the form doesn\'t '
                                                  'validate.'))
+    redirect_type = models.CharField(_('Redirect to'), max_length=20, choices=REDIRECT_CHOICES,
+                                     help_text=_('Where to redirect the user when the form has been '
+                                                 'successfully sent?'))
+    page = models.ForeignKey('cms.Page', verbose_name=_('CMS Page'), blank=True, null=True)
+    url = models.URLField(_('Absolute URL'), blank=True, null=True)
 
     def __unicode__(self):
         return self.name
