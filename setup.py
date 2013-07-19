@@ -2,6 +2,9 @@
 from setuptools import setup, find_packages
 from aldryn_forms import __version__
 
+REQUIREMENTS = [
+    'django-emailit'
+]
 
 CLASSIFIERS = [
     'Development Status :: 2 - Pre-Alpha',
@@ -26,6 +29,7 @@ setup(
     packages=find_packages(),
     license='LICENSE.txt',
     platforms=['OS Independent'],
+    requirements=REQUIREMENTS,
     classifiers=CLASSIFIERS,
     include_package_data=True,
     zip_safe=False

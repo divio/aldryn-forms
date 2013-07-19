@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+from django.db import models
 from django.forms.forms import NON_FIELD_ERRORS
 from django.shortcuts import get_object_or_404
 
@@ -31,8 +32,18 @@ def get_next_level(current_level):
     return all_plugins.filter(parent__in=[x.pk for x in current_level])
 
 
-def append_non_field_form_error(form, message):
+def add_form_error(form, message, field=NON_FIELD_ERRORS):
     try:
-        form._errors[NON_FIELD_ERRORS].append(message)
+        form._errors[field].append(message)
     except KeyError:
-        form._errors[NON_FIELD_ERRORS] = form.error_class([message])
+        form._errors[field] = form.error_class([message])
+
+
+def label_to_cleaned_data(form):
+    form_data = []
+    for field in form:
+        value = form.cleaned_data[field.name]
+        if isinstance(value, models.query.QuerySet):
+            value = ', '.join(map(unicode, value))
+        form_data.append((field.label, value))
+    return form_data

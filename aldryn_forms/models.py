@@ -4,6 +4,13 @@ from django.utils.translation import ugettext_lazy as _
 
 from cms.models.pluginmodel import CMSPlugin
 
+try:
+    from django.contrib.auth import get_user_model
+except ImportError:  # django < 1.5
+    from django.contrib.auth.models import User
+else:
+    User = get_user_model()
+
 
 class FormPlugin(CMSPlugin):
 
@@ -23,9 +30,19 @@ class FormPlugin(CMSPlugin):
                                                  'successfully sent?'))
     page = models.ForeignKey('cms.Page', verbose_name=_('CMS Page'), blank=True, null=True)
     url = models.URLField(_('Absolute URL'), blank=True, null=True)
+    recipients = models.ManyToManyField(User, verbose_name=_('Recipients'), blank=True,
+                                        # through='aldryn_forms.FormToRecipient',
+                                        help_text=_('People who will get the form content via e-mail.'))
 
     def __unicode__(self):
         return self.name
+
+    def copy_relations(self, oldinstance):
+        for recipient in oldinstance.recipients.all():
+            self.recipients.add(recipient)
+
+    def get_notification_emails(self):
+        return [x.email for x in self.recipients.all()]
 
 
 class FieldsetPlugin(CMSPlugin):
@@ -87,3 +104,14 @@ class ButtonPlugin(CMSPlugin):
 
     def __unicode__(self):
         return self.label
+
+
+class FormData(models.Model):
+
+    name = models.CharField(max_length=50, db_index=True, editable=False)
+    data = models.TextField(blank=True, null=True, editable=False)
+    people_notified = models.ManyToManyField(User, blank=True, editable=False)
+    sent_at = models.DateTimeField(auto_now_add=True)
+
+    def __unicode__(self):
+        return self.name

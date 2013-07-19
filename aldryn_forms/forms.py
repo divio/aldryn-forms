@@ -3,15 +3,13 @@ from django import forms
 from django.utils.translation import ugettext_lazy as _
 
 from aldryn_forms.models import FormPlugin
+from aldryn_forms.utils import add_form_error
 
 
 class ExtandableErrorForm(forms.ModelForm):
 
     def append_to_errors(self, field, message):
-        try:
-            self._errors[field].append(message)
-        except KeyError:
-            self._errors[field] = self.error_class([message])
+        add_form_error(form=self, message=message, field=field)
 
 
 class FormPluginForm(ExtandableErrorForm):

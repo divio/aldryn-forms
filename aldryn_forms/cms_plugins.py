@@ -40,6 +40,18 @@ class FormPlugin(FieldContainer):
     name = _('Form')
     model = models.FormPlugin
     form = FormPluginForm
+    filter_horizontal = ['recipients']
+
+    fieldsets = [
+        (
+            'General options',
+            {'fields': ['name', 'error_message', 'recipients']}
+        ),
+        (
+            'Redirect',
+            {'fields': ['redirect_type', 'page', 'url']}
+        )
+    ]
 
     def render(self, context, instance, placeholder):
         context = super(FormPlugin, self).render(context, instance, placeholder)
@@ -93,7 +105,7 @@ class Field(FormElement):
 
     def get_fieldsets(self, request, obj=None):
         fieldsets = [
-            (_('General field options'), {'fields': self.general_fields}),
+            (_('General options'), {'fields': self.general_fields}),
         ]
         if self.boundries_fields:
             fieldsets.append(
