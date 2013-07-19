@@ -114,8 +114,8 @@ class FormData(models.Model):
     sent_at = models.DateTimeField(auto_now_add=True)
 
     class Meta:
-        verbose_name = _('Job submission')
-        verbose_name_plural = _('Job submissions')
+        verbose_name = _('Form submission')
+        verbose_name_plural = _('Form submissions')
 
     def __unicode__(self):
         return self.name
