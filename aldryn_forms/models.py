@@ -113,5 +113,9 @@ class FormData(models.Model):
     people_notified = models.ManyToManyField(User, blank=True, editable=False)
     sent_at = models.DateTimeField(auto_now_add=True)
 
+    class Meta:
+        verbose_name = _('Job submission')
+        verbose_name_plural = _('Job submissions')
+
     def __unicode__(self):
         return self.name
