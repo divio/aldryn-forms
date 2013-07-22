@@ -92,9 +92,9 @@ class Field(FormElement):
 
     render_template = 'aldryn_forms/field.html'
     model = models.FieldPlugin
-    general_fields = ['label', 'help_text']
-    boundries_fields = []
-    required_fields = ['required', 'required_message']
+    general_fields_group = ['label', 'help_text']
+    boundries_fields_group = []
+    required_fields_group = ['required', 'required_message']
 
     def get_field_name(self, instance):
         return u'aldryn-forms-field-%d' % (instance.pk,)
@@ -107,14 +107,14 @@ class Field(FormElement):
 
     def get_fieldsets(self, request, obj=None):
         fieldsets = [
-            (_('General options'), {'fields': self.general_fields}),
+            (_('General options'), {'fields': self.general_fields_group}),
         ]
-        if self.boundries_fields:
+        if self.boundries_fields_group:
             fieldsets.append(
-                (_('Field boundries'), {'fields': self.boundries_fields}))
-        if self.required_fields:
+                (_('Field boundries'), {'fields': self.boundries_fields_group}))
+        if self.required_fields_group:
             fieldsets.append(
-                (_('Required'), {'fields': self.required_fields}))
+                (_('Required'), {'fields': self.required_fields_group}))
         return fieldsets
 
     def get_error_messages(self, instance):
@@ -128,8 +128,8 @@ class TextField(Field):
 
     name = _('TextField')
     form = TextFieldForm
-    general_fields = ['label', 'placeholder_text', 'help_text']
-    boundries_fields = ['min_value', 'max_value']
+    general_fields_group = ['label', 'placeholder_text', 'help_text']
+    boundries_fields_group = ['min_value', 'max_value']
 
     def get_form_fields(self, instance):
         validators = []
@@ -191,8 +191,8 @@ class MultipleSelectField(SelectField):
 
     form = MultipleSelectFieldForm
     name = _('Multiple Select Field')
-    boundries_fields = ['min_value', 'max_value']
-    required_fields = []
+    boundries_fields_group = ['min_value', 'max_value']
+    required_fields_group = []
 
     def get_form_fields(self, instance):
         validators = []
@@ -215,8 +215,8 @@ plugin_pool.register_plugin(MultipleSelectField)
 class CaptchaField(Field):
 
     name = _('Captcha Field')
-    general_fields = ['label']
-    required_fields = ['required_message']
+    general_fields_group = ['label']
+    required_fields_group = ['required_message']
 
     def get_form_fields(self, instance):
         field = ReCaptchaField(
