@@ -6,6 +6,7 @@ author:
   url: https://www.divio.ch
 installed-apps:
   - emailit
+  - captcha
   - aldryn_forms
 version: 0.0.1
 description: Create forms and embed them on CMS pages

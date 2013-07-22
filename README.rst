@@ -6,7 +6,6 @@ This add-on allows you to:
 
 - create forms
 - display them on CMS pages
-- send form 
 
 Installation
 ============
@@ -21,7 +20,28 @@ Redeploy the site.
 Manuall Installation
 --------------------
 
-Run `pip install aldryn-forms`.
+Run ``pip install aldryn-forms``.
+
+Update ``INSTALLED_APPS`` with ::
+
+    INSTALLED_APPS = [
+        …
+        'absolute',
+        'aldryn_forms',
+        'captcha',
+        'django_emailit',
+        …
+    ]
+
+Set the following settings accordingly if you want to have re-captcha form field plugin available:
+
+    - ``RECAPTCHA_PUBLIC_KEY``
+    - ``RECAPTCHA_PRIVATE_KEY``
+
+Visit django-recaptcha_ for more info about installation.
+
+.. _django-recaptcha : https://github.com/praekelt/django-recaptcha
+
 
 Creating a Form
 ===============
@@ -39,3 +59,13 @@ Available Plug-ins
 ==================
 
 ``Form`` plugin lets you embed certain forms on a CMS page.
+
+``Fieldset`` groups fields.
+
+``Text Field`` renders text input.
+
+``Yes/No Field`` renders checkbox.
+
+``Select Field`` renders single select input.
+
+``Multiple Select Field`` renders multiple checkboxes.

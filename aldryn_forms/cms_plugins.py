@@ -1,11 +1,13 @@
 # -*- coding: utf-8 -*-
 from django import forms
+from django.conf import settings
 from django.contrib.admin import TabularInline
 from django.core.validators import MinLengthValidator
 from django.utils.translation import ugettext_lazy as _
 
 from cms.plugin_base import CMSPluginBase
 from cms.plugin_pool import plugin_pool
+from captcha.fields import ReCaptchaField
 
 from aldryn_forms import models
 from aldryn_forms.forms import FormPluginForm, TextFieldForm, BooleanFieldForm, MultipleSelectFieldForm
@@ -208,6 +210,20 @@ class MultipleSelectField(SelectField):
         return {self.get_field_name(instance): field}
 
 plugin_pool.register_plugin(MultipleSelectField)
+
+
+class CaptchaField(Field):
+
+    name = _('Captcha Field')
+    general_fields = ['label']
+    required_fields = []
+
+    def get_form_fields(self, instance):
+        field = ReCaptchaField(label=instance.label)
+        return {self.get_field_name(instance): field}
+
+if settings.RECAPTCHA_PUBLIC_KEY and settings.RECAPTCHA_PRIVATE_KEY:
+    plugin_pool.register_plugin(CaptchaField)
 
 
 class SubmitButton(FormElement):
