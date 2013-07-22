@@ -5,7 +5,7 @@ from django.template.loader import render_to_string
 from django.utils.translation import ugettext_lazy as _
 
 from aldryn_forms.models import FormPlugin, FormData
-from aldryn_forms.utils import get_plugin_tree, add_form_error, label_to_cleaned_data
+from aldryn_forms.utils import get_plugin_tree, add_form_error, get_form_render_data
 
 from emailit.api import send_mail
 
@@ -30,7 +30,7 @@ class SendView(FormView):
         return plugin_instance.get_form_class(instance=self.object)
 
     def form_valid(self, form):
-        form_data = label_to_cleaned_data(form)
+        form_data = get_form_render_data(form)
         self.send_notification_emails(form_data)
         self.save_to_db(form_data)
         messages.success(self.request, _('The form has been sent.'))

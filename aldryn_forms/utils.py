@@ -39,11 +39,12 @@ def add_form_error(form, message, field=NON_FIELD_ERRORS):
         form._errors[field] = form.error_class([message])
 
 
-def label_to_cleaned_data(form):
+def get_form_render_data(form):
     form_data = []
     for field in form.visible_fields():
         value = form.cleaned_data[field.name]
         if isinstance(value, models.query.QuerySet):
             value = ', '.join(map(unicode, value))
-        form_data.append((field.label, value))
+        name = field.label if field.label else field.name
+        form_data.append((name, value))
     return form_data
