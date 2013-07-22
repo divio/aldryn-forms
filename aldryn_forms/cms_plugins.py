@@ -102,7 +102,7 @@ class Field(FormElement):
     def render(self, context, instance, placeholder):
         context = super(Field, self).render(context, instance, placeholder)
         if 'form' in context:
-            context['field'] = context['form'][self.get_field_name(instance)]
+            context['field'] = context['form'][self.get_field_name(instance=instance)]
         return context
 
     def get_fieldsets(self, request, obj=None):
@@ -144,7 +144,7 @@ class TextField(Field):
             validators=validators)
         if instance.placeholder_text:
             field.widget.attrs['placeholder'] = instance.placeholder_text
-        return {self.get_field_name(instance): field}
+        return {self.get_field_name(instance=instance): field}
 
 plugin_pool.register_plugin(TextField)
 
@@ -160,7 +160,7 @@ class BooleanField(Field):
             help_text=instance.help_text,
             error_messages=self.get_error_messages(instance=instance),
             required=instance.required)
-        return {self.get_field_name(instance): field}
+        return {self.get_field_name(instance=instance): field}
 
 plugin_pool.register_plugin(BooleanField)
 
@@ -182,7 +182,7 @@ class SelectField(Field):
             help_text=instance.help_text,
             error_messages=self.get_error_messages(instance=instance),
             required=instance.required)
-        return {self.get_field_name(instance): field}
+        return {self.get_field_name(instance=instance): field}
 
 plugin_pool.register_plugin(SelectField)
 
@@ -207,7 +207,7 @@ class MultipleSelectField(SelectField):
             required=instance.min_value,
             widget=forms.CheckboxSelectMultiple,
             validators=validators)
-        return {self.get_field_name(instance): field}
+        return {self.get_field_name(instance=instance): field}
 
 plugin_pool.register_plugin(MultipleSelectField)
 
@@ -216,11 +216,13 @@ class CaptchaField(Field):
 
     name = _('Captcha Field')
     general_fields = ['label']
-    required_fields = []
+    required_fields = ['required_message']
 
     def get_form_fields(self, instance):
-        field = ReCaptchaField(label=instance.label)
-        return {self.get_field_name(instance): field}
+        field = ReCaptchaField(
+            label=instance.label,
+            error_messages=self.get_error_messages(instance=instance))
+        return {self.get_field_name(instance=instance): field}
 
 if settings.RECAPTCHA_PUBLIC_KEY and settings.RECAPTCHA_PRIVATE_KEY:
     plugin_pool.register_plugin(CaptchaField)

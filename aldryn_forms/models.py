@@ -53,27 +53,12 @@ class FieldsetPlugin(CMSPlugin):
         return self.legend or str(self.pk)
 
 
-class FieldBase(models.Model):
-
-    label = models.CharField(_('Label'), max_length=50)
-
-    class Meta:
-        abstract = True
-
-    def __unicode__(self):
-        return self.label
-
-
-class FieldPlugin(CMSPlugin, FieldBase):
+class FieldPlugin(CMSPlugin):
     """
     A general field model.
-
-    The reason it's flat instead of having a nice structure is, as we read in
-    CMSPlugin docs:
-
-    > 1. subclasses of CMSPlugin *cannot be further subclassed*
     """
 
+    label = models.CharField(_('Label'), max_length=50)
     required = models.BooleanField(_('Field is required'), default=True)
     required_message = models.TextField(_('Error message'), blank=True, null=True,
                                         help_text=_('Error message displayed if the required field is left '
@@ -95,10 +80,8 @@ class FieldPlugin(CMSPlugin, FieldBase):
             option.field = self
             option.save()
 
-
-class CaptchaField(CMSPlugin, FieldBase):
-
-    pass
+    def __unicode__(self):
+        return self.label
 
 
 class Option(models.Model):
