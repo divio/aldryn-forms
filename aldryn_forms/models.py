@@ -58,7 +58,7 @@ class FieldPlugin(CMSPlugin):
     A general field model.
     """
 
-    label = models.CharField(_('Label'), max_length=50)
+    label = models.CharField(_('Label'), max_length=50, blank=True)
     required = models.BooleanField(_('Field is required'), default=True)
     required_message = models.TextField(_('Error message'), blank=True, null=True,
                                         help_text=_('Error message displayed if the required field is left '
