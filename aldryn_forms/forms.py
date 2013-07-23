@@ -41,6 +41,22 @@ class BooleanFieldForm(forms.ModelForm):
             kwargs['initial'] = initial
         super(BooleanFieldForm, self).__init__(*args, **kwargs)
 
+    class Meta:
+        fields = ['label', 'help_text', 'required', 'required_message']
+
+
+class SelectFieldForm(forms.ModelForm):
+
+    class Meta:
+        fields = ['label', 'help_text', 'required', 'required_message']
+
+
+class CaptchaFieldForm(forms.ModelForm):
+
+    class Meta:
+        # captcha is always required
+        fields = ['label', 'help_text', 'required_message']
+
 
 class MinMaxValueForm(ExtandableErrorForm):
 
@@ -64,6 +80,10 @@ class TextFieldForm(MinMaxValueForm):
         self.fields['max_value'].help_text = _(u'Maximum number of characters to type.')
         self.fields['max_value'].required = True
 
+    class Meta:
+        fields = ['label', 'placeholder_text', 'help_text',
+                  'min_value', 'max_value', 'required', 'required_message']
+
 
 class MultipleSelectFieldForm(MinMaxValueForm):
 
@@ -75,3 +95,7 @@ class MultipleSelectFieldForm(MinMaxValueForm):
 
         self.fields['max_value'].label = _(u'Max choices')
         self.fields['max_value'].help_text = _(u'Maximum amount of elements to chose.')
+
+    class Meta:
+        # 'required' and 'required_message' depend on min_value field validator
+        fields = ['label', 'help_text', 'min_value', 'max_value']

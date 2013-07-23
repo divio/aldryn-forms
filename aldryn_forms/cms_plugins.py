@@ -10,7 +10,9 @@ from cms.plugin_pool import plugin_pool
 from captcha.fields import ReCaptchaField
 
 from aldryn_forms import models
-from aldryn_forms.forms import FormPluginForm, TextFieldForm, BooleanFieldForm, MultipleSelectFieldForm
+from aldryn_forms.forms import (FormPluginForm, TextFieldForm, BooleanFieldForm,
+                                MultipleSelectFieldForm, SelectFieldForm,
+                                CaptchaFieldForm)
 from aldryn_forms.validators import MinChoicesValidator, MaxChoicesValidator
 
 
@@ -92,12 +94,15 @@ class Field(FormElement):
 
     render_template = 'aldryn_forms/field.html'
     model = models.FieldPlugin
-    general_fields_group = ['label', 'help_text']
-    boundries_fields_group = []
-    required_fields_group = ['required', 'required_message']
 
     def get_field_name(self, instance):
         return u'aldryn-forms-field-%d' % (instance.pk,)
+
+    def get_form_fields(self, instance):
+        return {self.get_field_name(instance=instance): self.get_form_field(instance=instance)}
+
+    def get_form_field(self, instance):
+        raise NotImplementedError()
 
     def render(self, context, instance, placeholder):
         context = super(Field, self).render(context, instance, placeholder)
@@ -106,15 +111,28 @@ class Field(FormElement):
         return context
 
     def get_fieldsets(self, request, obj=None):
+        if self.form:
+            fields = set(self.form._meta.fields)
+        else:
+            fields = ['label']
+
+        in_fields = lambda x: x in fields
+
+        general_fields = filter(in_fields, ['label', 'placeholder_text', 'help_text'])
         fieldsets = [
-            (_('General options'), {'fields': self.general_fields_group}),
+            (_('General options'), {'fields': general_fields}),
         ]
-        if self.boundries_fields_group:
+
+        boundries_fields = filter(in_fields, ['min_value', 'max_value'])
+        if boundries_fields:
             fieldsets.append(
-                (_('Field boundries'), {'fields': self.boundries_fields_group}))
-        if self.required_fields_group:
+                (_('Min and max values'), {'fields': boundries_fields}))
+
+        required_fields = filter(in_fields, ['required', 'required_message'])
+        if required_fields:
             fieldsets.append(
-                (_('Required'), {'fields': self.required_fields_group}))
+                (_('Required'), {'fields': required_fields}))
+
         return fieldsets
 
     def get_error_messages(self, instance):
@@ -126,12 +144,10 @@ class Field(FormElement):
 
 class TextField(Field):
 
-    name = _('TextField')
+    name = _('Text Field')
     form = TextFieldForm
-    general_fields_group = ['label', 'placeholder_text', 'help_text']
-    boundries_fields_group = ['min_value', 'max_value']
 
-    def get_form_fields(self, instance):
+    def get_form_field(self, instance):
         validators = []
         if instance.min_value:
             validators.append(MinLengthValidator(instance.min_value))
@@ -144,7 +160,7 @@ class TextField(Field):
             validators=validators)
         if instance.placeholder_text:
             field.widget.attrs['placeholder'] = instance.placeholder_text
-        return {self.get_field_name(instance=instance): field}
+        return field
 
 plugin_pool.register_plugin(TextField)
 
@@ -154,13 +170,13 @@ class BooleanField(Field):
     name = _('Yes/No Field')
     form = BooleanFieldForm
 
-    def get_form_fields(self, instance):
+    def get_form_field(self, instance):
         field = forms.BooleanField(
             label=instance.label,
             help_text=instance.help_text,
             error_messages=self.get_error_messages(instance=instance),
             required=instance.required)
-        return {self.get_field_name(instance=instance): field}
+        return field
 
 plugin_pool.register_plugin(BooleanField)
 
@@ -173,28 +189,27 @@ class SelectOptionInline(TabularInline):
 class SelectField(Field):
 
     name = _('Select Field')
+    form = SelectFieldForm
     inlines = [SelectOptionInline]
 
-    def get_form_fields(self, instance):
+    def get_form_field(self, instance):
         field = forms.ModelChoiceField(
             queryset=instance.option_set.all(),
             label=instance.label,
             help_text=instance.help_text,
             error_messages=self.get_error_messages(instance=instance),
             required=instance.required)
-        return {self.get_field_name(instance=instance): field}
+        return field
 
 plugin_pool.register_plugin(SelectField)
 
 
 class MultipleSelectField(SelectField):
 
-    form = MultipleSelectFieldForm
     name = _('Multiple Select Field')
-    boundries_fields_group = ['min_value', 'max_value']
-    required_fields_group = []
+    form = MultipleSelectFieldForm
 
-    def get_form_fields(self, instance):
+    def get_form_field(self, instance):
         validators = []
         if instance.min_value:
             validators.append(MinChoicesValidator(limit_value=instance.min_value))
@@ -207,7 +222,7 @@ class MultipleSelectField(SelectField):
             required=instance.min_value,
             widget=forms.CheckboxSelectMultiple,
             validators=validators)
-        return {self.get_field_name(instance=instance): field}
+        return field
 
 plugin_pool.register_plugin(MultipleSelectField)
 
@@ -215,14 +230,13 @@ plugin_pool.register_plugin(MultipleSelectField)
 class CaptchaField(Field):
 
     name = _('Captcha Field')
-    general_fields_group = ['label']
-    required_fields_group = ['required_message']
+    form = CaptchaFieldForm
 
-    def get_form_fields(self, instance):
+    def get_form_field(self, instance):
         field = ReCaptchaField(
             label=instance.label,
             error_messages=self.get_error_messages(instance=instance))
-        return {self.get_field_name(instance=instance): field}
+        return field
 
 if settings.RECAPTCHA_PUBLIC_KEY and settings.RECAPTCHA_PRIVATE_KEY:
     plugin_pool.register_plugin(CaptchaField)

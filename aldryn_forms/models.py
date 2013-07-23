@@ -54,9 +54,6 @@ class FieldsetPlugin(CMSPlugin):
 
 
 class FieldPlugin(CMSPlugin):
-    """
-    A general field model.
-    """
 
     label = models.CharField(_('Label'), max_length=50, blank=True)
     required = models.BooleanField(_('Field is required'), default=True)
@@ -81,13 +78,13 @@ class FieldPlugin(CMSPlugin):
             option.save()
 
     def __unicode__(self):
-        return self.label
+        return self.label or str(self.pk)
 
 
 class Option(models.Model):
 
-    value = models.CharField(_('Value'), max_length=50)
     field = models.ForeignKey(FieldPlugin, editable=False)
+    value = models.CharField(_('Value'), max_length=50)
 
     def __unicode__(self):
         return self.value
