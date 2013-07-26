@@ -29,7 +29,7 @@ Update ``INSTALLED_APPS`` with ::
         'absolute',
         'aldryn_forms',
         'captcha',
-        'django_emailit',
+        'emailit',
         …
     ]
 
