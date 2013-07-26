@@ -4,7 +4,8 @@ from aldryn_forms import __version__
 
 REQUIREMENTS = [
     'django-emailit',
-    'django-recaptcha'
+    'django-recaptcha',
+    'South>=0.8.1',
 ]
 
 CLASSIFIERS = [
