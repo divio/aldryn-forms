@@ -238,7 +238,7 @@ class CaptchaField(Field):
             error_messages=self.get_error_messages(instance=instance))
         return field
 
-if settings.RECAPTCHA_PUBLIC_KEY and settings.RECAPTCHA_PRIVATE_KEY:
+if getattr(settings, 'RECAPTCHA_PUBLIC_KEY', None) and getattr(settings, 'RECAPTCHA_PRIVATE_KEY', None):
     plugin_pool.register_plugin(CaptchaField)
 
 
