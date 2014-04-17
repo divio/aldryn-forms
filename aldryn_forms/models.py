@@ -2,6 +2,7 @@
 from django.db import models
 from django.utils.translation import ugettext_lazy as _
 
+from cms.models.fields import PageField
 from cms.models.pluginmodel import CMSPlugin
 
 try:
@@ -28,7 +29,7 @@ class FormPlugin(CMSPlugin):
     redirect_type = models.CharField(_('Redirect to'), max_length=20, choices=REDIRECT_CHOICES,
                                      help_text=_('Where to redirect the user when the form has been '
                                                  'successfully sent?'))
-    page = models.ForeignKey('cms.Page', verbose_name=_('CMS Page'), blank=True, null=True)
+    page = PageField(verbose_name=_('CMS Page'), blank=True, null=True)
     url = models.URLField(_('Absolute URL'), blank=True, null=True)
     recipients = models.ManyToManyField(User, verbose_name=_('Recipients'), blank=True,
                                         # through='aldryn_forms.FormToRecipient',

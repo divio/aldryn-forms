@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 from django.contrib import admin
 
-from aldryn_forms.models import FormData
+from .models import FormData
 
 
 class FormDataAdmin(admin.ModelAdmin):

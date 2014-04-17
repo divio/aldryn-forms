@@ -10,14 +10,21 @@ from cms.plugin_pool import plugin_pool
 from captcha.fields import ReCaptchaField
 
 from aldryn_forms import models
-from aldryn_forms.forms import (FormPluginForm, TextFieldForm, BooleanFieldForm,
-                                MultipleSelectFieldForm, SelectFieldForm,
-                                CaptchaFieldForm)
-from aldryn_forms.validators import MinChoicesValidator, MaxChoicesValidator
+from .forms import (
+    FormPluginForm,
+    TextFieldForm,
+    BooleanFieldForm,
+    MultipleSelectFieldForm,
+    SelectFieldForm,
+    CaptchaFieldForm
+)
+from .validators import MinChoicesValidator, MaxChoicesValidator
+from .views import SendView
 
 
 class FormElement(CMSPluginBase):
-
+    # Don't cache anything.
+    cache = False
     module = _('Forms')
 
     def get_form_fields(self, instance):
@@ -60,7 +67,10 @@ class FormPlugin(FieldContainer):
     def render(self, context, instance, placeholder):
         context = super(FormPlugin, self).render(context, instance, placeholder)
         if 'form' not in context:  # the context not from form processing view
-            context['form'] = self.get_form_class(instance=instance)()
+            template_response = SendView.as_view(
+                template_name=self.render_template
+            )(request=context['request'], pk=instance.pk)
+            context.update(template_response.context_data)
         return context
 
     def get_form_class(self, instance):

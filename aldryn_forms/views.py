@@ -4,15 +4,17 @@ from django.views.generic import FormView
 from django.template.loader import render_to_string
 from django.utils.translation import ugettext_lazy as _
 
-from aldryn_forms.models import FormPlugin, FormData
-from aldryn_forms.utils import get_plugin_tree, add_form_error, get_form_render_data
-
 from emailit.api import send_mail
+
+from .models import FormPlugin, FormData
+from .utils import (
+    get_plugin_tree,
+    add_form_error,
+    get_form_render_data
+)
 
 
 class SendView(FormView):
-
-    template_name = 'aldryn_forms/send.html'
 
     def get(self, *args, **kwargs):
         self.object = self.get_object()
@@ -33,8 +35,9 @@ class SendView(FormView):
         form_data = get_form_render_data(form)
         self.send_notification_emails(form_data)
         self.save_to_db(form_data)
+        context = self.get_context_data(form=form, form_success_url=self.get_success_url())
         messages.success(self.request, _('The form has been sent.'))
-        return super(SendView, self).form_valid(form)
+        return self.render_to_response(context=context)
 
     def form_invalid(self, form):
         if self.object.error_message:

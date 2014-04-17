@@ -4,7 +4,7 @@ from django.forms.forms import NON_FIELD_ERRORS
 from django.shortcuts import get_object_or_404
 
 from cms.utils.moderator import get_cmsplugin_queryset
-from cms.plugins.utils import downcast_plugins, build_plugin_tree
+from cms.utils.plugins import downcast_plugins, build_plugin_tree
 
 
 def get_plugin_tree(model, **kwargs):

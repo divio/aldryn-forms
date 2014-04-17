@@ -1,5 +1,4 @@
 # -*- coding: utf-8 -*-
-
 from django.core.validators import MinLengthValidator, MaxLengthValidator
 from django.utils.translation import ugettext_lazy as _
 
