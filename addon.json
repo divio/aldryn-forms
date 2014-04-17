@@ -1,0 +1,15 @@
+{
+    "name": "Forms",
+    "description": "Create forms and embed them on CMS pages.",
+    "version": "0.0.2",
+    "url": "https://github.com/aldryn/aldryn-forms",
+    "package-name": "aldryn-forms",
+    "installed-apps": ["emailit", "captcha", "aldryn_forms"],
+    "author": {
+        "name": "Divio AG",
+        "url": "https://www.divio.ch"
+    },
+    "license": {
+        "name": "BSD"
+    }
+}
