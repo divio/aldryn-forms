@@ -31,7 +31,7 @@ setup(
     packages=find_packages(),
     license='LICENSE.txt',
     platforms=['OS Independent'],
-    requirements=REQUIREMENTS,
+    install_requires=REQUIREMENTS,
     classifiers=CLASSIFIERS,
     include_package_data=True,
     zip_safe=False
