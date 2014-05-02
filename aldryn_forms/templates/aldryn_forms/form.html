@@ -7,7 +7,7 @@
 </script>
 {% endif %}
 
-<form class="aldryn-forms-form" action="" method="POST">
+<form class="aldryn-forms-form" action="." method="POST">
 	{% csrf_token %}
 	<ul>
 		{% for error in form.non_field_errors %}
