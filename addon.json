@@ -1,7 +1,7 @@
 {
     "name": "Forms",
     "description": "Create forms and embed them on CMS pages.",
-    "version": "0.0.6",
+    "version": "0.0.7",
     "url": "https://github.com/aldryn/aldryn-forms",
     "package-name": "aldryn-forms",
     "installed-apps": ["emailit", "captcha", "aldryn_forms"],
