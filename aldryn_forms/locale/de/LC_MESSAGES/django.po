@@ -20,15 +20,15 @@ msgstr ""
 
 #: cms_app.py:9 cms_plugins.py:28
 msgid "Forms"
-msgstr ""
+msgstr "Formulare"
 
 #: cms_plugins.py:51
 msgid "Form"
-msgstr ""
+msgstr "Formular"
 
 #: cms_plugins.py:97
 msgid "Fieldset"
-msgstr ""
+msgstr "Text"
 
 #: cms_plugins.py:133
 msgid "General options"
@@ -36,188 +36,190 @@ msgstr ""
 
 #: cms_plugins.py:139
 msgid "Min and max values"
-msgstr ""
+msgstr "Min und Max Werte"
 
 #: cms_plugins.py:144
 msgid "Required"
-msgstr ""
+msgstr "Notwendig"
 
 #: cms_plugins.py:157
 msgid "Text Field"
-msgstr ""
+msgstr "Textfeld"
 
 #: cms_plugins.py:180
 msgid "Yes/No Field"
-msgstr ""
+msgstr "Radiobutton"
 
 #: cms_plugins.py:201
 msgid "Select Field"
-msgstr ""
+msgstr "Auswahlfeld"
 
 #: cms_plugins.py:219
 msgid "Multiple Select Field"
-msgstr ""
+msgstr "Mehrfach Auswahl"
 
 #: cms_plugins.py:242
 msgid "Captcha Field"
-msgstr ""
+msgstr "Captcha Feld"
 
 #: cms_plugins.py:258
 msgid "Submit Button"
-msgstr ""
+msgstr "Senden Button"
 
 #: forms.py:25
 msgid "Please provide CMS page for redirect."
-msgstr ""
+msgstr "Bitte CMS Seite angeben fÃ¼r die Weiterleitung."
 
 #: forms.py:29
 msgid "Please provide an absolute URL for redirect."
-msgstr ""
+msgstr "Bitte eine absolute URL angeben fÃ¼r die Weiterleitung"
 
 #: forms.py:67
 msgid "Min value can not be greater then max value."
-msgstr ""
+msgstr "Der Mindestwert kann nicht grÃ¶sser sein als der maximale Wert"
 
 #: forms.py:76
 msgid "Min length"
-msgstr ""
+msgstr "MindestlÃ¤nge"
 
 #: forms.py:77
 msgid "Required number of characters to type."
-msgstr ""
+msgstr "BenÃ¶tigte Anzahl von getippten Zeichen."
 
 #: forms.py:79
 msgid "Max length"
-msgstr ""
+msgstr "Maximale LÃ¤nge"
 
 #: forms.py:80
 msgid "Maximum number of characters to type."
-msgstr ""
+msgstr "Maximale Anzahl von getippten Zeichen."
 
 #: forms.py:93
 msgid "Min choices"
-msgstr ""
+msgstr "Mindestauswahl"
 
 #: forms.py:94
 msgid "Required amount of elements to chose."
-msgstr ""
+msgstr "BenÃ¶tigte Anzahl von ausgewÃ¤hlten Elementen"
 
 #: forms.py:96
 msgid "Max choices"
-msgstr ""
+msgstr "Maximale Auswahl"
 
 #: forms.py:97
 msgid "Maximum amount of elements to chose."
-msgstr ""
+msgstr "Maximale Anzahl der gewÃ¤hlten Auswahl."
 
 #: models.py:21 models.py:32
 msgid "CMS Page"
-msgstr ""
+msgstr "CMS Seite"
 
 #: models.py:22 models.py:33
 msgid "Absolute URL"
-msgstr ""
+msgstr "Absolute URL"
 
 #: models.py:25
 msgid "Name"
-msgstr ""
+msgstr "Name"
 
 #: models.py:25
 msgid "Used to filter out form submissions."
-msgstr ""
+msgstr "Benutzt um die Formular-Ãœbertragung zu filtern."
 
 #: models.py:26 models.py:61
 msgid "Error message"
-msgstr ""
+msgstr "Fehlermeldung"
 
 #: models.py:27
 msgid "An error message that will be displayed if the form doesn't validate."
-msgstr ""
+msgstr "Eine Fehlermeldung, welche angezeigt wird, wenn das Formular nicht gÃ¼ltig ist."
 
 #: models.py:29
 msgid "Redirect to"
-msgstr ""
+msgstr "Weiterleiten zu"
 
 #: models.py:30
 msgid "Where to redirect the user when the form has been successfully sent?"
-msgstr ""
+msgstr "Wohin soll der Benutzer weitergeleitet werden, wenn das Formular erfolgreich verschickt wurde?"
 
 #: models.py:34
 msgid "Recipients"
-msgstr ""
+msgstr "EmpfÃ¤nger"
 
 #: models.py:36
 msgid "People who will get the form content via e-mail."
-msgstr ""
+msgstr "Personen welche das Formular per E-Mail erhalten"
 
 #: models.py:51
 msgid "Legend"
-msgstr ""
+msgstr "Legende"
 
 #: models.py:59 models.py:96
 msgid "Label"
-msgstr ""
+msgstr "Beschreibung"
 
 #: models.py:60
 msgid "Field is required"
-msgstr ""
+msgstr "Feld ist zwingend erforderlich"
 
 #: models.py:62
 msgid ""
 "Error message displayed if the required field is left empty. Default: \"This "
 "field is required\"."
-msgstr ""
+msgstr "Fehlermeldung welche angezeigt wird, wenn das erforderliche Feld leer gelassen wird. Standard: \"Dieses Feld "
+"muss ausgefÃ¼llt werden\"."
 
 #: models.py:64
 msgid "Placeholder text"
-msgstr ""
+msgstr "Platzhalter Text"
 
 #: models.py:65
 msgid ""
 "Default text in a form. Disapears when user starts typing. Example: "
 "\"email@exmaple.com\""
-msgstr ""
+msgstr "Standardtext im Formular. Verschwindet, sobald der Benutzer anfÃ¤ngt zu tippen. Beispiel: "
+"\"email@exmaple.com\""
 
 #: models.py:67
 msgid "Help text"
-msgstr ""
+msgstr "Hilfetext"
 
 #: models.py:68
 msgid "Explanatory text displayed next to input field. Just like this one."
-msgstr ""
+msgstr "ErklÃ¤render Text, welcher neben dem Eingabefeld angezeigt wird. Genau wie dieser Text."
 
 #: models.py:72
 msgid "Min value"
-msgstr ""
+msgstr "Mindestwert"
 
 #: models.py:73
 msgid "Max value"
-msgstr ""
+msgstr "Maximaler Wert"
 
 #: models.py:88
 msgid "Value"
-msgstr ""
+msgstr "Wert"
 
 #: models.py:110
 msgid "Form submission"
-msgstr ""
+msgstr "Formular Ãœbertragung"
 
 #: models.py:111
 msgid "Form submissions"
-msgstr ""
+msgstr "Formular Ãœbertragungen"
 
 #: validators.py:8
 #, python-format
 msgid ""
 "You have to choose at least %(limit_value)d options (chosen %(show_value)d)."
-msgstr ""
+msgstr "Sie mÃ¼ssen mindestens %(limit_value)d Optionen (chosen %(show_value)d) angeben."
 
 #: validators.py:14
 #, python-format
 msgid ""
 "You can't choose more than %(limit_value)d options (chosen %(show_value)d)."
-msgstr ""
+msgstr "Sie kÃ¶nnen nicht mehr als %(limit_value)d Optionen (chosen %(show_value)d) angeben."
 
 #: views.py:39
 msgid "The form has been sent."
-msgstr ""
+msgstr "Das Formular wurde versendet."
