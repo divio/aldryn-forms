@@ -7,7 +7,9 @@ from django.utils.translation import ugettext_lazy as _
 
 from cms.plugin_base import CMSPluginBase
 from cms.plugin_pool import plugin_pool
+
 from captcha.fields import ReCaptchaField
+from captcha.widgets import ReCaptcha
 
 from aldryn_forms import models
 from .forms import (
@@ -315,7 +317,7 @@ class CaptchaField(Field):
     name = _('Captcha Field')
     form = CaptchaFieldForm
     form_field = ReCaptchaField
-    form_field_widget = form_field.widget
+    form_field_widget = ReCaptcha
     form_field_enabled_options = ['label', 'error_messages']
 
 
