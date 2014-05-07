@@ -75,19 +75,20 @@ class FieldPluginBase(CMSPlugin):
     class Meta:
         abstract = True
 
-    def copy_relations(self, oldinstance):
-        for option in oldinstance.option_set.all():
-            option.pk = None  # copy on save
-            option.field = self
-            option.save()
-
     def __unicode__(self):
         return self.label or str(self.pk)
 
 
 class FieldPlugin(FieldPluginBase):
+
     class Meta:
         db_table = 'cmsplugin_fieldplugin'
+
+    def copy_relations(self, oldinstance):
+        for option in oldinstance.option_set.all():
+            option.pk = None  # copy on save
+            option.field = self
+            option.save()
 
 
 class TextAreaFieldPlugin(FieldPluginBase):
