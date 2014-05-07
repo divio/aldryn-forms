@@ -85,6 +85,18 @@ class TextFieldForm(MinMaxValueForm):
                   'min_value', 'max_value', 'required', 'required_message']
 
 
+class TextAreaFieldForm(TextFieldForm):
+
+    def __init__(self, *args, **kwargs):
+        super(TextAreaFieldForm, self).__init__(*args, **kwargs)
+        self.fields['max_value'].required = False
+
+    class Meta:
+        fields = ['label', 'placeholder_text', 'help_text', 'text_area_columns',
+                  'text_area_rows', 'min_value', 'max_value', 'required', 'required_message']
+
+
+
 class MultipleSelectFieldForm(MinMaxValueForm):
 
     def __init__(self, *args, **kwargs):

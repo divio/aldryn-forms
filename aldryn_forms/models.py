@@ -54,7 +54,7 @@ class FieldsetPlugin(CMSPlugin):
         return self.legend or str(self.pk)
 
 
-class FieldPlugin(CMSPlugin):
+class FieldPluginBase(CMSPlugin):
 
     label = models.CharField(_('Label'), max_length=50, blank=True)
     required = models.BooleanField(_('Field is required'), default=True)
@@ -72,6 +72,9 @@ class FieldPlugin(CMSPlugin):
     min_value = models.PositiveIntegerField(_('Min value'), blank=True, null=True)
     max_value = models.PositiveIntegerField(_('Max value'), blank=True, null=True)
 
+    class Meta:
+        abstract = True
+
     def copy_relations(self, oldinstance):
         for option in oldinstance.option_set.all():
             option.pk = None  # copy on save
@@ -80,6 +83,17 @@ class FieldPlugin(CMSPlugin):
 
     def __unicode__(self):
         return self.label or str(self.pk)
+
+
+class FieldPlugin(FieldPluginBase):
+    class Meta:
+        db_table = 'cmsplugin_fieldplugin'
+
+
+class TextAreaFieldPlugin(FieldPluginBase):
+
+    text_area_columns = models.PositiveIntegerField(verbose_name=_('columns'), blank=True, null=True)
+    text_area_rows = models.PositiveIntegerField(verbose_name=_('rows'), blank=True, null=True)
 
 
 class Option(models.Model):

@@ -15,6 +15,7 @@ from aldryn_forms import models
 from .forms import (
     FormPluginForm,
     TextFieldForm,
+    TextAreaFieldForm,
     BooleanFieldForm,
     MultipleSelectFieldForm,
     SelectFieldForm,
@@ -40,9 +41,9 @@ class FieldContainer(FormElement):
     def get_form_fields(self, instance):
         form_fields = {}
         for child_plugin_instance in instance.child_plugin_instances:
-            child_plugin = child_plugin_instance.get_plugin_instance()[1]
-            if hasattr(child_plugin, 'get_form_fields'):
-                fields = child_plugin.get_form_fields(instance=child_plugin_instance)
+            plugin_instance, child_plugin = child_plugin_instance.get_plugin_instance()
+            if plugin_instance and hasattr(child_plugin, 'get_form_fields'):
+                fields = child_plugin.get_form_fields(instance=plugin_instance)
                 form_fields.update(fields)
         return form_fields
 
@@ -194,6 +195,11 @@ class Field(FormElement):
             fieldsets.append(
                 (_('Required'), {'fields': required_fields}))
 
+        extra_fields = filter(in_fields, ['text_area_columns', 'text_area_rows'])
+        if extra_fields:
+            fieldsets.append(
+                (_('Extra'), {'fields': extra_fields}))
+
         return fieldsets
 
     def get_error_messages(self, instance):
@@ -239,7 +245,31 @@ plugin_pool.register_plugin(TextField)
 class TextAreaField(TextField):
 
     name = _('Text Area Field')
+    model = models.TextAreaFieldPlugin
+    form = TextAreaFieldForm
     form_field_widget = forms.Textarea
+
+    def get_form_field_widget(self, instance):
+        widget = super(TextAreaField, self).get_form_field_widget(instance)
+
+        # django adds the cols and rows attributes by default.
+        # remove them if the user did not specify a value for them.
+        if not instance.text_area_columns:
+            del widget.attrs['cols']
+
+        if not instance.text_area_rows:
+            del widget.attrs['rows']
+        return widget
+
+    def get_form_field_widget_attrs(self, instance):
+        attrs = super(TextAreaField, self).get_form_field_widget_attrs(instance)
+
+        if instance.text_area_columns:
+            attrs['cols'] = instance.text_area_columns
+        if instance.text_area_rows:
+            attrs['rows'] = instance.text_area_rows
+        return attrs
+
 
 plugin_pool.register_plugin(TextAreaField)
 

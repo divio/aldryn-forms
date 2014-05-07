@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2014-04-29 11:19-0400\n"
+"POT-Creation-Date: 2014-05-07 08:31-0400\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -18,51 +18,59 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
-#: cms_app.py:9 cms_plugins.py:28
+#: cms_app.py:9 cms_plugins.py:31
 msgid "Forms"
 msgstr ""
 
-#: cms_plugins.py:51
+#: cms_plugins.py:54
 msgid "Form"
 msgstr ""
 
-#: cms_plugins.py:97
+#: cms_plugins.py:100
 msgid "Fieldset"
 msgstr ""
 
-#: cms_plugins.py:133
+#: cms_plugins.py:185
 msgid "General options"
 msgstr ""
 
-#: cms_plugins.py:139
+#: cms_plugins.py:191
 msgid "Min and max values"
 msgstr ""
 
-#: cms_plugins.py:144
+#: cms_plugins.py:196
 msgid "Required"
 msgstr ""
 
-#: cms_plugins.py:157
+#: cms_plugins.py:201
+msgid "Extra"
+msgstr ""
+
+#: cms_plugins.py:222
 msgid "Text Field"
 msgstr ""
 
-#: cms_plugins.py:180
+#: cms_plugins.py:247
+msgid "Text Area Field"
+msgstr ""
+
+#: cms_plugins.py:279
 msgid "Yes/No Field"
 msgstr ""
 
-#: cms_plugins.py:201
+#: cms_plugins.py:301
 msgid "Select Field"
 msgstr ""
 
-#: cms_plugins.py:219
+#: cms_plugins.py:323
 msgid "Multiple Select Field"
 msgstr ""
 
-#: cms_plugins.py:242
+#: cms_plugins.py:347
 msgid "Captcha Field"
 msgstr ""
 
-#: cms_plugins.py:258
+#: cms_plugins.py:361
 msgid "Submit Button"
 msgstr ""
 
@@ -94,19 +102,19 @@ msgstr ""
 msgid "Maximum number of characters to type."
 msgstr ""
 
-#: forms.py:93
+#: forms.py:105
 msgid "Min choices"
 msgstr ""
 
-#: forms.py:94
+#: forms.py:106
 msgid "Required amount of elements to chose."
 msgstr ""
 
-#: forms.py:96
+#: forms.py:108
 msgid "Max choices"
 msgstr ""
 
-#: forms.py:97
+#: forms.py:109
 msgid "Maximum amount of elements to chose."
 msgstr ""
 
@@ -154,7 +162,7 @@ msgstr ""
 msgid "Legend"
 msgstr ""
 
-#: models.py:59 models.py:96
+#: models.py:59 models.py:110
 msgid "Label"
 msgstr ""
 
@@ -194,15 +202,23 @@ msgstr ""
 msgid "Max value"
 msgstr ""
 
-#: models.py:88
+#: models.py:95
+msgid "columns"
+msgstr ""
+
+#: models.py:96
+msgid "rows"
+msgstr ""
+
+#: models.py:102
 msgid "Value"
 msgstr ""
 
-#: models.py:110
+#: models.py:124
 msgid "Form submission"
 msgstr ""
 
-#: models.py:111
+#: models.py:125
 msgid "Form submissions"
 msgstr ""
 
