@@ -72,6 +72,8 @@ class FieldPluginBase(CMSPlugin):
     min_value = models.PositiveIntegerField(_('Min value'), blank=True, null=True)
     max_value = models.PositiveIntegerField(_('Max value'), blank=True, null=True)
 
+    input_html_class = models.CharField(verbose_name=_('input html class'), max_length=200, blank=True)
+
     class Meta:
         abstract = True
 

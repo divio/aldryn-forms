@@ -8,9 +8,6 @@ from django.utils.translation import ugettext_lazy as _
 from cms.plugin_base import CMSPluginBase
 from cms.plugin_pool import plugin_pool
 
-from captcha.fields import ReCaptchaField
-from captcha.widgets import ReCaptcha
-
 from aldryn_forms import models
 from .forms import (
     FormPluginForm,
@@ -161,6 +158,8 @@ class Field(FormElement):
         attrs = {}
         if instance.placeholder_text:
             attrs['placeholder'] = instance.placeholder_text
+        if instance.input_html_class:
+            attrs['class'] = instance.input_html_class
         return attrs
 
     def get_form_field_widget_kwargs(self, instance):
@@ -195,7 +194,7 @@ class Field(FormElement):
             fieldsets.append(
                 (_('Required'), {'fields': required_fields}))
 
-        extra_fields = filter(in_fields, ['text_area_columns', 'text_area_rows'])
+        extra_fields = filter(in_fields, ['input_html_class', 'text_area_columns', 'text_area_rows'])
         if extra_fields:
             fieldsets.append(
                 (_('Extra'), {'fields': extra_fields}))
@@ -342,17 +341,25 @@ class MultipleSelectField(SelectField):
 plugin_pool.register_plugin(MultipleSelectField)
 
 
-class CaptchaField(Field):
 
-    name = _('Captcha Field')
-    form = CaptchaFieldForm
-    form_field = ReCaptchaField
-    form_field_widget = ReCaptcha
-    form_field_enabled_options = ['label', 'error_messages']
+try:
+    from captcha.fields import ReCaptchaField
+    from captcha.widgets import ReCaptcha
+except ImportError:
+    pass
+else:
+    # Don't like doing this. But we shouldn't force recaptcha.
+    class CaptchaField(Field):
+
+        name = _('Captcha Field')
+        form = CaptchaFieldForm
+        form_field = ReCaptchaField
+        form_field_widget = ReCaptcha
+        form_field_enabled_options = ['label', 'error_messages']
 
 
-if getattr(settings, 'RECAPTCHA_PUBLIC_KEY', None) and getattr(settings, 'RECAPTCHA_PRIVATE_KEY', None):
-    plugin_pool.register_plugin(CaptchaField)
+    if getattr(settings, 'RECAPTCHA_PUBLIC_KEY', None) and getattr(settings, 'RECAPTCHA_PRIVATE_KEY', None):
+        plugin_pool.register_plugin(CaptchaField)
 
 
 class SubmitButton(FormElement):
