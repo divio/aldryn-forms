@@ -32,7 +32,6 @@ class FormElement(CMSPluginBase):
 
 
 class FieldContainer(FormElement):
-
     allow_children = True
 
     def get_form_fields(self, instance):
@@ -46,12 +45,13 @@ class FieldContainer(FormElement):
 
 
 class FormPlugin(FieldContainer):
-
     render_template = 'aldryn_forms/form.html'
     name = _('Form')
     model = models.FormPlugin
     form = FormPluginForm
     filter_horizontal = ['recipients']
+    allow_children = True
+    child_classes = ['Fieldset']
 
     fieldsets = [
         (
@@ -92,18 +92,22 @@ plugin_pool.register_plugin(FormPlugin)
 
 
 class Fieldset(FieldContainer):
-
     render_template = 'aldryn_forms/fieldset.html'
     name = _('Fieldset')
     model = models.FieldsetPlugin
+    require_parent = True
+    parent_classes = ['FormPlugin']
+    allow_children = True
+    child_classes = ['TextField', 'TextAreaField', 'BooleanField', 'SelectField', 'MultipleSelectField', 'SubmitButton']
 
 plugin_pool.register_plugin(Fieldset)
 
 
 class Field(FormElement):
-
     render_template = 'aldryn_forms/field.html'
     model = models.FieldPlugin
+    require_parent = True
+    parent_classes = ['Fieldset']
 
     # Custom field related attributes
     form_field = None
@@ -217,7 +221,6 @@ class Field(FormElement):
 
 
 class TextField(Field):
-
     name = _('Text Field')
     form = TextFieldForm
     form_field = forms.CharField
@@ -242,7 +245,6 @@ plugin_pool.register_plugin(TextField)
 
 
 class TextAreaField(TextField):
-
     name = _('Text Area Field')
     model = models.TextAreaFieldPlugin
     form = TextAreaFieldForm
@@ -274,7 +276,6 @@ plugin_pool.register_plugin(TextAreaField)
 
 
 class BooleanField(Field):
-
     name = _('Yes/No Field')
     form = BooleanFieldForm
     form_field = forms.BooleanField
@@ -291,12 +292,10 @@ plugin_pool.register_plugin(BooleanField)
 
 
 class SelectOptionInline(TabularInline):
-
     model = models.Option
 
 
 class SelectField(Field):
-
     name = _('Select Field')
     form = SelectFieldForm
     form_field = forms.ModelChoiceField
@@ -318,7 +317,6 @@ plugin_pool.register_plugin(SelectField)
 
 
 class MultipleSelectField(SelectField):
-
     name = _('Multiple Select Field')
     form = MultipleSelectFieldForm
     form_field = forms.ModelMultipleChoiceField
@@ -341,7 +339,6 @@ class MultipleSelectField(SelectField):
 plugin_pool.register_plugin(MultipleSelectField)
 
 
-
 try:
     from captcha.fields import ReCaptchaField
     from captcha.widgets import ReCaptcha
@@ -350,23 +347,23 @@ except ImportError:
 else:
     # Don't like doing this. But we shouldn't force recaptcha.
     class CaptchaField(Field):
-
         name = _('Captcha Field')
         form = CaptchaFieldForm
         form_field = ReCaptchaField
         form_field_widget = ReCaptcha
         form_field_enabled_options = ['label', 'error_messages']
 
-
     if getattr(settings, 'RECAPTCHA_PUBLIC_KEY', None) and getattr(settings, 'RECAPTCHA_PRIVATE_KEY', None):
         plugin_pool.register_plugin(CaptchaField)
+        Fieldset.child_classes += ['CaptchaField']
 
 
 class SubmitButton(FormElement):
-
     render_template = 'aldryn_forms/submit_button.html'
     name = _('Submit Button')
     model = models.ButtonPlugin
+    require_parent = True
+    parent_classes = ['Fieldset']
 
     def get_form_fields(self, instance):
         return {}
