@@ -56,7 +56,7 @@ class FormPlugin(FieldContainer):
     fieldsets = [
         (
             'General options',
-            {'fields': ['name', 'error_message', 'recipients']}
+            {'fields': ['name', 'error_message', 'recipients', 'html_class']}
         ),
         (
             'Redirect',
