@@ -333,8 +333,14 @@ class MultipleSelectField(SelectField):
         if instance.min_value:
             validators.append(MinChoicesValidator(limit_value=instance.min_value))
         if instance.max_value:
-            validators.append(MaxChoicesValidator(limit_value=instance.min_value))
+            validators.append(MaxChoicesValidator(limit_value=instance.max_value))
         return validators
+
+    def get_form_field_kwargs(self, instance):
+        kwargs = super(MultipleSelectField, self).get_form_field_kwargs(instance)
+        if hasattr(instance, 'min_value') and instance.min_value == 0:
+            kwargs['required'] = False
+        return kwargs
 
 plugin_pool.register_plugin(MultipleSelectField)
 
