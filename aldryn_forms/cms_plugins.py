@@ -50,8 +50,6 @@ class FormPlugin(FieldContainer):
     model = models.FormPlugin
     form = FormPluginForm
     filter_horizontal = ['recipients']
-    allow_children = True
-    child_classes = ['Fieldset']
 
     fieldsets = [
         (
@@ -95,10 +93,6 @@ class Fieldset(FieldContainer):
     render_template = 'aldryn_forms/fieldset.html'
     name = _('Fieldset')
     model = models.FieldsetPlugin
-    require_parent = True
-    parent_classes = ['FormPlugin']
-    allow_children = True
-    child_classes = ['TextField', 'TextAreaField', 'BooleanField', 'SelectField', 'MultipleSelectField', 'SubmitButton']
 
 plugin_pool.register_plugin(Fieldset)
 
@@ -106,8 +100,6 @@ plugin_pool.register_plugin(Fieldset)
 class Field(FormElement):
     render_template = 'aldryn_forms/field.html'
     model = models.FieldPlugin
-    require_parent = True
-    parent_classes = ['Fieldset']
 
     # Custom field related attributes
     form_field = None
@@ -361,15 +353,12 @@ else:
 
     if getattr(settings, 'RECAPTCHA_PUBLIC_KEY', None) and getattr(settings, 'RECAPTCHA_PRIVATE_KEY', None):
         plugin_pool.register_plugin(CaptchaField)
-        Fieldset.child_classes += ['CaptchaField']
 
 
 class SubmitButton(FormElement):
     render_template = 'aldryn_forms/submit_button.html'
     name = _('Submit Button')
     model = models.ButtonPlugin
-    require_parent = True
-    parent_classes = ['Fieldset']
 
     def get_form_fields(self, instance):
         return {}
