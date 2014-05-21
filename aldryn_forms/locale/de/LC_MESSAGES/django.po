@@ -32,7 +32,7 @@ msgstr "Text"
 
 #: cms_plugins.py:185
 msgid "General options"
-msgstr ""
+msgstr "Allgemeine Einstellungen"
 
 #: cms_plugins.py:191
 msgid "Min and max values"
@@ -51,9 +51,8 @@ msgid "Text Field"
 msgstr "Textfeld"
 
 #: cms_plugins.py:247
-#, fuzzy
 msgid "Text Area Field"
-msgstr "Textfeld"
+msgstr "Text-Bereich-Feld"
 
 #: cms_plugins.py:279
 msgid "Yes/No Field"
@@ -77,27 +76,27 @@ msgstr "Senden Button"
 
 #: forms.py:25
 msgid "Please provide CMS page for redirect."
-msgstr "Bitte CMS Seite angeben fÃ¼r die Weiterleitung."
+msgstr "Bitte CMS Seite angeben für die Weiterleitung."
 
 #: forms.py:29
 msgid "Please provide an absolute URL for redirect."
-msgstr "Bitte eine absolute URL angeben fÃ¼r die Weiterleitung"
+msgstr "Bitte eine absolute URL angeben für die Weiterleitung"
 
 #: forms.py:67
 msgid "Min value can not be greater then max value."
-msgstr "Der Mindestwert kann nicht grÃ¶sser sein als der maximale Wert"
+msgstr "Der Mindestwert kann nicht grösser sein als der maximale Wert"
 
 #: forms.py:76
 msgid "Min length"
-msgstr "MindestlÃ¤nge"
+msgstr "Mindestlänge"
 
 #: forms.py:77
 msgid "Required number of characters to type."
-msgstr "BenÃ¶tigte Anzahl von getippten Zeichen."
+msgstr "Benötigte Anzahl von getippten Zeichen."
 
 #: forms.py:79
 msgid "Max length"
-msgstr "Maximale LÃ¤nge"
+msgstr "Maximale Länge"
 
 #: forms.py:80
 msgid "Maximum number of characters to type."
@@ -109,15 +108,15 @@ msgstr "Mindestauswahl"
 
 #: forms.py:106
 msgid "Required amount of elements to chose."
-msgstr "BenÃ¶tigte Anzahl von ausgewÃ¤hlten Elementen"
+msgstr "Benötigte Anzahl von ausgewählten Elementen"
 
 #: forms.py:108
 msgid "Max choices"
-msgstr "Maximale Auswahl"
+msgstr "Maximale Anzahl Auswahlmöglichkeiten"
 
 #: forms.py:109
 msgid "Maximum amount of elements to chose."
-msgstr "Maximale Anzahl der gewÃ¤hlten Auswahl."
+msgstr "Maximale Anzahl der gewählten Auswahl."
 
 #: models.py:21 models.py:32
 msgid "CMS Page"
@@ -142,7 +141,7 @@ msgstr "Fehlermeldung"
 #: models.py:27
 msgid "An error message that will be displayed if the form doesn't validate."
 msgstr ""
-"Eine Fehlermeldung, welche angezeigt wird, wenn das Formular nicht gÃ¼ltig "
+"Eine Fehlermeldung, welche angezeigt wird, wenn das Formular nicht gültig "
 "ist."
 
 #: models.py:29
@@ -157,7 +156,7 @@ msgstr ""
 
 #: models.py:34
 msgid "Recipients"
-msgstr "EmpfÃ¤nger"
+msgstr "Empfänger"
 
 #: models.py:36
 msgid "People who will get the form content via e-mail."
@@ -181,7 +180,7 @@ msgid ""
 "field is required\"."
 msgstr ""
 "Fehlermeldung welche angezeigt wird, wenn das erforderliche Feld leer "
-"gelassen wird. Standard: \"Dieses Feld muss ausgefÃ¼llt werden\"."
+"gelassen wird. Standard: \"Dieses Feld muss ausgefüllt werden\"."
 
 #: models.py:64
 msgid "Placeholder text"
@@ -192,7 +191,7 @@ msgid ""
 "Default text in a form. Disapears when user starts typing. Example: "
 "\"email@exmaple.com\""
 msgstr ""
-"Standardtext im Formular. Verschwindet, sobald der Benutzer anfÃ¤ngt zu "
+"Standardtext im Formular. Verschwindet, sobald der Benutzer anfängt zu "
 "tippen. Beispiel: \"email@exmaple.com\""
 
 #: models.py:67
@@ -202,7 +201,7 @@ msgstr "Hilfetext"
 #: models.py:68
 msgid "Explanatory text displayed next to input field. Just like this one."
 msgstr ""
-"ErklÃ¤render Text, welcher neben dem Eingabefeld angezeigt wird. Genau wie "
+"Erklärender Text, welcher neben dem Eingabefeld angezeigt wird. Genau wie "
 "dieser Text."
 
 #: models.py:72
@@ -215,11 +214,11 @@ msgstr "Maximaler Wert"
 
 #: models.py:95
 msgid "columns"
-msgstr ""
+msgstr "Spalten"
 
 #: models.py:96
 msgid "rows"
-msgstr ""
+msgstr "Zeilen"
 
 #: models.py:102
 msgid "Value"
@@ -227,18 +226,18 @@ msgstr "Wert"
 
 #: models.py:124
 msgid "Form submission"
-msgstr "Formular Ãœbertragung"
+msgstr "Formular Übertragung"
 
 #: models.py:125
 msgid "Form submissions"
-msgstr "Formular Ãœbertragungen"
+msgstr "Formular Übertragungen"
 
 #: validators.py:8
 #, python-format
 msgid ""
 "You have to choose at least %(limit_value)d options (chosen %(show_value)d)."
 msgstr ""
-"Sie mÃ¼ssen mindestens %(limit_value)d Optionen (chosen %(show_value)d) "
+"Sie müssen mindestens %(limit_value)d Optionen (chosen %(show_value)d) "
 "angeben."
 
 #: validators.py:14
@@ -246,7 +245,7 @@ msgstr ""
 msgid ""
 "You can't choose more than %(limit_value)d options (chosen %(show_value)d)."
 msgstr ""
-"Sie kÃ¶nnen nicht mehr als %(limit_value)d Optionen (chosen %(show_value)d) "
+"Sie können nicht mehr als %(limit_value)d Optionen (chosen %(show_value)d) "
 "angeben."
 
 #: views.py:39
