@@ -18,6 +18,7 @@ def get_plugin_tree(model, **kwargs):
     This is ok as forms shouldn't form very deep trees.
     """
     plugin = get_object_or_404(model, **kwargs)
+    plugin.parent = None
     current_level = [plugin]
     plugin_list = [plugin]
     while get_next_level(current_level).exists():
