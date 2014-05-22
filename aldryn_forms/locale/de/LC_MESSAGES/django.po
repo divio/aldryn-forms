@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2014-05-07 08:31-0400\n"
+"POT-Creation-Date: 2014-05-22 16:38+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -18,59 +18,59 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
-#: cms_app.py:9 cms_plugins.py:31
+#: cms_app.py:9 cms_plugins.py:28
 msgid "Forms"
 msgstr "Formulare"
 
-#: cms_plugins.py:54
+#: cms_plugins.py:49
 msgid "Form"
 msgstr "Formular"
 
-#: cms_plugins.py:100
+#: cms_plugins.py:94
 msgid "Fieldset"
 msgstr "Text"
 
-#: cms_plugins.py:185
+#: cms_plugins.py:180
 msgid "General options"
 msgstr "Allgemeine Einstellungen"
 
-#: cms_plugins.py:191
+#: cms_plugins.py:186
 msgid "Min and max values"
 msgstr "Min und Max Werte"
 
-#: cms_plugins.py:196
+#: cms_plugins.py:191
 msgid "Required"
 msgstr "Notwendig"
 
-#: cms_plugins.py:201
+#: cms_plugins.py:196
 msgid "Extra"
 msgstr ""
 
-#: cms_plugins.py:222
+#: cms_plugins.py:216
 msgid "Text Field"
 msgstr "Textfeld"
 
-#: cms_plugins.py:247
+#: cms_plugins.py:240
 msgid "Text Area Field"
 msgstr "Text-Bereich-Feld"
 
-#: cms_plugins.py:279
+#: cms_plugins.py:271
 msgid "Yes/No Field"
 msgstr "Radiobutton"
 
-#: cms_plugins.py:301
+#: cms_plugins.py:291
 msgid "Select Field"
 msgstr "Auswahlfeld"
 
-#: cms_plugins.py:323
+#: cms_plugins.py:312
 msgid "Multiple Select Field"
 msgstr "Mehrfach Auswahl"
 
-#: cms_plugins.py:347
+#: cms_plugins.py:348
 msgid "Captcha Field"
 msgstr "Captcha Feld"
 
-#: cms_plugins.py:361
+#: cms_plugins.py:360
 msgid "Submit Button"
 msgstr "Senden Button"
 
@@ -134,7 +134,7 @@ msgstr "Name"
 msgid "Used to filter out form submissions."
 msgstr "Benutzt um die Formular-Ãœbertragung zu filtern."
 
-#: models.py:26 models.py:61
+#: models.py:26 models.py:63
 msgid "Error message"
 msgstr "Fehlermeldung"
 
@@ -162,19 +162,23 @@ msgstr "Empfänger"
 msgid "People who will get the form content via e-mail."
 msgstr "Personen welche das Formular per E-Mail erhalten"
 
-#: models.py:51
+#: models.py:37 models.py:53 models.py:77 models.py:116
+msgid "custom css classes"
+msgstr "CSS Klassen"
+
+#: models.py:52
 msgid "Legend"
 msgstr "Legende"
 
-#: models.py:59 models.py:110
+#: models.py:61 models.py:115
 msgid "Label"
 msgstr "Beschreibung"
 
-#: models.py:60
+#: models.py:62
 msgid "Field is required"
 msgstr "Feld ist zwingend erforderlich"
 
-#: models.py:62
+#: models.py:64
 msgid ""
 "Error message displayed if the required field is left empty. Default: \"This "
 "field is required\"."
@@ -182,11 +186,11 @@ msgstr ""
 "Fehlermeldung welche angezeigt wird, wenn das erforderliche Feld leer "
 "gelassen wird. Standard: \"Dieses Feld muss ausgefüllt werden\"."
 
-#: models.py:64
+#: models.py:66
 msgid "Placeholder text"
 msgstr "Platzhalter Text"
 
-#: models.py:65
+#: models.py:67
 msgid ""
 "Default text in a form. Disapears when user starts typing. Example: "
 "\"email@exmaple.com\""
@@ -194,41 +198,41 @@ msgstr ""
 "Standardtext im Formular. Verschwindet, sobald der Benutzer anfängt zu "
 "tippen. Beispiel: \"email@exmaple.com\""
 
-#: models.py:67
+#: models.py:69
 msgid "Help text"
 msgstr "Hilfetext"
 
-#: models.py:68
+#: models.py:70
 msgid "Explanatory text displayed next to input field. Just like this one."
 msgstr ""
 "Erklärender Text, welcher neben dem Eingabefeld angezeigt wird. Genau wie "
 "dieser Text."
 
-#: models.py:72
+#: models.py:74
 msgid "Min value"
 msgstr "Mindestwert"
 
-#: models.py:73
+#: models.py:75
 msgid "Max value"
 msgstr "Maximaler Wert"
 
-#: models.py:95
+#: models.py:100
 msgid "columns"
 msgstr "Spalten"
 
-#: models.py:96
+#: models.py:101
 msgid "rows"
 msgstr "Zeilen"
 
-#: models.py:102
+#: models.py:107
 msgid "Value"
 msgstr "Wert"
 
-#: models.py:124
+#: models.py:130
 msgid "Form submission"
 msgstr "Formular Übertragung"
 
-#: models.py:125
+#: models.py:131
 msgid "Form submissions"
 msgstr "Formular Übertragungen"
 

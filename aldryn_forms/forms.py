@@ -42,13 +42,13 @@ class BooleanFieldForm(forms.ModelForm):
         super(BooleanFieldForm, self).__init__(*args, **kwargs)
 
     class Meta:
-        fields = ['label', 'help_text', 'required', 'required_message', 'input_html_class']
+        fields = ['label', 'help_text', 'required', 'required_message', 'custom_classes']
 
 
 class SelectFieldForm(forms.ModelForm):
 
     class Meta:
-        fields = ['label', 'help_text', 'required', 'required_message', 'input_html_class']
+        fields = ['label', 'help_text', 'required', 'required_message', 'custom_classes']
 
 
 class CaptchaFieldForm(forms.ModelForm):
@@ -82,7 +82,7 @@ class TextFieldForm(MinMaxValueForm):
 
     class Meta:
         fields = ['label', 'placeholder_text', 'help_text',
-                  'min_value', 'max_value', 'required', 'required_message', 'input_html_class']
+                  'min_value', 'max_value', 'required', 'required_message', 'custom_classes']
 
 
 class TextAreaFieldForm(TextFieldForm):
@@ -93,7 +93,7 @@ class TextAreaFieldForm(TextFieldForm):
 
     class Meta:
         fields = ['label', 'placeholder_text', 'help_text', 'text_area_columns',
-                  'text_area_rows', 'min_value', 'max_value', 'required', 'required_message', 'input_html_class']
+                  'text_area_rows', 'min_value', 'max_value', 'required', 'required_message', 'custom_classes']
 
 
 
@@ -110,4 +110,4 @@ class MultipleSelectFieldForm(MinMaxValueForm):
 
     class Meta:
         # 'required' and 'required_message' depend on min_value field validator
-        fields = ['label', 'help_text', 'min_value', 'max_value', 'input_html_class']
+        fields = ['label', 'help_text', 'min_value', 'max_value', 'custom_classes']

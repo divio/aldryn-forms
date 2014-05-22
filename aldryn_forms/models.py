@@ -34,7 +34,7 @@ class FormPlugin(CMSPlugin):
     recipients = models.ManyToManyField(User, verbose_name=_('Recipients'), blank=True,
                                         # through='aldryn_forms.FormToRecipient',
                                         help_text=_('People who will get the form content via e-mail.'))
-    html_class = models.CharField(verbose_name=_('html class'), max_length=200, blank=True)
+    custom_classes = models.CharField(verbose_name=_('custom css classes'), max_length=200, blank=True)
 
     def __unicode__(self):
         return self.name
@@ -50,7 +50,7 @@ class FormPlugin(CMSPlugin):
 class FieldsetPlugin(CMSPlugin):
 
     legend = models.CharField(_('Legend'), max_length=50, blank=True)
-    html_class = models.CharField(verbose_name=_('html class'), max_length=200, blank=True)
+    custom_classes = models.CharField(verbose_name=_('custom css classes'), max_length=200, blank=True)
 
     def __unicode__(self):
         return self.legend or str(self.pk)
@@ -74,7 +74,7 @@ class FieldPluginBase(CMSPlugin):
     min_value = models.PositiveIntegerField(_('Min value'), blank=True, null=True)
     max_value = models.PositiveIntegerField(_('Max value'), blank=True, null=True)
 
-    input_html_class = models.CharField(verbose_name=_('input html class'), max_length=200, blank=True)
+    custom_classes = models.CharField(verbose_name=_('custom css classes'), max_length=200, blank=True)
 
     class Meta:
         abstract = True
@@ -113,7 +113,7 @@ class Option(models.Model):
 class ButtonPlugin(CMSPlugin):
 
     label = models.CharField(_('Label'), max_length=50)
-    input_html_class = models.CharField(verbose_name=_('input html class'), max_length=200, blank=True)
+    custom_classes = models.CharField(verbose_name=_('custom css classes'), max_length=200, blank=True)
 
     def __unicode__(self):
         return self.label

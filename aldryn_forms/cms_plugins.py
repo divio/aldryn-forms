@@ -54,7 +54,7 @@ class FormPlugin(FieldContainer):
     fieldsets = [
         (
             'General options',
-            {'fields': ['name', 'error_message', 'recipients', 'html_class']}
+            {'fields': ['name', 'error_message', 'recipients', 'custom_classes']}
         ),
         (
             'Redirect',
@@ -154,8 +154,8 @@ class Field(FormElement):
         attrs = {}
         if instance.placeholder_text:
             attrs['placeholder'] = instance.placeholder_text
-        if instance.input_html_class:
-            attrs['class'] = instance.input_html_class
+        if instance.custom_classes:
+            attrs['class'] = instance.custom_classes
         return attrs
 
     def get_form_field_widget_kwargs(self, instance):
@@ -190,7 +190,7 @@ class Field(FormElement):
             fieldsets.append(
                 (_('Required'), {'fields': required_fields}))
 
-        extra_fields = filter(in_fields, ['input_html_class', 'text_area_columns', 'text_area_rows'])
+        extra_fields = filter(in_fields, ['custom_classes', 'text_area_columns', 'text_area_rows'])
         if extra_fields:
             fieldsets.append(
                 (_('Extra'), {'fields': extra_fields}))

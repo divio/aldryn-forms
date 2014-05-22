@@ -7,7 +7,7 @@
 </script>
 {% endif %}
 
-<form class="aldryn-forms-form{% if instance.html_class %} {{ instance.html_class }}{% endif %}" action="." method="POST">
+<form class="aldryn-forms-form{% if instance.custom_classes %} {{ instance.custom_classes }}{% endif %}" action="." method="POST">
 	{% csrf_token %}
 	<ul>
 		{% for error in form.non_field_errors %}
