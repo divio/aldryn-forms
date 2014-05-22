@@ -1,0 +1,238 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2014-05-07 08:31-0400\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: cms_app.py:9 cms_plugins.py:31
+msgid "Forms"
+msgstr ""
+
+#: cms_plugins.py:54
+msgid "Form"
+msgstr ""
+
+#: cms_plugins.py:100
+msgid "Fieldset"
+msgstr ""
+
+#: cms_plugins.py:185
+msgid "General options"
+msgstr ""
+
+#: cms_plugins.py:191
+msgid "Min and max values"
+msgstr ""
+
+#: cms_plugins.py:196
+msgid "Required"
+msgstr ""
+
+#: cms_plugins.py:201
+msgid "Extra"
+msgstr ""
+
+#: cms_plugins.py:222
+msgid "Text Field"
+msgstr ""
+
+#: cms_plugins.py:247
+msgid "Text Area Field"
+msgstr ""
+
+#: cms_plugins.py:279
+msgid "Yes/No Field"
+msgstr ""
+
+#: cms_plugins.py:301
+msgid "Select Field"
+msgstr ""
+
+#: cms_plugins.py:323
+msgid "Multiple Select Field"
+msgstr ""
+
+#: cms_plugins.py:347
+msgid "Captcha Field"
+msgstr ""
+
+#: cms_plugins.py:361
+msgid "Submit Button"
+msgstr ""
+
+#: forms.py:25
+msgid "Please provide CMS page for redirect."
+msgstr ""
+
+#: forms.py:29
+msgid "Please provide an absolute URL for redirect."
+msgstr ""
+
+#: forms.py:67
+msgid "Min value can not be greater then max value."
+msgstr ""
+
+#: forms.py:76
+msgid "Min length"
+msgstr ""
+
+#: forms.py:77
+msgid "Required number of characters to type."
+msgstr ""
+
+#: forms.py:79
+msgid "Max length"
+msgstr ""
+
+#: forms.py:80
+msgid "Maximum number of characters to type."
+msgstr ""
+
+#: forms.py:105
+msgid "Min choices"
+msgstr ""
+
+#: forms.py:106
+msgid "Required amount of elements to chose."
+msgstr ""
+
+#: forms.py:108
+msgid "Max choices"
+msgstr ""
+
+#: forms.py:109
+msgid "Maximum amount of elements to chose."
+msgstr ""
+
+#: models.py:21 models.py:32
+msgid "CMS Page"
+msgstr ""
+
+#: models.py:22 models.py:33
+msgid "Absolute URL"
+msgstr ""
+
+#: models.py:25
+msgid "Name"
+msgstr ""
+
+#: models.py:25
+msgid "Used to filter out form submissions."
+msgstr ""
+
+#: models.py:26 models.py:61
+msgid "Error message"
+msgstr ""
+
+#: models.py:27
+msgid "An error message that will be displayed if the form doesn't validate."
+msgstr ""
+
+#: models.py:29
+msgid "Redirect to"
+msgstr ""
+
+#: models.py:30
+msgid "Where to redirect the user when the form has been successfully sent?"
+msgstr ""
+
+#: models.py:34
+msgid "Recipients"
+msgstr ""
+
+#: models.py:36
+msgid "People who will get the form content via e-mail."
+msgstr ""
+
+#: models.py:51
+msgid "Legend"
+msgstr ""
+
+#: models.py:59 models.py:110
+msgid "Label"
+msgstr ""
+
+#: models.py:60
+msgid "Field is required"
+msgstr ""
+
+#: models.py:62
+msgid ""
+"Error message displayed if the required field is left empty. Default: \"This "
+"field is required\"."
+msgstr ""
+
+#: models.py:64
+msgid "Placeholder text"
+msgstr ""
+
+#: models.py:65
+msgid ""
+"Default text in a form. Disapears when user starts typing. Example: "
+"\"email@exmaple.com\""
+msgstr ""
+
+#: models.py:67
+msgid "Help text"
+msgstr ""
+
+#: models.py:68
+msgid "Explanatory text displayed next to input field. Just like this one."
+msgstr ""
+
+#: models.py:72
+msgid "Min value"
+msgstr ""
+
+#: models.py:73
+msgid "Max value"
+msgstr ""
+
+#: models.py:95
+msgid "columns"
+msgstr ""
+
+#: models.py:96
+msgid "rows"
+msgstr ""
+
+#: models.py:102
+msgid "Value"
+msgstr ""
+
+#: models.py:124
+msgid "Form submission"
+msgstr ""
+
+#: models.py:125
+msgid "Form submissions"
+msgstr ""
+
+#: validators.py:8
+#, python-format
+msgid ""
+"You have to choose at least %(limit_value)d options (chosen %(show_value)d)."
+msgstr ""
+
+#: validators.py:14
+#, python-format
+msgid ""
+"You can't choose more than %(limit_value)d options (chosen %(show_value)d)."
+msgstr ""
+
+#: views.py:39
+msgid "The form has been sent."
+msgstr ""

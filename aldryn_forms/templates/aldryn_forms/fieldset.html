@@ -1,7 +1,7 @@
 {% load cms_tags %}
 
 <li>
-	<fieldset>
+	<fieldset{% if instance.html_class %}class="{{ instance.html_class }}"{% endif %}>
 		{% if instance.legend %}
 			<legend>{{ instance.legend }}</legend>
 		{% endif %}

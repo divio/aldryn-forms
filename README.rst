@@ -64,6 +64,8 @@ Available Plug-ins
 
 ``Text Field`` renders text input.
 
+``Text Area Field`` renders text input.
+
 ``Yes/No Field`` renders checkbox.
 
 ``Select Field`` renders single select input.

@@ -2,6 +2,7 @@
 from django.db import models
 from django.utils.translation import ugettext_lazy as _
 
+from cms.models.fields import PageField
 from cms.models.pluginmodel import CMSPlugin
 
 try:
@@ -28,11 +29,12 @@ class FormPlugin(CMSPlugin):
     redirect_type = models.CharField(_('Redirect to'), max_length=20, choices=REDIRECT_CHOICES,
                                      help_text=_('Where to redirect the user when the form has been '
                                                  'successfully sent?'))
-    page = models.ForeignKey('cms.Page', verbose_name=_('CMS Page'), blank=True, null=True)
+    page = PageField(verbose_name=_('CMS Page'), blank=True, null=True)
     url = models.URLField(_('Absolute URL'), blank=True, null=True)
     recipients = models.ManyToManyField(User, verbose_name=_('Recipients'), blank=True,
                                         # through='aldryn_forms.FormToRecipient',
                                         help_text=_('People who will get the form content via e-mail.'))
+    html_class = models.CharField(verbose_name=_('html class'), max_length=200, blank=True)
 
     def __unicode__(self):
         return self.name
@@ -48,12 +50,13 @@ class FormPlugin(CMSPlugin):
 class FieldsetPlugin(CMSPlugin):
 
     legend = models.CharField(_('Legend'), max_length=50, blank=True)
+    html_class = models.CharField(verbose_name=_('html class'), max_length=200, blank=True)
 
     def __unicode__(self):
         return self.legend or str(self.pk)
 
 
-class FieldPlugin(CMSPlugin):
+class FieldPluginBase(CMSPlugin):
 
     label = models.CharField(_('Label'), max_length=50, blank=True)
     required = models.BooleanField(_('Field is required'), default=True)
@@ -71,14 +74,31 @@ class FieldPlugin(CMSPlugin):
     min_value = models.PositiveIntegerField(_('Min value'), blank=True, null=True)
     max_value = models.PositiveIntegerField(_('Max value'), blank=True, null=True)
 
+    input_html_class = models.CharField(verbose_name=_('input html class'), max_length=200, blank=True)
+
+    class Meta:
+        abstract = True
+
+    def __unicode__(self):
+        return self.label or str(self.pk)
+
+
+class FieldPlugin(FieldPluginBase):
+
+    class Meta:
+        db_table = 'cmsplugin_fieldplugin'
+
     def copy_relations(self, oldinstance):
         for option in oldinstance.option_set.all():
             option.pk = None  # copy on save
             option.field = self
             option.save()
 
-    def __unicode__(self):
-        return self.label or str(self.pk)
+
+class TextAreaFieldPlugin(FieldPluginBase):
+
+    text_area_columns = models.PositiveIntegerField(verbose_name=_('columns'), blank=True, null=True)
+    text_area_rows = models.PositiveIntegerField(verbose_name=_('rows'), blank=True, null=True)
 
 
 class Option(models.Model):
@@ -93,6 +113,7 @@ class Option(models.Model):
 class ButtonPlugin(CMSPlugin):
 
     label = models.CharField(_('Label'), max_length=50)
+    input_html_class = models.CharField(verbose_name=_('input html class'), max_length=200, blank=True)
 
     def __unicode__(self):
         return self.label
