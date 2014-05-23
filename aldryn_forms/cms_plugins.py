@@ -16,7 +16,8 @@ from .forms import (
     BooleanFieldForm,
     MultipleSelectFieldForm,
     SelectFieldForm,
-    CaptchaFieldForm
+    CaptchaFieldForm,
+    RadioFieldForm,
 )
 from .validators import MinChoicesValidator, MaxChoicesValidator
 from .views import SendView
@@ -340,6 +341,29 @@ class MultipleSelectField(SelectField):
 
 plugin_pool.register_plugin(MultipleSelectField)
 
+
+class RadioSelectField(Field):
+    name = _('Radio Select Field')
+    form = RadioFieldForm
+    form_field = forms.ModelChoiceField
+    form_field_widget = forms.RadioSelect
+
+    form_field_enabled_options = [
+        'label',
+        'help_text',
+        'required',
+        'error_messages',
+        'default_value',
+    ]
+    inlines = [SelectOptionInline]
+
+    def get_form_field_kwargs(self, instance):
+        kwargs = super(RadioSelectField, self).get_form_field_kwargs(instance)
+        kwargs['queryset'] = instance.option_set.all()
+        kwargs['empty_label'] = None
+        return kwargs
+
+plugin_pool.register_plugin(RadioSelectField)
 
 try:
     from captcha.fields import ReCaptchaField
