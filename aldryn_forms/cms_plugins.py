@@ -138,6 +138,9 @@ class Field(FormElement):
             kwargs['required'] = instance.required
         if 'validators' in allowed_options:
             kwargs['validators'] = self.get_form_field_validators(instance)
+        if 'default_value' in allowed_options:
+            qs = instance.option_set.filter(default_value=True)
+            kwargs['initial'] = qs[0] if qs.exists() else None
 
         return kwargs
 
@@ -297,6 +300,7 @@ class SelectField(Field):
         'help_text',
         'required',
         'error_messages',
+        'default_value',
     ]
     inlines = [SelectOptionInline]
 
