@@ -42,7 +42,7 @@ class BooleanFieldForm(forms.ModelForm):
         super(BooleanFieldForm, self).__init__(*args, **kwargs)
 
     class Meta:
-        fields = ['label', 'help_text', 'required', 'required_message', 'custom_classes']
+        fields = ['label', 'help_text', 'required', 'required_message', 'custom_classes', 'default_value']
 
 
 class SelectFieldForm(forms.ModelForm):

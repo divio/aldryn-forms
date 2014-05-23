@@ -95,6 +95,10 @@ class FieldPlugin(FieldPluginBase):
             option.save()
 
 
+class BooleanFieldPlugin(FieldPluginBase):
+    default_value = models.BooleanField(_('Preselected'), default=False)
+
+
 class TextAreaFieldPlugin(FieldPluginBase):
 
     text_area_columns = models.PositiveIntegerField(verbose_name=_('columns'), blank=True, null=True)

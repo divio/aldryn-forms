@@ -139,8 +139,11 @@ class Field(FormElement):
         if 'validators' in allowed_options:
             kwargs['validators'] = self.get_form_field_validators(instance)
         if 'default_value' in allowed_options:
-            qs = instance.option_set.filter(default_value=True)
-            kwargs['initial'] = qs[0] if qs.exists() else None
+            if hasattr(instance, 'object_set'):
+                qs = instance.option_set.filter(default_value=True)
+                kwargs['initial'] = qs[0] if qs.exists() else None
+            elif hasattr(instance, 'default_value'):
+                kwargs['initial'] = instance.default_value
 
         return kwargs
 
@@ -193,7 +196,7 @@ class Field(FormElement):
             fieldsets.append(
                 (_('Required'), {'fields': required_fields}))
 
-        extra_fields = filter(in_fields, ['custom_classes', 'text_area_columns', 'text_area_rows'])
+        extra_fields = filter(in_fields, ['default_value', 'custom_classes', 'text_area_columns', 'text_area_rows'])
         if extra_fields:
             fieldsets.append(
                 (_('Extra'), {'fields': extra_fields}))
@@ -272,6 +275,7 @@ plugin_pool.register_plugin(TextAreaField)
 
 class BooleanField(Field):
     name = _('Yes/No Field')
+    model = models.BooleanFieldPlugin
     form = BooleanFieldForm
     form_field = forms.BooleanField
     form_field_widget = form_field.widget
@@ -280,6 +284,7 @@ class BooleanField(Field):
         'help_text',
         'required',
         'error_messages',
+        'default_value',
     ]
 
 
