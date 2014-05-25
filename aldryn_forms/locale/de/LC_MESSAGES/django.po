@@ -28,7 +28,7 @@ msgstr "Formular"
 
 #: cms_plugins.py:94
 msgid "Fieldset"
-msgstr "Text"
+msgstr "Fieldset"
 
 #: cms_plugins.py:180
 msgid "General options"
@@ -56,7 +56,7 @@ msgstr "Text-Bereich-Feld"
 
 #: cms_plugins.py:271
 msgid "Yes/No Field"
-msgstr "Radiobutton"
+msgstr "Checkbox"
 
 #: cms_plugins.py:291
 msgid "Select Field"
