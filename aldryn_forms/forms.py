@@ -1,8 +1,9 @@
 # -*- coding: utf-8 -*-
 from django import forms
 from django.utils.translation import ugettext_lazy as _
+from django.conf import settings
 
-from aldryn_forms.models import FormPlugin
+from aldryn_forms.models import FormPlugin, User
 from aldryn_forms.utils import add_form_error
 
 
@@ -30,6 +31,11 @@ class FormPluginForm(ExtandableErrorForm):
                 self.cleaned_data['page'] = None
 
         return self.cleaned_data
+
+    def __init__(self, *args, **kwargs):
+        super(FormPluginForm, self).__init__(*args, **kwargs)
+        if getattr(settings, 'ALDRYN_FORMS_SHOW_ALL_RECIPIENTS', False):
+            self.fields['recipients'].queryset = User.objects.all()
 
 
 class BooleanFieldForm(forms.ModelForm):

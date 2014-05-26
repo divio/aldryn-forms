@@ -32,6 +32,7 @@ class FormPlugin(CMSPlugin):
     page = PageField(verbose_name=_('CMS Page'), blank=True, null=True)
     url = models.URLField(_('Absolute URL'), blank=True, null=True)
     recipients = models.ManyToManyField(User, verbose_name=_('Recipients'), blank=True,
+                                        limit_choices_to={'is_staff': True},
                                         # through='aldryn_forms.FormToRecipient',
                                         help_text=_('People who will get the form content via e-mail.'))
     custom_classes = models.CharField(verbose_name=_('custom css classes'), max_length=200, blank=True)
