@@ -386,7 +386,7 @@ else:
 class SubmitButton(FormElement):
     render_template = 'aldryn_forms/submit_button.html'
     name = _('Submit Button')
-    model = models.ButtonPlugin
+    model = models.FormButtonPlugin
 
     def get_form_fields(self, instance):
         return {}

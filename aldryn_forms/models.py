@@ -86,9 +86,6 @@ class FieldPluginBase(CMSPlugin):
 
 class FieldPlugin(FieldPluginBase):
 
-    class Meta:
-        db_table = 'cmsplugin_fieldplugin'
-
     def copy_relations(self, oldinstance):
         for option in oldinstance.option_set.all():
             option.pk = None  # copy on save
@@ -112,7 +109,7 @@ class Option(models.Model):
         return self.value
 
 
-class ButtonPlugin(CMSPlugin):
+class FormButtonPlugin(CMSPlugin):
 
     label = models.CharField(_('Label'), max_length=50)
     custom_classes = models.CharField(verbose_name=_('custom css classes'), max_length=200, blank=True)
