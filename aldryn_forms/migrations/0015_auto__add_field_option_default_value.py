@@ -84,19 +84,6 @@ class Migration(SchemaMigration):
             'text_area_columns': ('django.db.models.fields.PositiveIntegerField', [], {'null': 'True', 'blank': 'True'}),
             'text_area_rows': ('django.db.models.fields.PositiveIntegerField', [], {'null': 'True', 'blank': 'True'})
         },
-        u'aldryn_forms.textfieldplugin': {
-            'Meta': {'object_name': 'TextFieldPlugin'},
-            u'cmsplugin_ptr': ('django.db.models.fields.related.OneToOneField', [], {'to': "orm['cms.CMSPlugin']", 'unique': 'True', 'primary_key': 'True'}),
-            'custom_classes': ('django.db.models.fields.CharField', [], {'max_length': '200', 'blank': 'True'}),
-            'help_text': ('django.db.models.fields.TextField', [], {'null': 'True', 'blank': 'True'}),
-            'html_input_type': ('django.db.models.fields.CharField', [], {'default': "'text'", 'max_length': '30'}),
-            'label': ('django.db.models.fields.CharField', [], {'max_length': '50', 'blank': 'True'}),
-            'max_value': ('django.db.models.fields.PositiveIntegerField', [], {'null': 'True', 'blank': 'True'}),
-            'min_value': ('django.db.models.fields.PositiveIntegerField', [], {'null': 'True', 'blank': 'True'}),
-            'placeholder_text': ('django.db.models.fields.CharField', [], {'max_length': '50', 'blank': 'True'}),
-            'required': ('django.db.models.fields.BooleanField', [], {'default': 'True'}),
-            'required_message': ('django.db.models.fields.TextField', [], {'null': 'True', 'blank': 'True'})
-        },
         u'auth.group': {
             'Meta': {'object_name': 'Group'},
             u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
