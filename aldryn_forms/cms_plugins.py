@@ -205,7 +205,7 @@ class Field(FormElement):
         if instance.required_message:
             return {'required': instance.required_message}
         else:
-            return None
+            return {}
 
     def get_form_field_validators(self, instance):
         return []
@@ -366,21 +366,19 @@ class RadioSelectField(Field):
 plugin_pool.register_plugin(RadioSelectField)
 
 try:
-    from captcha.fields import ReCaptchaField
-    from captcha.widgets import ReCaptcha
+    from captcha.fields import CaptchaField, CaptchaTextInput
 except ImportError:
     pass
 else:
-    # Don't like doing this. But we shouldn't force recaptcha.
+    # Don't like doing this. But we shouldn't force captcha.
     class CaptchaField(Field):
         name = _('Captcha Field')
         form = CaptchaFieldForm
-        form_field = ReCaptchaField
-        form_field_widget = ReCaptcha
+        form_field = CaptchaField
+        form_field_widget = CaptchaTextInput
         form_field_enabled_options = ['label', 'error_messages']
 
-    if getattr(settings, 'RECAPTCHA_PUBLIC_KEY', None) and getattr(settings, 'RECAPTCHA_PRIVATE_KEY', None):
-        plugin_pool.register_plugin(CaptchaField)
+    plugin_pool.register_plugin(CaptchaField)
 
 
 class SubmitButton(FormElement):
