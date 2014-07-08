@@ -4,7 +4,7 @@ from aldryn_forms import __version__
 
 REQUIREMENTS = [
     'django-emailit',
-    'django-recaptcha',
+    'django-simple-recaptcha',
     'South>=0.8.1',
 ]
 
