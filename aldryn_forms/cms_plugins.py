@@ -19,6 +19,7 @@ from .forms import (
     CaptchaFieldForm,
     RadioFieldForm,
 )
+from .utils import get_nested_plugins
 from .validators import MinChoicesValidator, MaxChoicesValidator
 from .views import SendView
 
@@ -37,7 +38,7 @@ class FieldContainer(FormElement):
 
     def get_form_fields(self, instance):
         form_fields = {}
-        for child_plugin_instance in instance.child_plugin_instances:
+        for child_plugin_instance in get_nested_plugins(instance):
             plugin_instance, child_plugin = child_plugin_instance.get_plugin_instance()
             if plugin_instance and hasattr(child_plugin, 'get_form_fields'):
                 fields = child_plugin.get_form_fields(instance=plugin_instance)
@@ -167,8 +168,10 @@ class Field(FormElement):
 
     def render(self, context, instance, placeholder):
         context = super(Field, self).render(context, instance, placeholder)
-        if 'form' in context:
-            context['field'] = context['form'][self.get_field_name(instance=instance)]
+        form = context.get('form')
+        if form:
+            field_name = self.get_field_name(instance=instance)
+            context['field'] = form[field_name]
         return context
 
     def get_fieldsets(self, request, obj=None):

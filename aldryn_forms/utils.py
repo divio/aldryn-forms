@@ -10,6 +10,24 @@ except ImportError:
     from cms.plugins.utils import downcast_plugins, build_plugin_tree
 
 
+def get_nested_plugins(parent_plugin, include_self=False):
+    """
+    Returns a flat list of plugins from parent_plugin
+    """
+    found_plugins = []
+
+    if include_self:
+        found_plugins.append(parent_plugin)
+
+    child_plugins = getattr(parent_plugin, 'child_plugin_instances', [])
+
+    for plugin in child_plugins:
+        found_nested_plugins = get_nested_plugins(plugin, include_self=True)
+        found_plugins.extend(found_nested_plugins)
+
+    return found_plugins
+
+
 def get_plugin_tree(model, **kwargs):
     """
     Plugins in django CMS are highly related to a placeholder.
