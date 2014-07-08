@@ -33,15 +33,6 @@ Update ``INSTALLED_APPS`` with ::
         …
     ]
 
-Set the following settings accordingly if you want to have re-captcha form field plugin available:
-
-    - ``RECAPTCHA_PUBLIC_KEY``
-    - ``RECAPTCHA_PRIVATE_KEY``
-
-Visit django-recaptcha_ for more info about installation.
-
-.. _django-recaptcha : https://github.com/praekelt/django-recaptcha
-
 
 Creating a Form
 ===============
