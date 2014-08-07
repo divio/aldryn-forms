@@ -62,6 +62,7 @@ class RadioFieldForm(forms.ModelForm):
     class Meta:
         fields = ['label', 'help_text', 'required', 'required_message', 'custom_classes']
 
+
 class CaptchaFieldForm(forms.ModelForm):
 
     class Meta:

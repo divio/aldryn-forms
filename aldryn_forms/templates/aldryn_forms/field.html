@@ -7,8 +7,6 @@
 			<label for="{{ field.auto_id }}">{{ field.label }}{% if field.field.required %}*{% endif %}:</label> 
 		{% endif %}
 		{{ field }}
-		{% if field.help_text %}<p class="aldryn-forms-help-text">{{ field.help_text }}</p>{% endif %}
+		{% include 'aldryn_forms/includes/field_help_text.html' %}
 	</li>
-{% else %}
-	<p>Field outside of form.</p>
 {% endif %}

@@ -86,6 +86,16 @@ class FieldPluginBase(CMSPlugin):
 
 class FieldPlugin(FieldPluginBase):
 
+    def __init__(self, *args, **kwargs):
+        super(FieldPlugin, self).__init__(*args, **kwargs)
+        if self.plugin_type:
+            attribute = 'is_%s' % self.field_type
+            setattr(self, attribute, True)
+
+    @property
+    def field_type(self):
+        return self.plugin_type.lower()
+
     def copy_relations(self, oldinstance):
         for option in oldinstance.option_set.all():
             option.pk = None  # copy on save

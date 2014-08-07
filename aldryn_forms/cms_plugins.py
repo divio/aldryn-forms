@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 from django import forms
-from django.conf import settings
 from django.contrib.admin import TabularInline
 from django.core.validators import MinLengthValidator
+from django.template.loader import select_template
 from django.utils.translation import ugettext_lazy as _
 
 from cms.plugin_base import CMSPluginBase
@@ -100,7 +100,8 @@ plugin_pool.register_plugin(Fieldset)
 
 
 class Field(FormElement):
-    render_template = 'aldryn_forms/field.html'
+    # template name is calculated based on field
+    render_template = True
     model = models.FieldPlugin
 
     # Custom field related attributes
@@ -167,6 +168,8 @@ class Field(FormElement):
         return {}
 
     def render(self, context, instance, placeholder):
+        templates = self.get_template_names()
+        self.render_template = select_template(templates)
         context = super(Field, self).render(context, instance, placeholder)
         form = context.get('form')
         if form:
@@ -217,6 +220,13 @@ class Field(FormElement):
         enabled_options = self.form_field_enabled_options
         disabled_options = self.form_field_disabled_options
         return [option for option in enabled_options if option not in disabled_options]
+
+    def get_template_names(self):
+        template_names = [
+            'aldryn_forms/fields/{0}.html'.format(self.field_type),
+            'aldryn_forms/field.html',
+        ]
+        return template_names
 
 
 class TextField(Field):
