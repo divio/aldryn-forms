@@ -80,21 +80,21 @@ class FieldPluginBase(CMSPlugin):
     class Meta:
         abstract = True
 
-    def __unicode__(self):
-        return self.label or str(self.pk)
-
-
-class FieldPlugin(FieldPluginBase):
-
     def __init__(self, *args, **kwargs):
-        super(FieldPlugin, self).__init__(*args, **kwargs)
+        super(FieldPluginBase, self).__init__(*args, **kwargs)
         if self.plugin_type:
             attribute = 'is_%s' % self.field_type
             setattr(self, attribute, True)
 
+    def __unicode__(self):
+        return self.label or str(self.pk)
+
     @property
     def field_type(self):
         return self.plugin_type.lower()
+
+
+class FieldPlugin(FieldPluginBase):
 
     def copy_relations(self, oldinstance):
         for option in oldinstance.option_set.all():

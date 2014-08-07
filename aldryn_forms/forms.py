@@ -108,7 +108,6 @@ class TextAreaFieldForm(TextFieldForm):
                   'text_area_rows', 'min_value', 'max_value', 'required', 'required_message', 'custom_classes']
 
 
-
 class MultipleSelectFieldForm(MinMaxValueForm):
 
     def __init__(self, *args, **kwargs):

@@ -168,7 +168,7 @@ class Field(FormElement):
         return {}
 
     def render(self, context, instance, placeholder):
-        templates = self.get_template_names()
+        templates = self.get_template_names(instance)
         self.render_template = select_template(templates)
         context = super(Field, self).render(context, instance, placeholder)
         form = context.get('form')
@@ -221,9 +221,9 @@ class Field(FormElement):
         disabled_options = self.form_field_disabled_options
         return [option for option in enabled_options if option not in disabled_options]
 
-    def get_template_names(self):
+    def get_template_names(self, instance):
         template_names = [
-            'aldryn_forms/fields/{0}.html'.format(self.field_type),
+            'aldryn_forms/fields/{0}.html'.format(instance.field_type),
             'aldryn_forms/field.html',
         ]
         return template_names
@@ -285,6 +285,8 @@ plugin_pool.register_plugin(TextAreaField)
 
 
 class BooleanField(Field):
+    # checkbox field
+    # I add the above because searching for "checkbox" should give me this plugin :)
     name = _('Yes/No Field')
     form = BooleanFieldForm
     form_field = forms.BooleanField
