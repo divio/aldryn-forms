@@ -180,8 +180,11 @@ class Field(FormElement):
         return context
 
     def get_fieldsets(self, request, obj=None):
+        if self.declared_fieldsets:
+            return self.declared_fieldsets
+
         if self.form:
-            fields = set(self.form._meta.fields)
+            fields = self.form.base_fields.keys()
         else:
             fields = ['label']
 
