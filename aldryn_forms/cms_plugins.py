@@ -162,6 +162,8 @@ class Field(FormElement):
             attrs['placeholder'] = instance.placeholder_text
         if instance.custom_classes:
             attrs['class'] = instance.custom_classes
+        if instance.required:
+            attrs['required'] = "required"
         return attrs
 
     def get_form_field_widget_kwargs(self, instance):
