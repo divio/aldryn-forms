@@ -162,8 +162,9 @@ class Field(FormElement):
             attrs['placeholder'] = instance.placeholder_text
         if instance.custom_classes:
             attrs['class'] = instance.custom_classes
-        if instance.required:
-            attrs['required'] = "required"
+        # disabled due to some issues with this instead of just < required/>
+        # if instance.required:
+        #     attrs['required'] = "required"
         return attrs
 
     def get_form_field_widget_kwargs(self, instance):
@@ -184,7 +185,7 @@ class Field(FormElement):
             return self.declared_fieldsets
 
         if self.form:
-            fields = self.form.base_fields.keys()
+            fields = set(self.form._meta.fields)
         else:
             fields = ['label']
 
