@@ -1,15 +1,20 @@
 # -*- coding: utf-8 -*-
 from django import forms
+from django.contrib import messages
 from django.contrib.admin import TabularInline
 from django.core.validators import MinLengthValidator
 from django.template.loader import select_template
-from django.utils.translation import ugettext_lazy as _
+from django.utils.translation import ugettext, ugettext_lazy as _
 
 from cms.plugin_base import CMSPluginBase
 from cms.plugin_pool import plugin_pool
 
+from emailit.api import send_mail
+
 from aldryn_forms import models
 from .forms import (
+    EmailFieldForm,
+    FormDataBaseForm,
     FormPluginForm,
     TextFieldForm,
     TextAreaFieldForm,
@@ -19,9 +24,8 @@ from .forms import (
     CaptchaFieldForm,
     RadioFieldForm,
 )
-from .utils import get_nested_plugins
+from .utils import get_nested_plugins, get_form_render_data
 from .validators import MinChoicesValidator, MaxChoicesValidator
-from .views import SendView
 
 
 class FormElement(CMSPluginBase):
@@ -66,19 +70,60 @@ class FormPlugin(FieldContainer):
 
     def render(self, context, instance, placeholder):
         context = super(FormPlugin, self).render(context, instance, placeholder)
-        if 'form' not in context:  # the context not from form processing view
-            template_response = SendView.as_view(
-                template_name=self.render_template
-            )(request=context['request'], pk=instance.pk)
-            context.update(template_response.context_data)
+        request = context['request']
+        form = self.process_form(instance, request)
+        if form.is_valid():
+            context['form_success_url'] = self.get_success_url(instance)
+        context['form'] = form
         return context
+
+    def form_valid(self, instance, request, form):
+        form.save()
+        message = ugettext('The form has been sent.')
+        messages.success(request, message)
+
+    def form_invalid(self, instance, request, form):
+        if instance.error_message:
+            form._add_error(message=instance.error_message)
+
+    def process_form(self, instance, request):
+        form_class = self.get_form_class(instance)
+        form_kwargs = self.get_form_kwargs(instance, request)
+        form = form_class(**form_kwargs)
+
+        if form.is_valid():
+            fields = [field for field in form.base_fields.values() if hasattr(field, '_plugin_instance')]
+
+            # pre save field hooks
+            for field in fields:
+                field._plugin_instance.form_pre_save(instance=field._model_instance, form=form)
+
+            self.form_valid(instance, request, form)
+
+            # post save field hooks
+            for field in fields:
+                field._plugin_instance.form_post_save(instance=field._model_instance, form=form)
+        elif request.method == 'POST':
+            # only call form_invalid if request is POST and form is not valid
+            self.form_invalid(instance, request, form)
+        return form
 
     def get_form_class(self, instance):
         """
         Constructs form class basing on children plugin instances.
         """
         fields = self.get_form_fields(instance)
-        return forms.forms.DeclarativeFieldsMetaclass('AldrynDynamicForm', (forms.Form,), fields)
+        return forms.forms.DeclarativeFieldsMetaclass('AldrynDynamicForm', (FormDataBaseForm,), fields)
+
+    def get_form_kwargs(self, instance, request):
+        kwargs = {'form_plugin': instance}
+
+        if request.method in ('POST', 'PUT'):
+            data = request.POST.copy()
+            data['form_plugin_id'] = instance.pk
+            kwargs['data'] = data
+            kwargs['files'] = request.FILES
+        return kwargs
 
     def get_success_url(self, instance):
         if instance.redirect_type == models.FormPlugin.REDIRECT_TO_PAGE:
@@ -88,15 +133,11 @@ class FormPlugin(FieldContainer):
         else:
             raise RuntimeError('Form is not configured properly.')
 
-plugin_pool.register_plugin(FormPlugin)
-
 
 class Fieldset(FieldContainer):
     render_template = 'aldryn_forms/fieldset.html'
     name = _('Fieldset')
     model = models.FieldsetPlugin
-
-plugin_pool.register_plugin(Fieldset)
 
 
 class Field(FormElement):
@@ -110,6 +151,12 @@ class Field(FormElement):
     form_field_enabled_options = ['label', 'help_text', 'required']
     form_field_disabled_options = []
 
+    # Used to configure default fieldset in admin form
+    fieldset_general_fields = ['label', 'placeholder_text', 'help_text']
+    fieldset_boundaries_fields = ['min_value', 'max_value']
+    fieldset_required_conf_fields = ['required', 'required_message']
+    fieldset_extra_fields = ['custom_classes', 'text_area_columns', 'text_area_rows']
+
     def get_field_name(self, instance):
         return u'aldryn-forms-field-%d' % (instance.pk,)
 
@@ -119,7 +166,12 @@ class Field(FormElement):
     def get_form_field(self, instance):
         form_field_class = self.get_form_field_class(instance)
         form_field_kwargs = self.get_form_field_kwargs(instance)
-        return form_field_class(**form_field_kwargs)
+        field = form_field_class(**form_field_kwargs)
+        # allow fields access to their model plugin class instance
+        field._model_instance = instance
+        # and also to the plugin class instance
+        field._plugin_instance = self
+        return field
 
     def get_form_field_class(self, instance):
         return self.form_field
@@ -162,9 +214,6 @@ class Field(FormElement):
             attrs['placeholder'] = instance.placeholder_text
         if instance.custom_classes:
             attrs['class'] = instance.custom_classes
-        # disabled due to some issues with this instead of just < required/>
-        # if instance.required:
-        #     attrs['required'] = "required"
         return attrs
 
     def get_form_field_widget_kwargs(self, instance):
@@ -191,22 +240,22 @@ class Field(FormElement):
 
         in_fields = lambda x: x in fields
 
-        general_fields = filter(in_fields, ['label', 'placeholder_text', 'help_text'])
+        general_fields = filter(in_fields, self.fieldset_general_fields)
         fieldsets = [
             (_('General options'), {'fields': general_fields}),
         ]
 
-        boundries_fields = filter(in_fields, ['min_value', 'max_value'])
+        boundries_fields = filter(in_fields, self.fieldset_boundaries_fields)
         if boundries_fields:
             fieldsets.append(
                 (_('Min and max values'), {'fields': boundries_fields}))
 
-        required_fields = filter(in_fields, ['required', 'required_message'])
+        required_fields = filter(in_fields, self.fieldset_required_conf_fields)
         if required_fields:
             fieldsets.append(
                 (_('Required'), {'fields': required_fields}))
 
-        extra_fields = filter(in_fields, ['custom_classes', 'text_area_columns', 'text_area_rows'])
+        extra_fields = filter(in_fields, self.fieldset_extra_fields)
         if extra_fields:
             fieldsets.append(
                 (_('Extra'), {'fields': extra_fields}))
@@ -234,6 +283,13 @@ class Field(FormElement):
         ]
         return template_names
 
+    # hooks to allow processing of form data per field
+    def form_pre_save(self, instance, form):
+        pass
+
+    def form_post_save(self, instance, form):
+        pass
+
 
 class TextField(Field):
     name = _('Text Field')
@@ -255,8 +311,6 @@ class TextField(Field):
         if instance.min_value:
             validators.append(MinLengthValidator(instance.min_value))
         return validators
-
-plugin_pool.register_plugin(TextField)
 
 
 class TextAreaField(TextField):
@@ -287,7 +341,31 @@ class TextAreaField(TextField):
         return attrs
 
 
-plugin_pool.register_plugin(TextAreaField)
+class EmailField(TextField):
+    name = _('Email Field')
+    model = models.EmailFieldPlugin
+    form = EmailFieldForm
+    form_field = forms.EmailField
+    fieldset_general_fields = Field.fieldset_general_fields + ['email_send_notification']
+    email_template_base = 'aldryn_forms/emails/user/notification'
+
+    def send_notification_email(self, email, form):
+        context = {
+            'form_name': form.instance.name,
+            'form_data': get_form_render_data(form)
+        }
+        send_mail(
+            recipients=[email],
+            context=context,
+            template_base=self.email_template_base
+        )
+
+    def form_post_save(self, instance, form):
+        field_name = self.get_field_name(instance)
+        email = form.cleaned_data.get(field_name)
+
+        if email and instance.email_send_notification:
+            self.send_notification_email(email, form)
 
 
 class BooleanField(Field):
@@ -303,9 +381,6 @@ class BooleanField(Field):
         'required',
         'error_messages',
     ]
-
-
-plugin_pool.register_plugin(BooleanField)
 
 
 class SelectOptionInline(TabularInline):
@@ -330,8 +405,6 @@ class SelectField(Field):
         kwargs = super(SelectField, self).get_form_field_kwargs(instance)
         kwargs['queryset'] = instance.option_set.all()
         return kwargs
-
-plugin_pool.register_plugin(SelectField)
 
 
 class MultipleSelectField(SelectField):
@@ -360,8 +433,6 @@ class MultipleSelectField(SelectField):
             kwargs['required'] = False
         return kwargs
 
-plugin_pool.register_plugin(MultipleSelectField)
-
 
 class RadioSelectField(Field):
     name = _('Radio Select Field')
@@ -384,7 +455,6 @@ class RadioSelectField(Field):
         kwargs['empty_label'] = None
         return kwargs
 
-plugin_pool.register_plugin(RadioSelectField)
 
 try:
     from captcha.fields import CaptchaField, CaptchaTextInput
@@ -410,4 +480,14 @@ class SubmitButton(FormElement):
     def get_form_fields(self, instance):
         return {}
 
+
+plugin_pool.register_plugin(BooleanField)
+plugin_pool.register_plugin(EmailField)
+plugin_pool.register_plugin(Fieldset)
+plugin_pool.register_plugin(FormPlugin)
+plugin_pool.register_plugin(MultipleSelectField)
+plugin_pool.register_plugin(RadioSelectField)
+plugin_pool.register_plugin(SelectField)
 plugin_pool.register_plugin(SubmitButton)
+plugin_pool.register_plugin(TextAreaField)
+plugin_pool.register_plugin(TextField)

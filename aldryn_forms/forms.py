@@ -1,10 +1,38 @@
 # -*- coding: utf-8 -*-
 from django import forms
+from django.forms.forms import NON_FIELD_ERRORS
 from django.utils.translation import ugettext_lazy as _
 from django.conf import settings
 
-from aldryn_forms.models import FormPlugin, User
-from aldryn_forms.utils import add_form_error
+from .models import FormData, FormPlugin, User
+from .utils import add_form_error
+
+
+class FormDataBaseForm(forms.Form):
+
+    form_plugin_id = forms.IntegerField(widget=forms.HiddenInput())
+
+    def __init__(self, *args, **kwargs):
+        self.form_plugin = kwargs.pop('form_plugin')
+        super(FormDataBaseForm, self).__init__(*args, **kwargs)
+        self.instance = FormData(name=self.form_plugin.name)
+        self.fields['form_plugin_id'].initial = self.form_plugin.pk
+
+    def _add_error(self, message, field=NON_FIELD_ERRORS):
+        try:
+            self._errors[field].append(message)
+        except KeyError:
+            self._errors[field] = self.error_class([message])
+
+    def save(self):
+        recipients = self.form_plugin.recipients.all()
+
+        self.instance.set_form_data(self)
+        self.instance.save()
+
+        self.instance.people_notified.add(*recipients)
+
+        self.instance.send_notification_email(form=self, form_plugin=self.form_plugin)
 
 
 class ExtandableErrorForm(forms.ModelForm):
@@ -14,6 +42,11 @@ class ExtandableErrorForm(forms.ModelForm):
 
 
 class FormPluginForm(ExtandableErrorForm):
+
+    def __init__(self, *args, **kwargs):
+        super(FormPluginForm, self).__init__(*args, **kwargs)
+        if getattr(settings, 'ALDRYN_FORMS_SHOW_ALL_RECIPIENTS', False):
+            self.fields['recipients'].queryset = User.objects.all()
 
     def clean(self):
         redirect_type = self.cleaned_data.get('redirect_type')
@@ -31,11 +64,6 @@ class FormPluginForm(ExtandableErrorForm):
                 self.cleaned_data['page'] = None
 
         return self.cleaned_data
-
-    def __init__(self, *args, **kwargs):
-        super(FormPluginForm, self).__init__(*args, **kwargs)
-        if getattr(settings, 'ALDRYN_FORMS_SHOW_ALL_RECIPIENTS', False):
-            self.fields['recipients'].queryset = User.objects.all()
 
 
 class BooleanFieldForm(forms.ModelForm):
@@ -95,6 +123,27 @@ class TextFieldForm(MinMaxValueForm):
     class Meta:
         fields = ['label', 'placeholder_text', 'help_text',
                   'min_value', 'max_value', 'required', 'required_message', 'custom_classes']
+
+
+class EmailFieldForm(TextFieldForm):
+
+    def __init__(self, *args, **kwargs):
+        super(EmailFieldForm, self).__init__(*args, **kwargs)
+        self.fields['min_value'].required = False
+        self.fields['max_value'].required = False
+
+    class Meta:
+        fields = [
+            'label',
+            'placeholder_text',
+            'help_text',
+            'min_value',
+            'max_value',
+            'required',
+            'required_message',
+            'email_send_notification',
+            'custom_classes'
+        ]
 
 
 class TextAreaFieldForm(TextFieldForm):

@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 from django.db import models
 from django.forms.forms import NON_FIELD_ERRORS
-from django.shortcuts import get_object_or_404
 
 from cms.utils.moderator import get_cmsplugin_queryset
 try:
@@ -19,7 +18,7 @@ def get_nested_plugins(parent_plugin, include_self=False):
     if include_self:
         found_plugins.append(parent_plugin)
 
-    child_plugins = getattr(parent_plugin, 'child_plugin_instances', [])
+    child_plugins = getattr(parent_plugin, 'child_plugin_instances', None) or []
 
     for plugin in child_plugins:
         found_nested_plugins = get_nested_plugins(plugin, include_self=True)
@@ -38,7 +37,7 @@ def get_plugin_tree(model, **kwargs):
 
     This is ok as forms shouldn't form very deep trees.
     """
-    plugin = get_object_or_404(model, **kwargs)
+    plugin = model.objects.get(**kwargs)
     plugin.parent = None
     current_level = [plugin]
     plugin_list = [plugin]
@@ -67,6 +66,8 @@ def get_form_render_data(form):
         value = form.cleaned_data[field.name]
         if isinstance(value, models.query.QuerySet):
             value = ', '.join(map(unicode, value))
+        elif value is None:
+            value = '-'
         name = field.label if field.label else field.name
         form_data.append((name, value))
     return form_data

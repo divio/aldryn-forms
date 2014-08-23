@@ -7,181 +7,190 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2014-05-27 08:33+0200\n"
+"POT-Creation-Date: 2014-08-22 23:29-0400\n"
 "PO-Revision-Date: 2014-05-27 08:34+0100\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: \n"
+"Language: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 "X-Generator: Poedit 1.5.7\n"
 
-#: cms_app.py:9 cms_plugins.py:29
+#: cms_app.py:9 cms_plugins.py:34
 msgid "Forms"
 msgstr "Formulare"
 
-#: cms_plugins.py:50
+#: cms_plugins.py:55
 msgid "Form"
 msgstr "Formular"
 
-#: cms_plugins.py:95
+#: cms_plugins.py:82
+msgid "The form has been sent."
+msgstr "Das Formular wurde versendet."
+
+#: cms_plugins.py:138
 msgid "Fieldset"
 msgstr "Fieldset"
 
-#: cms_plugins.py:184
+#: cms_plugins.py:244
 msgid "General options"
 msgstr "Allgemeine Einstellungen"
 
-#: cms_plugins.py:190
+#: cms_plugins.py:250
 msgid "Min and max values"
 msgstr "Min und Max Werte"
 
-#: cms_plugins.py:195
+#: cms_plugins.py:255
 msgid "Required"
 msgstr "Notwendig"
 
-#: cms_plugins.py:200
+#: cms_plugins.py:260
 msgid "Extra"
 msgstr ""
 
-#: cms_plugins.py:220
+#: cms_plugins.py:294
 msgid "Text Field"
 msgstr "Textfeld"
 
-#: cms_plugins.py:244
+#: cms_plugins.py:316
 msgid "Text Area Field"
 msgstr "Text-Bereich-Feld"
 
-#: cms_plugins.py:275
+#: cms_plugins.py:344
+msgid "Email Field"
+msgstr ""
+
+#: cms_plugins.py:373
 msgid "Yes/No Field"
 msgstr "Checkbox"
 
-#: cms_plugins.py:295
+#: cms_plugins.py:390
 msgid "Select Field"
 msgstr "Auswahlfeld"
 
-#: cms_plugins.py:317
+#: cms_plugins.py:410
 msgid "Multiple Select Field"
 msgstr "Mehrfach Auswahl"
 
-#: cms_plugins.py:346
+#: cms_plugins.py:437
 msgid "Radio Select Field"
 msgstr "Radio-Button Auswahlfeld"
 
-#: cms_plugins.py:376
+#: cms_plugins.py:465
 msgid "Captcha Field"
 msgstr "Captcha Feld"
 
-#: cms_plugins.py:388
+#: cms_plugins.py:476
 msgid "Submit Button"
 msgstr "Senden Button"
 
-#: forms.py:26
+#: forms.py:59
 msgid "Please provide CMS page for redirect."
 msgstr "Bitte CMS Seite angeben für die Weiterleitung."
 
-#: forms.py:30
+#: forms.py:63
 msgid "Please provide an absolute URL for redirect."
 msgstr "Bitte eine absolute URL angeben für die Weiterleitung"
 
-#: forms.py:78
+#: forms.py:107
 msgid "Min value can not be greater then max value."
 msgstr "Der Mindestwert kann nicht grösser sein als der maximale Wert"
 
-#: forms.py:87
+#: forms.py:116
 msgid "Min length"
 msgstr "Mindestlänge"
 
-#: forms.py:88
+#: forms.py:117
 msgid "Required number of characters to type."
 msgstr "Benötigte Anzahl von getippten Zeichen."
 
-#: forms.py:90
+#: forms.py:119
 msgid "Max length"
 msgstr "Maximale Länge"
 
-#: forms.py:91
+#: forms.py:120
 msgid "Maximum number of characters to type."
 msgstr "Maximale Anzahl von getippten Zeichen."
 
-#: forms.py:116
+#: forms.py:165
 msgid "Min choices"
 msgstr "Mindestauswahl"
 
-#: forms.py:117
+#: forms.py:166
 msgid "Required amount of elements to chose."
 msgstr "Benötigte Anzahl von ausgewählten Elementen"
 
-#: forms.py:119
+#: forms.py:168
 msgid "Max choices"
 msgstr "Maximale Anzahl Auswahlmöglichkeiten"
 
-#: forms.py:120
+#: forms.py:169
 msgid "Maximum amount of elements to chose."
 msgstr "Maximale Anzahl der gewählten Auswahl."
 
-#: models.py:21 models.py:32
+#: models.py:25 models.py:45
 msgid "CMS Page"
 msgstr "CMS Seite"
 
-#: models.py:22 models.py:33
+#: models.py:26 models.py:46
 msgid "Absolute URL"
 msgstr "Absolute URL"
 
-#: models.py:25
+#: models.py:30
 msgid "Name"
 msgstr "Name"
 
-#: models.py:25
+#: models.py:32
 msgid "Used to filter out form submissions."
 msgstr "Benutzt um die Formular-Ãœbertragung zu filtern."
 
-#: models.py:26 models.py:64
+#: models.py:35 models.py:81
 msgid "Error message"
 msgstr "Fehlermeldung"
 
-#: models.py:27
+#: models.py:38
 msgid "An error message that will be displayed if the form doesn't validate."
 msgstr ""
 "Eine Fehlermeldung, welche angezeigt wird, wenn das Formular nicht gültig "
 "ist."
 
-#: models.py:29
+#: models.py:40
 msgid "Redirect to"
 msgstr "Weiterleiten zu"
 
-#: models.py:30
+#: models.py:43
 msgid "Where to redirect the user when the form has been successfully sent?"
 msgstr ""
 "Wohin soll der Benutzer weitergeleitet werden, wenn das Formular erfolgreich "
 "verschickt wurde?"
 
-#: models.py:34
+#: models.py:49
 msgid "Recipients"
 msgstr "Empfänger"
 
-#: models.py:37
+#: models.py:52
 msgid "People who will get the form content via e-mail."
 msgstr "Personen welche das Formular per E-Mail erhalten"
 
-#: models.py:38 models.py:54 models.py:78 models.py:118
+#: models.py:54 models.py:70 models.py:104 models.py:160
 msgid "custom css classes"
 msgstr "CSS Klassen"
 
-#: models.py:53
+#: models.py:69
 msgid "Legend"
 msgstr "Legende"
 
-#: models.py:62 models.py:117
+#: models.py:78 models.py:159
 msgid "Label"
 msgstr "Beschreibung"
 
-#: models.py:63
+#: models.py:79
 msgid "Field is required"
 msgstr "Feld ist zwingend erforderlich"
 
-#: models.py:65
+#: models.py:84
 msgid ""
 "Error message displayed if the required field is left empty. Default: \"This "
 "field is required\"."
@@ -189,57 +198,67 @@ msgstr ""
 "Fehlermeldung welche angezeigt wird, wenn das erforderliche Feld leer "
 "gelassen wird. Standard: \"Dieses Feld muss ausgefüllt werden\"."
 
-#: models.py:67
+#: models.py:87
 msgid "Placeholder text"
 msgstr "Platzhalter Text"
 
-#: models.py:68
+#: models.py:90
 msgid ""
-"Default text in a form. Disapears when user starts typing. Example: "
+"Default text in a form. Disappears when user starts typing. Example: "
 "\"email@exmaple.com\""
 msgstr ""
 "Standardtext im Formular. Verschwindet, sobald der Benutzer anfängt zu "
 "tippen. Beispiel: \"email@exmaple.com\""
 
-#: models.py:70
+#: models.py:93
 msgid "Help text"
 msgstr "Hilfetext"
 
-#: models.py:71
+#: models.py:96
 msgid "Explanatory text displayed next to input field. Just like this one."
 msgstr ""
 "Erklärender Text, welcher neben dem Eingabefeld angezeigt wird. Genau wie "
 "dieser Text."
 
-#: models.py:75
+#: models.py:101
 msgid "Min value"
 msgstr "Mindestwert"
 
-#: models.py:76
+#: models.py:102
 msgid "Max value"
 msgstr "Maximaler Wert"
 
-#: models.py:101
+#: models.py:134
 msgid "columns"
 msgstr "Spalten"
 
-#: models.py:102
+#: models.py:135
 msgid "rows"
 msgstr "Zeilen"
 
-#: models.py:108
+#: models.py:143
+msgid ""
+"When checked, the value of this field will be used to send an email "
+"notification."
+msgstr ""
+
+#: models.py:150
 msgid "Value"
 msgstr "Wert"
 
-#: models.py:109
+#: models.py:151
 msgid "Default"
 msgstr "Standard"
 
-#: models.py:132
+#: models.py:172
+msgid "admins notified"
+msgstr ""
+
+#: models.py:179
 msgid "Form submission"
 msgstr "Formular Übertragung"
 
-#: models.py:133
+#: models.py:180
 msgid "Form submissions"
 msgstr "Formular Übertragungen"
 
@@ -258,7 +277,3 @@ msgid ""
 msgstr ""
 "Sie können nicht mehr als %(limit_value)d Optionen (chosen %(show_value)d) "
 "angeben."
-
-#: views.py:39
-msgid "The form has been sent."
-msgstr "Das Formular wurde versendet."

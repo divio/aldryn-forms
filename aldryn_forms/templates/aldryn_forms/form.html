@@ -9,6 +9,9 @@
 
 <form class="aldryn-forms-form{% if instance.custom_classes %} {{ instance.custom_classes }}{% endif %}" action="." method="POST">
 	{% csrf_token %}
+	{% for field in form.hidden_fields %}
+	{{ field }}
+	{% endfor %}
 	<ul>
 		{% for error in form.non_field_errors %}
 			<li class="aldryn-forms-error aldryn-forms-global-error">
