@@ -184,8 +184,8 @@ class FormData(models.Model):
 
     def set_form_data(self, form):
         grouped_data = get_form_render_data(form)
-        formatted_data = ['{0}: {1}'.format(*group) for group in grouped_data]
-        self.data = '\n'.join(formatted_data)
+        formatted_data = [u'{0}: {1}'.format(*group) for group in grouped_data]
+        self.data = u'\n'.join(formatted_data)
 
     def send_notification_email(self, form, form_plugin):
         recipients = self.people_notified.values_list('email', flat=True)
