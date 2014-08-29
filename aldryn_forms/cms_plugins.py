@@ -60,7 +60,7 @@ class FormPlugin(FieldContainer):
     fieldsets = [
         (
             'General options',
-            {'fields': ['name', 'error_message', 'recipients', 'custom_classes']}
+            {'fields': ['name', 'error_message', 'success_message', 'recipients', 'custom_classes']}
         ),
         (
             'Redirect',
@@ -74,13 +74,18 @@ class FormPlugin(FieldContainer):
         form = self.process_form(instance, request)
         if form.is_valid():
             context['form_success_url'] = self.get_success_url(instance)
+
         context['form'] = form
         return context
 
     def form_valid(self, instance, request, form):
         form.save()
-        message = ugettext('The form has been sent.')
-        messages.success(request, message)
+        if form.form_plugin.success_message == '':
+            message = ugettext('The form has been sent.')
+            messages.success(request, message)
+
+        else:
+            messages.success(request, form.form_plugin.success_message)
 
     def form_invalid(self, instance, request, form):
         if instance.error_message:
@@ -417,6 +422,7 @@ class MultipleSelectField(SelectField):
         'help_text',
         'required',
         'validators',
+
     ]
 
     def get_form_field_validators(self, instance):
