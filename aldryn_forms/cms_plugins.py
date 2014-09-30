@@ -24,6 +24,7 @@ from .forms import (
     CaptchaFieldForm,
     RadioFieldForm,
 )
+from .signals import form_pre_save, form_post_save
 from .utils import get_nested_plugins, get_form_render_data
 from .validators import MinChoicesValidator, MaxChoicesValidator
 
@@ -51,7 +52,7 @@ class FieldContainer(FormElement):
 
 
 class FormPlugin(FieldContainer):
-    render_template = 'aldryn_forms/form.html'
+    render_template = True
     name = _('Form')
     model = models.FormPlugin
     form = FormPluginForm
@@ -60,7 +61,7 @@ class FormPlugin(FieldContainer):
     fieldsets = [
         (
             'General options',
-            {'fields': ['name', 'error_message', 'recipients', 'custom_classes']}
+            {'fields': ['name', 'form_template', 'error_message', 'recipients', 'custom_classes']}
         ),
         (
             'Redirect',
@@ -69,6 +70,9 @@ class FormPlugin(FieldContainer):
     ]
 
     def render(self, context, instance, placeholder):
+        # remove once cms 3.0.6 is released
+        self.render_template = self.get_render_template(context, instance, placeholder)
+
         context = super(FormPlugin, self).render(context, instance, placeholder)
         request = context['request']
         form = self.process_form(instance, request)
@@ -76,6 +80,9 @@ class FormPlugin(FieldContainer):
             context['form_success_url'] = self.get_success_url(instance)
         context['form'] = form
         return context
+
+    def get_render_template(self, context, instance, placeholder):
+        return instance.form_template
 
     def form_valid(self, instance, request, form):
         form.save()
@@ -98,11 +105,15 @@ class FormPlugin(FieldContainer):
             for field in fields:
                 field._plugin_instance.form_pre_save(instance=field._model_instance, form=form)
 
+            form_pre_save.send(sender=models.FormPlugin, instance=instance, form=form)
+
             self.form_valid(instance, request, form)
 
             # post save field hooks
             for field in fields:
                 field._plugin_instance.form_post_save(instance=field._model_instance, form=form)
+
+            form_post_save.send(sender=models.FormPlugin, instance=instance, form=form)
         elif request.method == 'POST':
             # only call form_invalid if request is POST and form is not valid
             self.form_invalid(instance, request, form)
