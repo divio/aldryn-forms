@@ -115,7 +115,7 @@ class FieldsetPlugin(CMSPlugin):
     custom_classes = models.CharField(verbose_name=_('custom css classes'), max_length=200, blank=True)
 
     def __unicode__(self):
-        return self.legend or str(self.pk)
+        return self.legend or unicode(self.pk)
 
 
 class FieldPluginBase(CMSPlugin):
