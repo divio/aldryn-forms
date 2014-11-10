@@ -357,10 +357,10 @@ class EmailField(TextField):
     model = models.EmailFieldPlugin
     form = EmailFieldForm
     form_field = forms.EmailField
-    fieldset_general_fields = Field.fieldset_general_fields + ['email_send_notification']
+    fieldset_general_fields = Field.fieldset_general_fields + ['email_send_notification', 'email_subject']
     email_template_base = 'aldryn_forms/emails/user/notification'
 
-    def send_notification_email(self, email, form):
+    def send_notification_email(self, email, form, form_field_instance):
         context = {
             'form_name': form.instance.name,
             'form_data': get_form_render_data(form)
@@ -368,6 +368,7 @@ class EmailField(TextField):
         send_mail(
             recipients=[email],
             context=context,
+            subject=form_field_instance.email_subject,
             template_base=self.email_template_base
         )
 
@@ -376,7 +377,7 @@ class EmailField(TextField):
         email = form.cleaned_data.get(field_name)
 
         if email and instance.email_send_notification:
-            self.send_notification_email(email, form)
+            self.send_notification_email(email, form, instance)
 
 
 class BooleanField(Field):

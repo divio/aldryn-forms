@@ -181,11 +181,17 @@ class TextAreaFieldPlugin(FieldPluginBase):
 
 
 class EmailFieldPlugin(FieldPluginBase):
-
     email_send_notification = models.BooleanField(
         verbose_name=('send notification when form is submitted'),
         default=False,
         help_text=_('When checked, the value of this field will be used to send an email notification.')
+    )
+    email_subject = models.CharField(
+        verbose_name=_('email subject'),
+        max_length=200,
+        blank=True,
+        default='',
+        help_text=_('used as the email subject when email_send_notification is checked.')
     )
 
 
