@@ -25,6 +25,7 @@ class Migration(SchemaMigration):
             u'cmsplugin_ptr': ('django.db.models.fields.related.OneToOneField', [], {'to': "orm['cms.CMSPlugin']", 'unique': 'True', 'primary_key': 'True'}),
             'custom_classes': ('django.db.models.fields.CharField', [], {'max_length': '200', 'blank': 'True'}),
             'email_send_notification': ('django.db.models.fields.BooleanField', [], {'default': 'False'}),
+            'email_subject': ('django.db.models.fields.CharField', [], {'default': "''", 'max_length': '200', 'blank': 'True'}),
             'help_text': ('django.db.models.fields.TextField', [], {'null': 'True', 'blank': 'True'}),
             'label': ('django.db.models.fields.CharField', [], {'max_length': '50', 'blank': 'True'}),
             'max_value': ('django.db.models.fields.PositiveIntegerField', [], {'null': 'True', 'blank': 'True'}),
