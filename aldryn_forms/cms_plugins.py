@@ -61,7 +61,7 @@ class FormPlugin(FieldContainer):
     fieldsets = [
         (
             'General options',
-            {'fields': ['name', 'form_template', 'error_message', 'recipients', 'custom_classes']}
+            {'fields': ['name', 'form_template', 'error_message', 'success_message', 'recipients', 'custom_classes']}
         ),
         (
             'Redirect',
@@ -78,6 +78,7 @@ class FormPlugin(FieldContainer):
         form = self.process_form(instance, request)
         if form.is_valid():
             context['form_success_url'] = self.get_success_url(instance)
+
         context['form'] = form
         return context
 
@@ -86,7 +87,7 @@ class FormPlugin(FieldContainer):
 
     def form_valid(self, instance, request, form):
         form.save()
-        message = ugettext('The form has been sent.')
+        message = instance.success_message or ugettext('The form has been sent.')
         messages.success(request, message)
 
     def form_invalid(self, instance, request, form):
