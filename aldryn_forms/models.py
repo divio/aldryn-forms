@@ -45,7 +45,14 @@ class FormPlugin(CMSPlugin):
         verbose_name=_('Error message'),
         blank=True,
         null=True,
-        help_text=_('An error message that will be displayed if the form doesn\'t validate.'))
+        help_text=_('An error message that will be displayed if the form doesn\'t validate.')
+    )
+    success_message = models.TextField(
+        verbose_name=_('Success message'),
+        blank=True,
+        null=True,
+        help_text=_('An success message that will be displayed.')
+    )
     redirect_type = models.CharField(
         verbose_name=_('Redirect to'),
         max_length=20,
