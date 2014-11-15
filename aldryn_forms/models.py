@@ -3,7 +3,6 @@ from collections import namedtuple
 
 from django.conf import settings
 from django.db import models
-from django.utils.datastructures import SortedDict
 from django.utils.translation import ugettext_lazy as _
 
 from cms.models.fields import PageField
@@ -231,6 +230,12 @@ class FormData(models.Model):
 
     name = models.CharField(max_length=50, db_index=True, editable=False)
     data = models.TextField(blank=True, null=True, editable=False)
+    language = models.CharField(
+        verbose_name=_('language'),
+        max_length=10,
+        choices=settings.LANGUAGES,
+        default=settings.LANGUAGE_CODE
+    )
     people_notified = models.ManyToManyField(
         to=User,
         verbose_name=_('admins notified'),

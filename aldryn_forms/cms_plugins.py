@@ -131,6 +131,7 @@ class FormPlugin(FieldContainer):
 
         if request.method in ('POST', 'PUT'):
             data = request.POST.copy()
+            data['language'] = instance.language
             data['form_plugin_id'] = instance.pk
             kwargs['data'] = data
             kwargs['files'] = request.FILES

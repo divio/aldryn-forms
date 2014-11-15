@@ -74,12 +74,14 @@ class FormExportForm(forms.Form):
 
 class FormDataBaseForm(forms.Form):
 
+    language = forms.ChoiceField(choices=settings.LANGUAGES)
     form_plugin_id = forms.IntegerField(widget=forms.HiddenInput())
 
     def __init__(self, *args, **kwargs):
         self.form_plugin = kwargs.pop('form_plugin')
         super(FormDataBaseForm, self).__init__(*args, **kwargs)
         self.instance = FormData(name=self.form_plugin.name)
+        self.fields['language'].initial = self.form_plugin.language
         self.fields['form_plugin_id'].initial = self.form_plugin.pk
 
     def _add_error(self, message, field=NON_FIELD_ERRORS):

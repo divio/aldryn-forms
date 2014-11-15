@@ -22,7 +22,7 @@ class FormDataAdmin(admin.ModelAdmin):
     list_display = ['__unicode__', 'sent_at']
     list_filter = ['name', 'people_notified']
     model = FormData
-    readonly_fields = ['name', 'data', 'sent_at', 'people_notified']
+    readonly_fields = ['name', 'data', 'language', 'sent_at', 'people_notified']
 
     def get_urls(self):
         from django.conf.urls import patterns, url
@@ -95,6 +95,7 @@ class FormDataAdmin(admin.ModelAdmin):
                         label = u'%s %s' % (label, occurrences[label])
                     headers[label] = clean_data(field.label, position)
 
+                headers[ugettext('Language')] = 'language'
                 headers[ugettext('Submitted on')] = 'sent_at'
 
                 response = export(
