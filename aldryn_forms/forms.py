@@ -74,7 +74,12 @@ class FormExportForm(forms.Form):
 
 class FormDataBaseForm(forms.Form):
 
-    language = forms.ChoiceField(choices=settings.LANGUAGES)
+    # these fields are internal.
+    # by default we ignore all hidden fields when saving form data to db.
+    language = forms.ChoiceField(
+        choices=settings.LANGUAGES,
+        widget=forms.HiddenInput()
+    )
     form_plugin_id = forms.IntegerField(widget=forms.HiddenInput())
 
     def __init__(self, *args, **kwargs):
