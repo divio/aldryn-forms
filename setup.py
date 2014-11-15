@@ -5,7 +5,9 @@ from aldryn_forms import __version__
 REQUIREMENTS = [
     'django-emailit',
     'django-simple-captcha',
+    'django-tablib',
     'South>=0.8.1',
+    'tablib',
 ]
 
 CLASSIFIERS = [
