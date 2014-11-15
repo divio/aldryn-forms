@@ -19,9 +19,8 @@ msgstr ""
 "X-Generator: Poedit 1.5.7\n"
 
 #: admin.py:98
-#, fuzzy
 msgid "Submitted on"
-msgstr "Senden Button"
+msgstr ""
 
 #: admin.py:110
 msgid "No records found"
@@ -313,9 +312,8 @@ msgstr ""
 "angeben."
 
 #: templates/admin/aldryn_forms/export.html:4
-#, fuzzy
 msgid "export form submissions"
-msgstr "Formular Übertragungen"
+msgstr ""
 
 #: templates/admin/aldryn_forms/export.html:7
 msgid "Please correct the error below."
