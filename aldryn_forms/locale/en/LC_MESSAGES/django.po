@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2014-08-22 23:29-0400\n"
+"POT-Creation-Date: 2014-11-15 16:24-0500\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -16,237 +16,270 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: cms_app.py:9 cms_plugins.py:34
+#: admin.py:98
+msgid "Submitted on"
+msgstr ""
+
+#: admin.py:110
+msgid "No records found"
+msgstr ""
+
+#: cms_app.py:9 cms_plugins.py:35
 msgid "Forms"
 msgstr ""
 
-#: cms_plugins.py:55
+#: cms_plugins.py:56
 msgid "Form"
 msgstr ""
 
-#: cms_plugins.py:82
+#: cms_plugins.py:89
 msgid "The form has been sent."
 msgstr ""
 
-#: cms_plugins.py:138
+#: cms_plugins.py:150
 msgid "Fieldset"
 msgstr ""
 
-#: cms_plugins.py:244
+#: cms_plugins.py:256
 msgid "General options"
 msgstr ""
 
-#: cms_plugins.py:250
+#: cms_plugins.py:262
 msgid "Min and max values"
 msgstr ""
 
-#: cms_plugins.py:255
+#: cms_plugins.py:267
 msgid "Required"
 msgstr ""
 
-#: cms_plugins.py:260
+#: cms_plugins.py:272
 msgid "Extra"
 msgstr ""
 
-#: cms_plugins.py:294
+#: cms_plugins.py:306
 msgid "Text Field"
 msgstr ""
 
-#: cms_plugins.py:316
+#: cms_plugins.py:328
 msgid "Text Area Field"
 msgstr ""
 
-#: cms_plugins.py:344
+#: cms_plugins.py:356
 msgid "Email Field"
 msgstr ""
 
-#: cms_plugins.py:373
+#: cms_plugins.py:386
 msgid "Yes/No Field"
 msgstr ""
 
-#: cms_plugins.py:390
+#: cms_plugins.py:403
 msgid "Select Field"
 msgstr ""
 
-#: cms_plugins.py:410
+#: cms_plugins.py:423
 msgid "Multiple Select Field"
 msgstr ""
 
-#: cms_plugins.py:437
+#: cms_plugins.py:450
 msgid "Radio Select Field"
 msgstr ""
 
-#: cms_plugins.py:465
+#: cms_plugins.py:478
 msgid "Captcha Field"
 msgstr ""
 
-#: cms_plugins.py:476
+#: cms_plugins.py:489
 msgid "Submit Button"
 msgstr ""
 
-#: forms.py:59
+#: forms.py:29
+msgid "from date"
+msgstr ""
+
+#: forms.py:34
+msgid "to date"
+msgstr ""
+
+#: forms.py:47
+msgid ""
+"Export failed! More then 65'536 entries found, exceeded Excel limitation!"
+msgstr ""
+
+#: forms.py:123
 msgid "Please provide CMS page for redirect."
 msgstr ""
 
-#: forms.py:63
+#: forms.py:127
 msgid "Please provide an absolute URL for redirect."
 msgstr ""
 
-#: forms.py:107
+#: forms.py:171
 msgid "Min value can not be greater then max value."
 msgstr ""
 
-#: forms.py:116
+#: forms.py:180
 msgid "Min length"
 msgstr ""
 
-#: forms.py:117
+#: forms.py:181
 msgid "Required number of characters to type."
 msgstr ""
 
-#: forms.py:119
+#: forms.py:183
 msgid "Max length"
 msgstr ""
 
-#: forms.py:120
+#: forms.py:184
 msgid "Maximum number of characters to type."
 msgstr ""
 
-#: forms.py:165
+#: forms.py:230
 msgid "Min choices"
 msgstr ""
 
-#: forms.py:166
+#: forms.py:231
 msgid "Required amount of elements to chose."
 msgstr ""
 
-#: forms.py:168
+#: forms.py:233
 msgid "Max choices"
 msgstr ""
 
-#: forms.py:169
+#: forms.py:234
 msgid "Maximum amount of elements to chose."
 msgstr ""
 
-#: models.py:25 models.py:45
+#: models.py:33 models.py:208
+msgid "Default"
+msgstr ""
+
+#: models.py:41 models.py:61
 msgid "CMS Page"
 msgstr ""
 
-#: models.py:26 models.py:46
+#: models.py:42 models.py:62
 msgid "Absolute URL"
 msgstr ""
 
-#: models.py:30
+#: models.py:46
 msgid "Name"
 msgstr ""
 
-#: models.py:32
+#: models.py:48
 msgid "Used to filter out form submissions."
 msgstr ""
 
-#: models.py:35 models.py:81
+#: models.py:51 models.py:132
 msgid "Error message"
 msgstr ""
 
-#: models.py:38
+#: models.py:54
 msgid "An error message that will be displayed if the form doesn't validate."
 msgstr ""
 
-#: models.py:40
+#: models.py:56
 msgid "Redirect to"
 msgstr ""
 
-#: models.py:43
+#: models.py:59
 msgid "Where to redirect the user when the form has been successfully sent?"
 msgstr ""
 
-#: models.py:49
+#: models.py:65
 msgid "Recipients"
 msgstr ""
 
-#: models.py:52
+#: models.py:68
 msgid "People who will get the form content via e-mail."
 msgstr ""
 
-#: models.py:54 models.py:70 models.py:104 models.py:160
+#: models.py:70 models.py:121 models.py:155 models.py:217
 msgid "custom css classes"
 msgstr ""
 
-#: models.py:69
+#: models.py:72
+msgid "form template"
+msgstr ""
+
+#: models.py:120
 msgid "Legend"
 msgstr ""
 
-#: models.py:78 models.py:159
+#: models.py:129 models.py:216
 msgid "Label"
 msgstr ""
 
-#: models.py:79
+#: models.py:130
 msgid "Field is required"
 msgstr ""
 
-#: models.py:84
+#: models.py:135
 msgid ""
 "Error message displayed if the required field is left empty. Default: \"This "
 "field is required\"."
 msgstr ""
 
-#: models.py:87
+#: models.py:138
 msgid "Placeholder text"
 msgstr ""
 
-#: models.py:90
+#: models.py:141
 msgid ""
 "Default text in a form. Disappears when user starts typing. Example: "
 "\"email@exmaple.com\""
 msgstr ""
 
-#: models.py:93
+#: models.py:144
 msgid "Help text"
 msgstr ""
 
-#: models.py:96
+#: models.py:147
 msgid "Explanatory text displayed next to input field. Just like this one."
 msgstr ""
 
-#: models.py:101
+#: models.py:152
 msgid "Min value"
 msgstr ""
 
-#: models.py:102
+#: models.py:153
 msgid "Max value"
 msgstr ""
 
-#: models.py:134
+#: models.py:185
 msgid "columns"
 msgstr ""
 
-#: models.py:135
+#: models.py:186
 msgid "rows"
 msgstr ""
 
-#: models.py:143
+#: models.py:193
 msgid ""
 "When checked, the value of this field will be used to send an email "
 "notification."
 msgstr ""
 
-#: models.py:150
+#: models.py:196
+msgid "email subject"
+msgstr ""
+
+#: models.py:200
+msgid "used as the email subject when email_send_notification is checked."
+msgstr ""
+
+#: models.py:207
 msgid "Value"
 msgstr ""
 
-#: models.py:151
-msgid "Default"
-msgstr ""
-
-#: models.py:172
+#: models.py:229
 msgid "admins notified"
 msgstr ""
 
-#: models.py:179
+#: models.py:236
 msgid "Form submission"
 msgstr ""
 
-#: models.py:180
+#: models.py:237
 msgid "Form submissions"
 msgstr ""
 
@@ -260,4 +293,22 @@ msgstr ""
 #, python-format
 msgid ""
 "You can't choose more than %(limit_value)d options (chosen %(show_value)d)."
+msgstr ""
+
+#: templates/admin/aldryn_forms/export.html:4
+msgid "export form submissions"
+msgstr ""
+
+#: templates/admin/aldryn_forms/export.html:7
+msgid "Please correct the error below."
+msgid_plural "Please correct the errors below."
+msgstr[0] ""
+msgstr[1] ""
+
+#: templates/admin/aldryn_forms/export.html:27
+msgid "Export"
+msgstr ""
+
+#: templates/admin/aldryn_forms/formdata/change_list.html:9
+msgid "Export Form Entries"
 msgstr ""
