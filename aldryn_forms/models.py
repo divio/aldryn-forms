@@ -1,6 +1,9 @@
 # -*- coding: utf-8 -*-
+from collections import namedtuple
+
 from django.conf import settings
 from django.db import models
+from django.utils.datastructures import SortedDict
 from django.utils.translation import ugettext_lazy as _
 
 from cms.models.fields import PageField
@@ -17,6 +20,9 @@ else:
     User = get_user_model()
 
 from .utils import get_form_render_data
+
+
+FieldData = namedtuple('FieldData', field_names=['label', 'value'])
 
 
 class FormPlugin(CMSPlugin):
@@ -239,6 +245,24 @@ class FormData(models.Model):
 
     def __unicode__(self):
         return self.name
+
+    def get_data(self):
+        fields = self.data.splitlines()
+        # this will be a list of dictionaries mapping field name to value.
+        # we use this approach because using field name as key might result in overriding values
+        # since fields can have the same name
+        form_data = []
+
+        for field in fields:
+            bits = field.split(':')
+            # this is an unfortunate design flaw on this model.
+            # ":" was chosen as delimiter to separate field_name from field value
+            # and so if a user ever enters ":" in any one of the two then we can't
+            # really reliable get the name or value, so for now ignore that field :(
+            if len(bits) == 2:
+                data = FieldData(label=bits[0], value=bits[1])
+                form_data.append(data)
+        return form_data
 
     def set_form_data(self, form):
         grouped_data = get_form_render_data(form)

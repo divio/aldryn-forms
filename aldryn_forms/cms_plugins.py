@@ -78,7 +78,6 @@ class FormPlugin(FieldContainer):
         form = self.process_form(instance, request)
         if form.is_valid():
             context['form_success_url'] = self.get_success_url(instance)
-
         context['form'] = form
         return context
 
