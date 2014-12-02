@@ -8,7 +8,6 @@
 
 {% if field %}
 <div class="form-group{% if field.field.required %} form-required{% endif %}{% if field.errors %} has-error{% endif %}">
-
     <label class="control-label" for="{{ field.auto_id }}">
         {% if field.label %}
             {{ field.label }}{% if field.field.required %}<abbr title="{% trans "Required field" %}">*</abbr>{% endif %}
