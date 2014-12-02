@@ -1,11 +1,5 @@
 {% load i18n %}
 
-{% if not field %}
-<div class="alert alert-warning" role="alert">
-    <p>{% trans "Field outside of form." %}</p>
-</div>
-{% endif %}
-
 {% if field %}
 <div class="form-group{% if field.field.required %} form-required{% endif %}{% if field.errors %} has-error{% endif %}">
     <label class="control-label" for="{{ field.auto_id }}">
@@ -21,5 +15,11 @@
 
     {% if field.errors %}{% for error in field.errors %}<span class="text-danger">{{ error }}</span>{% endfor %}{% endif %}
     {% if field.help_text %}<span class="help-block">{{ field.help_text }}</span>{% endif %}
+</div>
+{% else %}
+<div class="alert alert-warning" role="alert">
+    <p>{% trans "Field outside of form." %}</p>
+    {{ field }}
+    {{ field.label }}
 </div>
 {% endif %}
