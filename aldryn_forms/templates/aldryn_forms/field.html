@@ -1,16 +1,26 @@
 {% load i18n %}
 
+{% if not field %}
+<div class="alert alert-warning" role="alert">
+    <p>{% trans "Field outside of form." %}</p>
+</div>
+{% endif %}
+
 {% if field %}
-    <div class="form-group{% if field.field.required %} form-required{% endif %}{% if field.errors %} text-danger{% endif %}">
+<div class="form-group{% if field.field.required %} form-required{% endif %}{% if field.errors %} has-error{% endif %}">
+
+    <label class="control-label" for="{{ field.auto_id }}">
         {% if field.label %}
-        <label class="control-label" for="{{ field.auto_id }}">{{ field.label }}{% if field.field.required %}<abbr title="{% trans "Required field" %}">*</abbr>{% endif %}</label>
+            {{ field.label }}{% if field.field.required %}<abbr title="{% trans "Required field" %}">*</abbr>{% endif %}
         {% else %}
-        <label class="control-label" for="{{ field.auto_id }}"><span class="sr-only">{% trans "Move to" %}</span>&nbsp;</label>
+            <span class="sr-only">{{ field.label }}</span>
         {% endif %}
-        <div class="control-field">{{ field }}</div>
-        {% if field.errors %}{% for error in field.errors %}<p class="text-danger">{{ error }}</p>{% endfor %}{% endif %}
-        {% if field.help_text %}<p class="text-info">{{ field.help_text }}</p>{% endif %}
-    </div>
-{% else %}
-    <div class="form-group"><p>{% trans "Field outside of form." %}</p></div>
+    </label>
+
+    {# TODO: implement something like {{ field|custom_class:"form-control" }} #}
+    <div class="control-field">{{ field }}</div>
+
+    {% if field.errors %}{% for error in field.errors %}<span class="text-danger">{{ error }}</span>{% endfor %}{% endif %}
+    {% if field.help_text %}<span class="help-block">{{ field.help_text }}</span>{% endif %}
+</div>
 {% endif %}
