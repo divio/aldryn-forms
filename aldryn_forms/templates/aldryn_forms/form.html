@@ -14,13 +14,15 @@
 
     {% if form_success_url %}
     <div class="alert alert-success" role="alert">
-        <p>{% trans "Thank you for submitting your information, you will be redirected shortly." %}</p>
+        <p>{% blocktrans %}Thank you for submitting your information, you will be <a href="{{ form_success_url }}">redirected shortly</a>.{% endblocktrans %}</p>
     </div>
     {% endif %}
 
-    {% for plugin in instance.child_plugin_instances %}
-        {% render_plugin plugin %}
-    {% endfor %}
+    {% if not form_success_url %}
+        {% for plugin in instance.child_plugin_instances %}
+            {% render_plugin plugin %}
+        {% endfor %}
+    {% endif %}
 </form>
 
 {# INFO: this hack is currently required as backend does not know where to redirect #}
@@ -28,8 +30,7 @@
 {% addtoblock "js" %}
 <script>
 setTimeout(function () {
-    // window.location.reload('{{ form_success_url }}');
-    alert('SCUEESS');
+    window.location.href = '{{ form_success_url }}';
 }, 2000);
 </script>
 {% endaddtoblock %}
