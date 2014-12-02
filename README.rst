@@ -33,6 +33,8 @@ Update ``INSTALLED_APPS`` with ::
         …
     ]
 
+Also ensure you define an `e-mail backend <https://docs.djangoproject.com/en/dev/topics/email/#dummy-backend>`_ for your app.
+
 
 Creating a Form
 ===============
