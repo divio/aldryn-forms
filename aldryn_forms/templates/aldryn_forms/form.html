@@ -25,7 +25,8 @@
     {% endif %}
 </form>
 
-{# INFO: this hack is currently required as backend does not know where to redirect #}
+
+{# INFO: this hack is currently required because we can't redirect from a plugin. #}
 {% if form_success_url %}
 {% addtoblock "js" %}
 <script>

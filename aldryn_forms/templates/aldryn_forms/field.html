@@ -1,25 +1,31 @@
-{% load i18n %}
+{% load aldryn_forms_tags i18n %}
 
 {% if field %}
 <div class="form-group{% if field.field.required %} form-required{% endif %}{% if field.errors %} has-error{% endif %}">
-    <label class="control-label" for="{{ field.auto_id }}">
+    {% block form_field_label %}
+    <label class="control-label" for="{{ field.id_for_label }}">
         {% if field.label %}
             {{ field.label }}{% if field.field.required %}<abbr title="{% trans "Required field" %}">*</abbr>{% endif %}
         {% else %}
             <span class="sr-only">{{ field.label }}</span>
         {% endif %}
     </label>
+    {% endblock form_field_label %}
 
-    {# TODO: implement something like {{ field|custom_class:"form-control" }} #}
-    <div class="control-field">{{ field }}</div>
+    {% block form_field %}
+    <div class="control-field">
+        {% render_form_widget field class="form-control" %}
+    </div>
+    {% endblock form_field %}
 
-    {% if field.errors %}{% for error in field.errors %}<span class="text-danger">{{ error }}</span>{% endfor %}{% endif %}
+    {% block form_field_errors %}
+    {% if field.errors %}
+        {% for error in field.errors %}<span class="text-danger">{{ error }}</span>{% endfor %}
+    {% endif %}
+    {% endblock form_field_errors %}
+
+    {% block form_field_help_text %}
     {% if field.help_text %}<span class="help-block">{{ field.help_text }}</span>{% endif %}
-</div>
-{% else %}
-<div class="alert alert-warning" role="alert">
-    <p>{% trans "Field outside of form." %}</p>
-    {{ field }}
-    {{ field.label }}
+    {% endblock form_field_help_text %}
 </div>
 {% endif %}
