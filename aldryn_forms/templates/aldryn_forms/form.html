@@ -5,17 +5,17 @@
     {% for field in form.hidden_fields %}{{ field }}{% endfor %}
 
     {% if form.non_field_errors %}
-    <div class="alert alert-danger" role="alert">
-        {% for error in form.non_field_errors %}
-        <p>{{ error }}</p>
-        {% endfor %}
-    </div>
+        <div class="alert alert-danger" role="alert">
+            {% for error in form.non_field_errors %}
+                <p>{{ error }}</p>
+            {% endfor %}
+        </div>
     {% endif %}
 
     {% if form_success_url %}
-    <div class="alert alert-success" role="alert">
-        <p>{% blocktrans %}Thank you for submitting your information, you will be <a href="{{ form_success_url }}">redirected shortly</a>.{% endblocktrans %}</p>
-    </div>
+        <div class="alert alert-success" role="alert">
+            <p>{% blocktrans %}Thank you for submitting your information, you will be <a href="{{ form_success_url }}">redirected shortly</a>.{% endblocktrans %}</p>
+        </div>
     {% endif %}
 
     {% if not form_success_url %}
