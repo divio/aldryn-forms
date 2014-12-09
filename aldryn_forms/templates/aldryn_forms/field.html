@@ -1,12 +1,23 @@
+{% load aldryn_forms_tags i18n %}
+
 {% if field %}
-	{% for error in field.errors %}
-		<li class="aldryn-forms-error">{{ error }}</li>
-	{% endfor %}
-	<li class="aldryn-forms-field {% if field.field.required %}required{% endif %}">
-		{% if field.label %}
-			<label for="{{ field.auto_id }}">{{ field.label }}{% if field.field.required %}*{% endif %}{% if not instance.is_booleanfield %}:{% endif %}</label>
-		{% endif %}
-		{{ field }}
-		{% include 'aldryn_forms/includes/field_help_text.html' %}
-	</li>
+<div class="form-group{% if field.field.required %} form-required{% endif %}{% if field.errors %} has-error{% endif %}">
+    {% block form_field_label %}
+    <label class="control-label{% if not field.label %} sr-only{% endif %}" for="{{ field.id_for_label }}">
+        {{ field.label }}{% if field.field.required %}<abbr title="{% trans "Required field" %}">*</abbr>{% endif %}
+    </label>
+    {% endblock form_field_label %}
+
+    {% block form_field %}
+    <div class="control-field">
+        {% render_form_widget field class="form-control" %}
+
+        {% if field.errors %}
+            {% for error in field.errors %}<span class="text-danger">{{ error }}</span>{% endfor %}
+        {% endif %}
+
+        {% if field.help_text %}<span class="help-block">{{ field.help_text }}</span>{% endif %}
+    </div>
+    {% endblock form_field %}
+</div>
 {% endif %}
