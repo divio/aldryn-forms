@@ -1,4 +1,6 @@
 # -*- coding: utf-8 -*-
+from PIL import Image
+
 from django import forms
 from django.db.models import query
 from django.contrib import messages
@@ -12,7 +14,9 @@ from cms.plugin_pool import plugin_pool
 
 from emailit.api import send_mail
 
-from aldryn_forms import models
+from filer.models import filemodels, imagemodels
+
+from . import models
 from .forms import (
     EmailFieldForm,
     FormDataBaseForm,
@@ -417,6 +421,36 @@ class FileField(Field):
     fieldset_general_fields = Field.fieldset_general_fields + [
         'upload_to',
     ]
+
+    def form_pre_save(self, instance, form):
+        """Save the uploaded file to django-filer
+
+        The type of model (file or image) is automatically chosen by trying to
+        open the uploaded file.
+        """
+        field_name = self.get_field_name(instance)
+        uploaded_file = form.cleaned_data[field_name]
+
+        try:
+            Image.open(uploaded_file).verify()
+        except:
+            model = filemodels.File
+        else:
+            model = imagemodels.Image
+
+        filer_file = model(
+            folder=instance.upload_to,
+            file=uploaded_file,
+            name=uploaded_file.name,
+            original_filename=uploaded_file.name,
+            is_public=False,
+        )
+        filer_file.save()
+
+        # Workaround until we can save/retrieve more complex values from the
+        # database
+        form.cleaned_data[field_name] = filer_file.get_admin_url_path()
+
 
 class BooleanField(Field):
     # checkbox field
