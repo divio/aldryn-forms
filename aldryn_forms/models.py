@@ -11,6 +11,8 @@ from cms.utils.plugins import downcast_plugins
 
 from emailit.api import send_mail
 
+from filer.fields.folder import FilerFolderField
+
 try:
     from django.contrib.auth import get_user_model
 except ImportError:  # django < 1.5
@@ -204,6 +206,14 @@ class EmailFieldPlugin(FieldPluginBase):
         blank=True,
         default='',
         help_text=_('used as the email subject when email_send_notification is checked.')
+    )
+
+
+class FileUploadFieldPlugin(FieldPluginBase):
+    upload_to = FilerFolderField(
+        verbose_name=_('Upload files to'),
+        help_text=_('Select a folder to which all files submitted through '
+                    'this field will be uploaded to.')
     )
 
 

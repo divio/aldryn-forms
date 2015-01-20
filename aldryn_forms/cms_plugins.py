@@ -24,6 +24,7 @@ from .forms import (
     SelectFieldForm,
     CaptchaFieldForm,
     RadioFieldForm,
+    FileFieldForm,
 )
 from .signals import form_pre_save, form_post_save
 from .utils import get_nested_plugins, get_form_render_data
@@ -398,6 +399,25 @@ class EmailField(TextField):
             self.send_notification_email(email, form, instance)
 
 
+class FileField(Field):
+    name = _('File upload field')
+
+    model = models.FileUploadFieldPlugin
+
+    form = FileFieldForm
+    form_field = forms.FileField
+    form_field_widget = forms.FileField.widget
+    form_field_enabled_options = [
+        'label',
+        'help_text',
+        'required',
+        'error_messages',
+        'validators',
+    ]
+    fieldset_general_fields = Field.fieldset_general_fields + [
+        'upload_to',
+    ]
+
 class BooleanField(Field):
     # checkbox field
     # I add the above because searching for "checkbox" should give me this plugin :)
@@ -516,6 +536,7 @@ class SubmitButton(FormElement):
 
 plugin_pool.register_plugin(BooleanField)
 plugin_pool.register_plugin(EmailField)
+plugin_pool.register_plugin(FileField)
 plugin_pool.register_plugin(Fieldset)
 plugin_pool.register_plugin(FormPlugin)
 plugin_pool.register_plugin(MultipleSelectField)

@@ -218,6 +218,12 @@ class EmailFieldForm(TextFieldForm):
         ]
 
 
+class FileFieldForm(forms.ModelForm):
+    class Meta:
+        fields = ['label', 'help_text', 'required', 'required_message',
+                  'custom_classes', 'upload_to']
+
+
 class TextAreaFieldForm(TextFieldForm):
 
     def __init__(self, *args, **kwargs):
