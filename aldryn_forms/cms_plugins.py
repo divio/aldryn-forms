@@ -442,7 +442,7 @@ class FileField(Field):
     ]
 
     def serialize_value(self, instance, value):
-        return value.absolute_uri
+        return value.absolute_uri if value else '-'
 
     def form_pre_save(self, instance, form, request, **kwargs):
         """Save the uploaded file to django-filer
@@ -452,6 +452,9 @@ class FileField(Field):
         """
         field_name = self.get_field_name(instance)
         uploaded_file = form.cleaned_data[field_name]
+
+        if uploaded_file is None:
+            return
 
         try:
             Image.open(uploaded_file).verify()
