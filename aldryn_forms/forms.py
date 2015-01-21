@@ -275,12 +275,26 @@ class EmailFieldForm(TextFieldForm):
 
 
 class FileFieldForm(forms.ModelForm):
+    def __init__(self, *args, **kwargs):
+        super(FileFieldForm, self).__init__(*args, **kwargs)
+        self.fields['help_text'].help_text = _(
+            'Explanatory text displayed next to input field. Just like this '
+            'one. You can use MAXSIZE as a placeholder for the maximum size '
+            'configured below.')
+
     class Meta:
         fields = ['label', 'help_text', 'required', 'required_message',
                   'custom_classes', 'upload_to', 'max_size']
 
 
 class ImageFieldForm(forms.ModelForm):
+    def __init__(self, *args, **kwargs):
+        super(ImageFieldForm, self).__init__(*args, **kwargs)
+        self.fields['help_text'].help_text = _(
+            'Explanatory text displayed next to input field. Just like this '
+            'one. You can use MAXSIZE, MAXWIDTH, MAXHEIGHT as a placeholders '
+            'for the maximum file size and dimensions configured below.')
+
     class Meta:
         fields = FileFieldForm.Meta.fields + ['max_height', 'max_width']
 
