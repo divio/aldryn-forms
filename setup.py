@@ -10,6 +10,7 @@ REQUIREMENTS = [
     'tablib',
     'pillow',
     'django-filer',
+    'django-sizefield',
 ]
 
 CLASSIFIERS = [

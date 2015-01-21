@@ -15,9 +15,11 @@ from cms.plugin_pool import plugin_pool
 from emailit.api import send_mail
 
 from filer.models import filemodels, imagemodels
+from sizefield.utils import filesizeformat
 
 from . import models
 from .forms import (
+    RestrictedFileField,
     EmailFieldForm,
     FormDataBaseForm,
     FormPluginForm,
@@ -428,8 +430,8 @@ class FileField(Field):
     model = models.FileUploadFieldPlugin
 
     form = FileFieldForm
-    form_field = forms.FileField
-    form_field_widget = forms.FileField.widget
+    form_field = RestrictedFileField
+    form_field_widget = RestrictedFileField.widget
     form_field_enabled_options = [
         'label',
         'help_text',
@@ -439,7 +441,17 @@ class FileField(Field):
     ]
     fieldset_general_fields = Field.fieldset_general_fields + [
         'upload_to',
+        'max_size',
     ]
+
+    def get_form_field_kwargs(self, instance):
+        kwargs = super(FileField, self).get_form_field_kwargs(instance)
+        if instance.max_size:
+            if 'help_text' in kwargs:
+                kwargs['help_text'] = kwargs['help_text'].replace(
+                    'MAXSIZE', filesizeformat(instance.max_size))
+            kwargs['max_size'] = instance.max_size
+        return kwargs
 
     def serialize_value(self, instance, value):
         return value.absolute_uri if value else '-'

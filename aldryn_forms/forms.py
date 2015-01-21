@@ -9,8 +9,26 @@ from django.utils import timezone
 from django.utils.text import slugify
 from django.utils.translation import ugettext_lazy as _
 
+from sizefield.utils import filesizeformat
+
 from .models import FormData, FormPlugin, User
 from .utils import add_form_error
+
+
+class RestrictedFileField(forms.FileField):
+    def __init__(self, *args, **kwargs):
+        self.max_size = kwargs.pop('max_size', None)
+        super(RestrictedFileField, self).__init__(*args, **kwargs)
+
+    def clean(self, *args, **kwargs):
+        data = super(RestrictedFileField, self).clean(*args, **kwargs)
+        if self.max_size is not None and data.size > self.max_size:
+            raise forms.ValidationError(
+                _('File size must be under %s. Current file size is %s.') % (
+                    filesizeformat(self.max_size),
+                    filesizeformat(data.size),
+                ))
+        return data
 
 
 def form_choices():
@@ -221,7 +239,7 @@ class EmailFieldForm(TextFieldForm):
 class FileFieldForm(forms.ModelForm):
     class Meta:
         fields = ['label', 'help_text', 'required', 'required_message',
-                  'custom_classes', 'upload_to']
+                  'custom_classes', 'upload_to', 'max_size']
 
 
 class TextAreaFieldForm(TextFieldForm):

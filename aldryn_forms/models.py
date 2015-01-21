@@ -12,6 +12,7 @@ from cms.utils.plugins import downcast_plugins
 from emailit.api import send_mail
 
 from filer.fields.folder import FilerFolderField
+from sizefield.models import FileSizeField
 
 try:
     from django.contrib.auth import get_user_model
@@ -215,6 +216,18 @@ class FileUploadFieldPlugin(FieldPluginBase):
         help_text=_('Select a folder to which all files submitted through '
                     'this field will be uploaded to.')
     )
+    max_size = FileSizeField(
+        verbose_name=_('Maximum file size'),
+        null=True, blank=True,
+        help_text=_('The maximum file size of the upload, in bytes. You can '
+                    'use common size suffixes (kB, MB, GB, ...).')
+    )
+
+
+FileUploadFieldPlugin._meta.get_field('help_text').help_text = _(
+    'Explanatory text displayed next to input field. Just like this one. You '
+    'can use MAXSIZE as a placeholder for the maximum size configured below.'
+)
 
 
 class Option(models.Model):
