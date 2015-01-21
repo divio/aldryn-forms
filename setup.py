@@ -8,6 +8,9 @@ REQUIREMENTS = [
     'django-tablib',
     'South>=0.8.1',
     'tablib',
+    'pillow',
+    'django-filer',
+    'django-sizefield',
 ]
 
 CLASSIFIERS = [

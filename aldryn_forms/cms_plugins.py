@@ -1,4 +1,6 @@
 # -*- coding: utf-8 -*-
+from PIL import Image
+
 from django import forms
 from django.db.models import query
 from django.contrib import messages
@@ -12,8 +14,12 @@ from cms.plugin_pool import plugin_pool
 
 from emailit.api import send_mail
 
-from aldryn_forms import models
+from filer.models import filemodels, imagemodels
+from sizefield.utils import filesizeformat
+
+from . import models
 from .forms import (
+    RestrictedFileField,
     EmailFieldForm,
     FormDataBaseForm,
     FormPluginForm,
@@ -24,6 +30,7 @@ from .forms import (
     SelectFieldForm,
     CaptchaFieldForm,
     RadioFieldForm,
+    FileFieldForm,
 )
 from .signals import form_pre_save, form_post_save
 from .utils import get_nested_plugins, get_form_render_data
@@ -100,21 +107,40 @@ class FormPlugin(FieldContainer):
         form = form_class(**form_kwargs)
 
         if form.is_valid():
-            fields = [field for field in form.base_fields.values() if hasattr(field, '_plugin_instance')]
+            fields = [field for field in form.base_fields.values()
+                      if hasattr(field, '_plugin_instance')]
 
             # pre save field hooks
             for field in fields:
-                field._plugin_instance.form_pre_save(instance=field._model_instance, form=form)
+                field._plugin_instance.form_pre_save(
+                    instance=field._model_instance,
+                    form=form,
+                    request=request,
+                )
 
-            form_pre_save.send(sender=models.FormPlugin, instance=instance, form=form)
+            form_pre_save.send(
+                sender=models.FormPlugin,
+                instance=instance,
+                form=form,
+                request=request,
+            )
 
             self.form_valid(instance, request, form)
 
             # post save field hooks
             for field in fields:
-                field._plugin_instance.form_post_save(instance=field._model_instance, form=form)
+                field._plugin_instance.form_post_save(
+                    instance=field._model_instance,
+                    form=form,
+                    request=request,
+                )
 
-            form_post_save.send(sender=models.FormPlugin, instance=instance, form=form)
+            form_post_save.send(
+                sender=models.FormPlugin,
+                instance=instance,
+                form=form,
+                request=request,
+            )
         elif request.method == 'POST':
             # only call form_invalid if request is POST and form is not valid
             self.form_invalid(instance, request, form)
@@ -313,10 +339,10 @@ class Field(FormElement):
         return template_names
 
     # hooks to allow processing of form data per field
-    def form_pre_save(self, instance, form):
+    def form_pre_save(self, instance, form, **kwargs):
         pass
 
-    def form_post_save(self, instance, form):
+    def form_post_save(self, instance, form, **kwargs):
         pass
 
 
@@ -390,12 +416,82 @@ class EmailField(TextField):
             template_base=self.email_template_base
         )
 
-    def form_post_save(self, instance, form):
+    def form_post_save(self, instance, form, **kwargs):
         field_name = self.get_field_name(instance)
         email = form.cleaned_data.get(field_name)
 
         if email and instance.email_send_notification:
             self.send_notification_email(email, form, instance)
+
+
+class FileField(Field):
+    name = _('File upload field')
+
+    model = models.FileUploadFieldPlugin
+
+    form = FileFieldForm
+    form_field = RestrictedFileField
+    form_field_widget = RestrictedFileField.widget
+    form_field_enabled_options = [
+        'label',
+        'help_text',
+        'required',
+        'error_messages',
+        'validators',
+    ]
+    fieldset_general_fields = Field.fieldset_general_fields + [
+        'upload_to',
+        'max_size',
+    ]
+
+    def get_form_field_kwargs(self, instance):
+        kwargs = super(FileField, self).get_form_field_kwargs(instance)
+        if instance.max_size:
+            if 'help_text' in kwargs:
+                kwargs['help_text'] = kwargs['help_text'].replace(
+                    'MAXSIZE', filesizeformat(instance.max_size))
+            kwargs['max_size'] = instance.max_size
+        return kwargs
+
+    def serialize_value(self, instance, value):
+        return value.absolute_uri if value else '-'
+
+    def form_pre_save(self, instance, form, request, **kwargs):
+        """Save the uploaded file to django-filer
+
+        The type of model (file or image) is automatically chosen by trying to
+        open the uploaded file.
+        """
+        field_name = self.get_field_name(instance)
+        uploaded_file = form.cleaned_data[field_name]
+
+        if uploaded_file is None:
+            return
+
+        try:
+            with Image.open(uploaded_file) as img:
+                img.verify()
+        except:
+            model = filemodels.File
+        else:
+            model = imagemodels.Image
+
+        filer_file = model(
+            folder=instance.upload_to,
+            file=uploaded_file,
+            name=uploaded_file.name,
+            original_filename=uploaded_file.name,
+            is_public=False,
+        )
+        filer_file.save()
+
+        # NOTE: This is a hack to make the full URL available later when we
+        # need to serialize this field. We avoid to serialize it here directly
+        # as we could still need access to the original filer File instance.
+        filer_file.absolute_uri = request.build_absolute_uri(
+            filer_file.get_admin_url_path())
+
+        form.cleaned_data[field_name] = filer_file
 
 
 class BooleanField(Field):
@@ -516,6 +612,7 @@ class SubmitButton(FormElement):
 
 plugin_pool.register_plugin(BooleanField)
 plugin_pool.register_plugin(EmailField)
+plugin_pool.register_plugin(FileField)
 plugin_pool.register_plugin(Fieldset)
 plugin_pool.register_plugin(FormPlugin)
 plugin_pool.register_plugin(MultipleSelectField)
