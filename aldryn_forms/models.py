@@ -223,12 +223,6 @@ class FileFieldPluginBase(FieldPluginBase):
                     'use common size suffixes (kB, MB, GB, ...).')
     )
 
-
-FileUploadFieldPlugin._meta.get_field('help_text').help_text = _(
-    'Explanatory text displayed next to input field. Just like this one. You '
-    'can use MAXSIZE as a placeholder for the maximum size configured below.'
-)
-
     class Meta:
         abstract = True
 
@@ -236,9 +230,29 @@ FileUploadFieldPlugin._meta.get_field('help_text').help_text = _(
 class FileUploadFieldPlugin(FileFieldPluginBase):
     pass
 
+FileUploadFieldPlugin._meta.get_field('help_text').help_text = _(
+    'Explanatory text displayed next to input field. Just like this one. You '
+    'can use MAXSIZE as a placeholder for the maximum size configured below.'
+)
+
 
 class ImageUploadFieldPlugin(FileFieldPluginBase):
-    pass
+    max_width = models.PositiveIntegerField(
+        verbose_name=_('Maximum image width'),
+        null=True, blank=True,
+        help_text=_('The maximum width of the uploaded image, in pixels.')
+    )
+    max_height = models.PositiveIntegerField(
+        verbose_name=_('Maximum image height'),
+        null=True, blank=True,
+        help_text=_('The maximum height of the uploaded image, in pixels.')
+    )
+
+ImageUploadFieldPlugin._meta.get_field('help_text').help_text = _(
+    'Explanatory text displayed next to input field. Just like this one. You '
+    'can use MAXSIZE, MAXWIDTH, MAXHEIGHT as a placeholders for the maximum '
+    'file size and dimensions configured below.'
+)
 
 
 class Option(models.Model):

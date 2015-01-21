@@ -20,6 +20,7 @@ from sizefield.utils import filesizeformat
 from . import models
 from .forms import (
     RestrictedFileField,
+    RestrictedImageField,
     EmailFieldForm,
     FormDataBaseForm,
     FormPluginForm,
@@ -31,6 +32,7 @@ from .forms import (
     CaptchaFieldForm,
     RadioFieldForm,
     FileFieldForm,
+    ImageFieldForm,
 )
 from .signals import form_pre_save, form_post_save
 from .utils import get_nested_plugins, get_form_render_data
@@ -497,8 +499,34 @@ class FileField(Field):
 class ImageField(FileField):
     name = _('Image upload field')
 
-    form_field = forms.ImageField
-    form_field_widget = forms.ImageField.widget
+    model = models.ImageUploadFieldPlugin
+
+    form = ImageFieldForm
+    form_field = RestrictedImageField
+    form_field_widget = RestrictedImageField.widget
+    fieldset_general_fields = Field.fieldset_general_fields + [
+        'upload_to',
+        'max_size',
+        'max_width',
+        'max_height',
+    ]
+
+    def get_form_field_kwargs(self, instance):
+        kwargs = super(ImageField, self).get_form_field_kwargs(instance)
+
+        if instance.max_width:
+            if 'help_text' in kwargs:
+                kwargs['help_text'] = kwargs['help_text'].replace(
+                    'MAXWIDTH', str(instance.max_width))
+            kwargs['max_width'] = instance.max_width
+
+        if instance.max_height:
+            if 'help_text' in kwargs:
+                kwargs['help_text'] = kwargs['help_text'].replace(
+                    'MAXHEIGHT', str(instance.max_height))
+            kwargs['max_height'] = instance.max_height
+
+        return kwargs
 
 
 class BooleanField(Field):
