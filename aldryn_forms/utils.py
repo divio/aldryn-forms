@@ -1,5 +1,4 @@
 # -*- coding: utf-8 -*-
-from django.db import models
 from django.forms.forms import NON_FIELD_ERRORS
 
 from cms.utils.moderator import get_cmsplugin_queryset
@@ -61,13 +60,6 @@ def add_form_error(form, message, field=NON_FIELD_ERRORS):
 
 
 def get_form_render_data(form):
-    form_data = []
-    for field in form.visible_fields():
-        value = form.cleaned_data[field.name]
-        if isinstance(value, models.query.QuerySet):
-            value = ', '.join(map(unicode, value))
-        elif value is None:
-            value = '-'
-        name = field.label if field.label else field.name
-        form_data.append((name, value))
-    return form_data
+    for field in form.form_plugin.get_form_fields():
+        plugin = field.get_plugin_instance()[1]
+        yield plugin.serialize_field(form, field)

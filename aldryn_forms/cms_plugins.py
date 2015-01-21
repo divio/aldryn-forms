@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 from django import forms
+from django.db.models import query
 from django.contrib import messages
 from django.contrib.admin import TabularInline
 from django.core.validators import MinLengthValidator
@@ -171,6 +172,22 @@ class Field(FormElement):
 
     def get_field_name(self, instance):
         return u'aldryn-forms-field-%d' % (instance.pk,)
+
+    def serialize_value(self, instance, value):
+        if isinstance(value, query.QuerySet):
+            value = u', '.join(map(unicode, value))
+        elif value is None:
+            value = '-'
+        return unicode(value)
+
+    def serialize_field(self, form, instance):
+        """Returns a (label, value) tuple for the given field.
+
+        Both fields will have been converted to a string object."""
+        key = self.get_field_name(instance)
+        value = self.serialize_value(instance, form.cleaned_data[key])
+        name = instance.label or key
+        return name, value
 
     def get_form_fields(self, instance):
         return {self.get_field_name(instance=instance): self.get_form_field(instance=instance)}
@@ -394,6 +411,9 @@ class BooleanField(Field):
         'required',
         'error_messages',
     ]
+
+    def serialize_value(self, instance, value):
+        return _('Yes') if value else _('No')
 
 
 class SelectOptionInline(TabularInline):
