@@ -494,6 +494,13 @@ class FileField(Field):
         form.cleaned_data[field_name] = filer_file
 
 
+class ImageField(FileField):
+    name = _('Image upload field')
+
+    form_field = forms.ImageField
+    form_field_widget = forms.ImageField.widget
+
+
 class BooleanField(Field):
     # checkbox field
     # I add the above because searching for "checkbox" should give me this plugin :)
@@ -613,6 +620,7 @@ class SubmitButton(FormElement):
 plugin_pool.register_plugin(BooleanField)
 plugin_pool.register_plugin(EmailField)
 plugin_pool.register_plugin(FileField)
+plugin_pool.register_plugin(ImageField)
 plugin_pool.register_plugin(Fieldset)
 plugin_pool.register_plugin(FormPlugin)
 plugin_pool.register_plugin(MultipleSelectField)

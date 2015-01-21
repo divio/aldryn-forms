@@ -210,7 +210,7 @@ class EmailFieldPlugin(FieldPluginBase):
     )
 
 
-class FileUploadFieldPlugin(FieldPluginBase):
+class FileFieldPluginBase(FieldPluginBase):
     upload_to = FilerFolderField(
         verbose_name=_('Upload files to'),
         help_text=_('Select a folder to which all files submitted through '
@@ -228,6 +228,17 @@ FileUploadFieldPlugin._meta.get_field('help_text').help_text = _(
     'Explanatory text displayed next to input field. Just like this one. You '
     'can use MAXSIZE as a placeholder for the maximum size configured below.'
 )
+
+    class Meta:
+        abstract = True
+
+
+class FileUploadFieldPlugin(FileFieldPluginBase):
+    pass
+
+
+class ImageUploadFieldPlugin(FileFieldPluginBase):
+    pass
 
 
 class Option(models.Model):
