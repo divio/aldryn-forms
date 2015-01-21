@@ -105,21 +105,40 @@ class FormPlugin(FieldContainer):
         form = form_class(**form_kwargs)
 
         if form.is_valid():
-            fields = [field for field in form.base_fields.values() if hasattr(field, '_plugin_instance')]
+            fields = [field for field in form.base_fields.values()
+                      if hasattr(field, '_plugin_instance')]
 
             # pre save field hooks
             for field in fields:
-                field._plugin_instance.form_pre_save(instance=field._model_instance, form=form)
+                field._plugin_instance.form_pre_save(
+                    instance=field._model_instance,
+                    form=form,
+                    request=request,
+                )
 
-            form_pre_save.send(sender=models.FormPlugin, instance=instance, form=form)
+            form_pre_save.send(
+                sender=models.FormPlugin,
+                instance=instance,
+                form=form,
+                request=request,
+            )
 
             self.form_valid(instance, request, form)
 
             # post save field hooks
             for field in fields:
-                field._plugin_instance.form_post_save(instance=field._model_instance, form=form)
+                field._plugin_instance.form_post_save(
+                    instance=field._model_instance,
+                    form=form,
+                    request=request,
+                )
 
-            form_post_save.send(sender=models.FormPlugin, instance=instance, form=form)
+            form_post_save.send(
+                sender=models.FormPlugin,
+                instance=instance,
+                form=form,
+                request=request,
+            )
         elif request.method == 'POST':
             # only call form_invalid if request is POST and form is not valid
             self.form_invalid(instance, request, form)
@@ -318,10 +337,10 @@ class Field(FormElement):
         return template_names
 
     # hooks to allow processing of form data per field
-    def form_pre_save(self, instance, form):
+    def form_pre_save(self, instance, form, **kwargs):
         pass
 
-    def form_post_save(self, instance, form):
+    def form_post_save(self, instance, form, **kwargs):
         pass
 
 
@@ -395,7 +414,7 @@ class EmailField(TextField):
             template_base=self.email_template_base
         )
 
-    def form_post_save(self, instance, form):
+    def form_post_save(self, instance, form, **kwargs):
         field_name = self.get_field_name(instance)
         email = form.cleaned_data.get(field_name)
 
@@ -422,7 +441,7 @@ class FileField(Field):
         'upload_to',
     ]
 
-    def form_pre_save(self, instance, form):
+    def form_pre_save(self, instance, form, request, **kwargs):
         """Save the uploaded file to django-filer
 
         The type of model (file or image) is automatically chosen by trying to
