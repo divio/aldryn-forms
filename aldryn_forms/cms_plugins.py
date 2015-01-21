@@ -441,6 +441,9 @@ class FileField(Field):
         'upload_to',
     ]
 
+    def serialize_value(self, instance, value):
+        return value.absolute_uri
+
     def form_pre_save(self, instance, form, request, **kwargs):
         """Save the uploaded file to django-filer
 
@@ -466,9 +469,13 @@ class FileField(Field):
         )
         filer_file.save()
 
-        # Workaround until we can save/retrieve more complex values from the
-        # database
-        form.cleaned_data[field_name] = filer_file.get_admin_url_path()
+        # NOTE: This is a hack to make the full URL available later when we
+        # need to serialize this field. We avoid to serialize it here directly
+        # as we could still need access to the original filer File instance.
+        filer_file.absolute_uri = request.build_absolute_uri(
+            filer_file.get_admin_url_path())
+
+        form.cleaned_data[field_name] = filer_file
 
 
 class BooleanField(Field):
