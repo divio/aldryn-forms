@@ -469,7 +469,8 @@ class FileField(Field):
             return
 
         try:
-            Image.open(uploaded_file).verify()
+            with Image.open(uploaded_file) as img:
+                img.verify()
         except:
             model = filemodels.File
         else:

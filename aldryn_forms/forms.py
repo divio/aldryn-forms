@@ -22,6 +22,10 @@ class RestrictedFileField(forms.FileField):
 
     def clean(self, *args, **kwargs):
         data = super(RestrictedFileField, self).clean(*args, **kwargs)
+
+        if data is None:
+            return
+
         if self.max_size is not None and data.size > self.max_size:
             raise forms.ValidationError(
                 _('File size must be under %s. Current file size is %s.') % (
