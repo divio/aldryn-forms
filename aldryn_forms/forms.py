@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
 from datetime import datetime, timedelta
 
+from PIL import Image
+
 from django import forms
 from django.conf import settings
 from django.contrib.admin.widgets import AdminDateWidget
@@ -15,13 +17,13 @@ from .models import FormData, FormPlugin, User
 from .utils import add_form_error
 
 
-class RestrictedFileField(forms.FileField):
+class FileSizeCheckMixin(object):
     def __init__(self, *args, **kwargs):
         self.max_size = kwargs.pop('max_size', None)
-        super(RestrictedFileField, self).__init__(*args, **kwargs)
+        super(FileSizeCheckMixin, self).__init__(*args, **kwargs)
 
     def clean(self, *args, **kwargs):
-        data = super(RestrictedFileField, self).clean(*args, **kwargs)
+        data = super(FileSizeCheckMixin, self).clean(*args, **kwargs)
 
         if data is None:
             return
@@ -32,6 +34,38 @@ class RestrictedFileField(forms.FileField):
                     filesizeformat(self.max_size),
                     filesizeformat(data.size),
                 ))
+        return data
+
+
+class RestrictedFileField(FileSizeCheckMixin, forms.FileField):
+    pass
+
+
+class RestrictedImageField(FileSizeCheckMixin, forms.ImageField):
+    def __init__(self, *args, **kwargs):
+        self.max_width = kwargs.pop('max_width', None)
+        self.max_height = kwargs.pop('max_height', None)
+        super(RestrictedImageField, self).__init__(*args, **kwargs)
+
+    def clean(self, *args, **kwargs):
+        data = super(RestrictedImageField, self).clean(*args, **kwargs)
+
+        if data is None:
+            return
+
+        with Image.open(data) as img:
+            width, height = img.size
+
+        if self.max_width and width > self.max_width:
+            raise forms.ValidationError(
+                _('Image width must be under %s pixels. '
+                  'Current width is %s pixels.') % (self.max_width, width))
+
+        if self.max_height and height > self.max_height:
+            raise forms.ValidationError(
+                _('Image height must be under %s pixels. '
+                  'Current height is %s pixels.') % (self.max_height, height))
+
         return data
 
 
@@ -241,9 +275,28 @@ class EmailFieldForm(TextFieldForm):
 
 
 class FileFieldForm(forms.ModelForm):
+    def __init__(self, *args, **kwargs):
+        super(FileFieldForm, self).__init__(*args, **kwargs)
+        self.fields['help_text'].help_text = _(
+            'Explanatory text displayed next to input field. Just like this '
+            'one. You can use MAXSIZE as a placeholder for the maximum size '
+            'configured below.')
+
     class Meta:
         fields = ['label', 'help_text', 'required', 'required_message',
                   'custom_classes', 'upload_to', 'max_size']
+
+
+class ImageFieldForm(forms.ModelForm):
+    def __init__(self, *args, **kwargs):
+        super(ImageFieldForm, self).__init__(*args, **kwargs)
+        self.fields['help_text'].help_text = _(
+            'Explanatory text displayed next to input field. Just like this '
+            'one. You can use MAXSIZE, MAXWIDTH, MAXHEIGHT as a placeholders '
+            'for the maximum file size and dimensions configured below.')
+
+    class Meta:
+        fields = FileFieldForm.Meta.fields + ['max_height', 'max_width']
 
 
 class TextAreaFieldForm(TextFieldForm):
