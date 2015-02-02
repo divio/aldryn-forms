@@ -30,6 +30,7 @@ Update ``INSTALLED_APPS`` with ::
         'aldryn_forms',
         'captcha',
         'emailit',
+        'filer',
         …
     ]
 
@@ -64,3 +65,7 @@ Available Plug-ins
 ``Select Field`` renders single select input.
 
 ``Multiple Select Field`` renders multiple checkboxes.
+
+``File field`` renders a file upload input.
+
+``Image field`` same as ``file field`` but validates that the uploaded file is an image.
