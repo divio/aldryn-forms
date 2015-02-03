@@ -34,6 +34,12 @@ Update ``INSTALLED_APPS`` with ::
         …
     ]
 
+Configure ``aldryn-boilerplates`` (https://pypi.python.org/pypi/aldryn-boilerplates/).
+
+To use the old templates, set ``ALDRYN_BOILERPLATE_NAME='legacy'``.
+To use https://github.com/aldryn/aldryn-boilerplate-standard (recommended, will be renamed to
+``aldryn-boilerplate-bootstrap3``) set ``ALDRYN_BOILERPLATE_NAME='bootstrap3'``.
+
 Also ensure you define an `e-mail backend <https://docs.djangoproject.com/en/dev/topics/email/#dummy-backend>`_ for your app.
 
 

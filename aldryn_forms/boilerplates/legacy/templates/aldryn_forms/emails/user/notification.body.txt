@@ -1,0 +1,3 @@
+Form name: {{ form_name }}
+
+{% include "aldryn_forms/snippets/_form_data.txt" %}
