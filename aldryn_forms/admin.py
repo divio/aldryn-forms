@@ -98,14 +98,25 @@ class FormDataAdmin(admin.ModelAdmin):
                 headers[ugettext('Language')] = 'language'
                 headers[ugettext('Submitted on')] = 'sent_at'
 
-                response = export(
-                    request,
-                    queryset=entries,
-                    model=entries.model,
-                    headers=headers,
-                    format='xls', # we can make this a field in the form ;)
-                    filename=filename
-                )
+                try:
+                    # Since django-tablib 3.1 the parameter is called file_type
+                    response = export(
+                        request,
+                        queryset=entries,
+                        model=entries.model,
+                        headers=headers,
+                        file_type='xls', # we can make this a field in the form ;)
+                        filename=filename
+                    )
+                except TypeError:
+                    response = export(
+                        request,
+                        queryset=entries,
+                        model=entries.model,
+                        headers=headers,
+                        format='xls', # we can make this a field in the form ;)
+                        filename=filename
+                    )
                 return response
             else:
                 self.message_user(request, _("No records found"), level=messages.WARNING)
