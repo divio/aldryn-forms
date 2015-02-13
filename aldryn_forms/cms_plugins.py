@@ -201,19 +201,20 @@ class Field(FormElement):
     def get_field_name(self, instance):
         return u'aldryn-forms-field-%d' % (instance.pk,)
 
-    def serialize_value(self, instance, value):
+    def serialize_value(self, instance, value, is_confirmation=False):
         if isinstance(value, query.QuerySet):
             value = u', '.join(map(unicode, value))
         elif value is None:
             value = '-'
         return unicode(value)
 
-    def serialize_field(self, form, instance):
+    def serialize_field(self, form, instance, is_confirmation=False):
         """Returns a (label, value) tuple for the given field.
 
         Both fields will have been converted to a string object."""
         key = self.get_field_name(instance)
-        value = self.serialize_value(instance, form.cleaned_data[key])
+        value = self.serialize_value(instance, form.cleaned_data[key],
+                                     is_confirmation)
         name = instance.label or key
         return name, value
 
@@ -413,7 +414,7 @@ class EmailField(TextField):
     def send_notification_email(self, email, form, form_field_instance):
         context = {
             'form_name': form.instance.name,
-            'form_data': get_form_render_data(form),
+            'form_data': get_form_render_data(form, is_confirmation=True),
             'body_text': form_field_instance.email_body,
         }
         send_mail(
@@ -460,8 +461,12 @@ class FileField(Field):
             kwargs['max_size'] = instance.max_size
         return kwargs
 
-    def serialize_value(self, instance, value):
-        return value.absolute_uri if value else '-'
+    def serialize_value(self, instance, value, is_confirmation=False):
+        if value:
+            return (value.original_filename if is_confirmation
+                    else value.absolute_uri)
+        else:
+            return '-'
 
     def form_pre_save(self, instance, form, request, **kwargs):
         """Save the uploaded file to django-filer
@@ -488,15 +493,14 @@ class FileField(Field):
             file=uploaded_file,
             name=uploaded_file.name,
             original_filename=uploaded_file.name,
-            is_public=False,
+            is_public=True,
         )
         filer_file.save()
 
         # NOTE: This is a hack to make the full URL available later when we
         # need to serialize this field. We avoid to serialize it here directly
         # as we could still need access to the original filer File instance.
-        filer_file.absolute_uri = request.build_absolute_uri(
-            filer_file.get_admin_url_path())
+        filer_file.absolute_uri = request.build_absolute_uri(filer_file.url)
 
         form.cleaned_data[field_name] = filer_file
 
@@ -548,7 +552,7 @@ class BooleanField(Field):
         'error_messages',
     ]
 
-    def serialize_value(self, instance, value):
+    def serialize_value(self, instance, value, is_confirmation=False):
         return _('Yes') if value else _('No')
 
 

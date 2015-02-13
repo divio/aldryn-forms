@@ -114,11 +114,12 @@ class FormPlugin(CMSPlugin):
 
     def get_form_elements(self):
         from .cms_plugins import FormElement
+        from .utils import get_nested_plugins
 
         is_form_element = lambda plugin: issubclass(plugin.get_plugin_class(), FormElement)
 
         if not hasattr(self, '_form_elements'):
-            children = self.cmsplugin_set.all()
+            children = get_nested_plugins(self)
             children_instances = downcast_plugins(children)
             self._form_elements = [plugin for plugin in children_instances if is_form_element(plugin)]
         return self._form_elements

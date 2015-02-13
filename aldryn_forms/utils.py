@@ -59,7 +59,13 @@ def add_form_error(form, message, field=NON_FIELD_ERRORS):
         form._errors[field] = form.error_class([message])
 
 
-def get_form_render_data(form):
+def get_form_render_data(form, is_confirmation=False):
+    """Renders the form data in a format suitable to be serialized.
+
+    The `is_confirmation` flag indicates if the data will be used in a
+    confirmation email sent to the user submitting the form or if it will be
+    used to render the data for the recipients/admin site.
+    """
     for field in form.form_plugin.get_form_fields():
         plugin = field.get_plugin_instance()[1]
-        yield plugin.serialize_field(form, field)
+        yield plugin.serialize_field(form, field, is_confirmation)
