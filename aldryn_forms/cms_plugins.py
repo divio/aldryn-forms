@@ -413,7 +413,8 @@ class EmailField(TextField):
     def send_notification_email(self, email, form, form_field_instance):
         context = {
             'form_name': form.instance.name,
-            'form_data': get_form_render_data(form)
+            'form_data': get_form_render_data(form),
+            'body_text': form_field_instance.email_body,
         }
         send_mail(
             recipients=[email],

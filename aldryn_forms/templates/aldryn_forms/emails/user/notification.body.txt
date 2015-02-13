@@ -1,3 +1,5 @@
-Form name: {{ form_name }}
+{% if body_text %}{{ body_text }}
+
+{% endif %}Form name: {{ form_name }}
 
 {% include "aldryn_forms/emails/includes/form_data.txt" %}
