@@ -488,7 +488,7 @@ class FileField(Field):
             file=uploaded_file,
             name=uploaded_file.name,
             original_filename=uploaded_file.name,
-            is_public=False,
+            is_public=True,
         )
         filer_file.save()
 
@@ -496,7 +496,7 @@ class FileField(Field):
         # need to serialize this field. We avoid to serialize it here directly
         # as we could still need access to the original filer File instance.
         filer_file.absolute_uri = request.build_absolute_uri(
-            filer_file.get_admin_url_path())
+            filer_file.path)
 
         form.cleaned_data[field_name] = filer_file
 
