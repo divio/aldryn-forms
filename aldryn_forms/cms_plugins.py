@@ -403,7 +403,11 @@ class EmailField(TextField):
     model = models.EmailFieldPlugin
     form = EmailFieldForm
     form_field = forms.EmailField
-    fieldset_general_fields = Field.fieldset_general_fields + ['email_send_notification', 'email_subject']
+    fieldset_general_fields = Field.fieldset_general_fields + [
+        'email_send_notification',
+        'email_subject',
+        'email_body',
+    ]
     email_template_base = 'aldryn_forms/emails/user/notification'
 
     def send_notification_email(self, email, form, form_field_instance):
