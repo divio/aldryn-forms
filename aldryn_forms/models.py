@@ -206,7 +206,14 @@ class EmailFieldPlugin(FieldPluginBase):
         max_length=200,
         blank=True,
         default='',
-        help_text=_('used as the email subject when email_send_notification is checked.')
+        help_text=_('Used as the email subject when email_send_notification is checked.')
+    )
+    email_body = models.TextField(
+        verbose_name=_('Additional email body'),
+        blank=True,
+        default='',
+        help_text=_('Additional body text used when email notifications '
+                    'are active.')
     )
 
 

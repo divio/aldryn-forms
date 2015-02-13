@@ -270,7 +270,8 @@ class EmailFieldForm(TextFieldForm):
             'required_message',
             'email_send_notification',
             'email_subject',
-            'custom_classes'
+            'email_body',
+            'custom_classes',
         ]
 
 
