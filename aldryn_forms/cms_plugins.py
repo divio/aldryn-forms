@@ -215,7 +215,7 @@ class Field(FormElement):
         key = self.get_field_name(instance)
         value = self.serialize_value(instance, form.cleaned_data[key],
                                      is_confirmation)
-        name = instance.label or key
+        name = instance.label or instance.placeholder_text or key
         return name, value
 
     def get_form_fields(self, instance):
