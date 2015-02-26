@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 from collections import defaultdict
+from functools import partial
 
 from django.contrib import admin
 from django.contrib import messages
@@ -98,14 +99,20 @@ class FormDataAdmin(admin.ModelAdmin):
                 headers[ugettext('Language')] = 'language'
                 headers[ugettext('Submitted on')] = 'sent_at'
 
-                response = export(
-                    request,
+                do_export = partial(
+                    export,
+                    request=request,
                     queryset=entries,
                     model=entries.model,
                     headers=headers,
-                    format='xls', # we can make this a field in the form ;)
                     filename=filename
                 )
+
+                try:
+                    # Since django-tablib 3.1 the parameter is called file_type
+                    response = do_export(file_type='xls')
+                except TypeError:
+                    response = do_export(format='xls')
                 return response
             else:
                 self.message_user(request, _("No records found"), level=messages.WARNING)
