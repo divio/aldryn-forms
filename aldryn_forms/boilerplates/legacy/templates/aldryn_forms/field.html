@@ -1,0 +1,12 @@
+{% if field %}
+	{% for error in field.errors %}
+		<li class="aldryn-forms-error">{{ error }}</li>
+	{% endfor %}
+	<li class="aldryn-forms-field {% if field.field.required %}required{% endif %}">
+		{% if field.label %}
+			<label for="{{ field.auto_id }}">{{ field.label }}{% if field.field.required %}*{% endif %}{% if not instance.is_booleanfield %}:{% endif %}</label>
+		{% endif %}
+		{{ field }}
+		{% include 'aldryn_forms/includes/field_help_text.html' %}
+	</li>
+{% endif %}

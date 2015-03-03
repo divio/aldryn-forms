@@ -11,6 +11,7 @@ REQUIREMENTS = [
     'pillow',
     'django-filer',
     'django-sizefield',
+    'aldryn-boilerplates>=0.6',
 ]
 
 CLASSIFIERS = [

@@ -1,0 +1,18 @@
+{# This is a very nasty hack to redirect the user #}
+{% if form_success_url %}
+<script type="text/javascript">
+    window.location.replace("{{ form_success_url }}");
+</script>
+{% endif %}
+
+{% block form %}
+<form class="aldryn-forms-form{% block form_classes %}{% if instance.custom_classes %} {{ instance.custom_classes }}{% endif %}{% endblock form_classes %}" action="." method="POST">
+	{% csrf_token %}
+	{% for field in form.hidden_fields %}
+	{{ field }}
+	{% endfor %}
+
+    {% block form_elements %}
+    {% endblock form_elements %}
+</form>
+{% endblock form %}
