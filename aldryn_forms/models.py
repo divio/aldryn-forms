@@ -30,7 +30,8 @@ FieldData = namedtuple('FieldData', field_names=['label', 'value'])
 class FormPlugin(CMSPlugin):
 
     FALLBACK_FORM_TEMPLATE = 'aldryn_forms/form.html'
-    DEFAULT_FORM_TEMPLATE = getattr(settings, 'ALDRYN_FORMS_DEFAULT_TEMPLATE', FALLBACK_FORM_TEMPLATE)
+    DEFAULT_FORM_TEMPLATE = getattr(
+        settings, 'ALDRYN_FORMS_DEFAULT_TEMPLATE', FALLBACK_FORM_TEMPLATE)
 
     FORM_TEMPLATES = ((DEFAULT_FORM_TEMPLATE, _('Default')),)
 
@@ -53,7 +54,8 @@ class FormPlugin(CMSPlugin):
         verbose_name=_('Error message'),
         blank=True,
         null=True,
-        help_text=_('An error message that will be displayed if the form doesn\'t validate.')
+        help_text=_("An error message that will be displayed if the form "
+                    "doesn't validate.")
     )
     success_message = models.TextField(
         verbose_name=_('Success message'),
@@ -65,7 +67,8 @@ class FormPlugin(CMSPlugin):
         verbose_name=_('Redirect to'),
         max_length=20,
         choices=REDIRECT_CHOICES,
-        help_text=_('Where to redirect the user when the form has been successfully sent?')
+        help_text=_("Where to redirect the user when the form has been "
+                    "successfully sent?")
     )
     page = PageField(verbose_name=_('CMS Page'), blank=True, null=True)
     url = models.URLField(_('Absolute URL'), blank=True, null=True)
@@ -76,7 +79,11 @@ class FormPlugin(CMSPlugin):
         limit_choices_to={'is_staff': True},
         help_text=_('People who will get the form content via e-mail.')
     )
-    custom_classes = models.CharField(verbose_name=_('custom css classes'), max_length=200, blank=True)
+    custom_classes = models.CharField(
+        verbose_name=_('custom css classes'),
+        max_length=200,
+        blank=True
+    )
     form_template = models.CharField(
         verbose_name=_('form template'),
         max_length=200,
@@ -109,26 +116,33 @@ class FormPlugin(CMSPlugin):
         from .cms_plugins import Field
 
         form_elements = self.get_form_elements()
-        is_form_field = lambda plugin: issubclass(plugin.get_plugin_class(), Field)
+        is_form_field = lambda plugin: issubclass(
+            plugin.get_plugin_class(), Field)
         return [plugin for plugin in form_elements if is_form_field(plugin)]
 
     def get_form_elements(self):
         from .cms_plugins import FormElement
         from .utils import get_nested_plugins
 
-        is_form_element = lambda plugin: issubclass(plugin.get_plugin_class(), FormElement)
+        is_form_element = lambda plugin: issubclass(
+            plugin.get_plugin_class(), FormElement)
 
         if not hasattr(self, '_form_elements'):
             children = get_nested_plugins(self)
             children_instances = downcast_plugins(children)
-            self._form_elements = [plugin for plugin in children_instances if is_form_element(plugin)]
+            self._form_elements = [
+                p for p in children_instances if is_form_element(p)]
         return self._form_elements
 
 
 class FieldsetPlugin(CMSPlugin):
 
     legend = models.CharField(_('Legend'), max_length=50, blank=True)
-    custom_classes = models.CharField(verbose_name=_('custom css classes'), max_length=200, blank=True)
+    custom_classes = models.CharField(
+        verbose_name=_('custom css classes'),
+        max_length=200,
+        blank=True
+    )
 
     def __unicode__(self):
         return self.legend or unicode(self.pk)
@@ -142,27 +156,42 @@ class FieldPluginBase(CMSPlugin):
         verbose_name=_('Error message'),
         blank=True,
         null=True,
-        help_text=_('Error message displayed if the required field is left empty. Default: "This field is required".')
+        help_text=_('Error message displayed if the required field is left '
+                    'empty. Default: "This field is required".')
     )
     placeholder_text = models.CharField(
         verbose_name=_('Placeholder text'),
         max_length=50,
         blank=True,
-        help_text=_('Default text in a form. Disappears when user starts typing. Example: "email@exmaple.com"')
+        help_text=_('Default text in a form. Disappears when user starts '
+                    'typing. Example: "email@exmaple.com"')
     )
     help_text = models.TextField(
         verbose_name=_('Help text'),
         blank=True,
         null=True,
-        help_text=_('Explanatory text displayed next to input field. Just like this one.')
+        help_text=_('Explanatory text displayed next to input field. Just like '
+                    'this one.')
     )
 
     # for text field those are min and max length
     # for multiple select those are min and max number of choices
-    min_value = models.PositiveIntegerField(_('Min value'), blank=True, null=True)
-    max_value = models.PositiveIntegerField(_('Max value'), blank=True, null=True)
+    min_value = models.PositiveIntegerField(
+        _('Min value'),
+        blank=True,
+        null=True,
+    )
+    max_value = models.PositiveIntegerField(
+        _('Max value'),
+        blank=True,
+        null=True,
+    )
 
-    custom_classes = models.CharField(verbose_name=_('custom css classes'), max_length=200, blank=True)
+    custom_classes = models.CharField(
+        verbose_name=_('custom css classes'),
+        max_length=200,
+        blank=True
+    )
 
     class Meta:
         abstract = True
@@ -192,22 +221,32 @@ class FieldPlugin(FieldPluginBase):
 
 class TextAreaFieldPlugin(FieldPluginBase):
 
-    text_area_columns = models.PositiveIntegerField(verbose_name=_('columns'), blank=True, null=True)
-    text_area_rows = models.PositiveIntegerField(verbose_name=_('rows'), blank=True, null=True)
+    text_area_columns = models.PositiveIntegerField(
+        verbose_name=_('columns'),
+        blank=True,
+        null=True,
+    )
+    text_area_rows = models.PositiveIntegerField(
+        verbose_name=_('rows'),
+        blank=True,
+        null=True,
+    )
 
 
 class EmailFieldPlugin(FieldPluginBase):
     email_send_notification = models.BooleanField(
         verbose_name=('send notification when form is submitted'),
         default=False,
-        help_text=_('When checked, the value of this field will be used to send an email notification.')
+        help_text=_('When checked, the value of this field will be used to '
+                    'send an email notification.')
     )
     email_subject = models.CharField(
         verbose_name=_('email subject'),
         max_length=200,
         blank=True,
         default='',
-        help_text=_('Used as the email subject when email_send_notification is checked.')
+        help_text=_('Used as the email subject when email_send_notification '
+                    'is checked.')
     )
     email_body = models.TextField(
         verbose_name=_('Additional email body'),
@@ -265,7 +304,11 @@ class Option(models.Model):
 class FormButtonPlugin(CMSPlugin):
 
     label = models.CharField(_('Label'), max_length=50)
-    custom_classes = models.CharField(verbose_name=_('custom css classes'), max_length=200, blank=True)
+    custom_classes = models.CharField(
+        verbose_name=_('custom css classes'),
+        max_length=200,
+        blank=True
+    )
 
     def __unicode__(self):
         return self.label
@@ -298,17 +341,17 @@ class FormData(models.Model):
 
     def get_data(self):
         fields = self.data.splitlines()
-        # this will be a list of dictionaries mapping field name to value.
-        # we use this approach because using field name as key might result in overriding values
-        # since fields can have the same name
+        # this will be a list of dictionaries mapping field name to value. we
+        # use this approach because using field name as key might result in
+        # overriding values since fields can have the same name
         form_data = []
 
         for field in fields:
             bits = field.split(':')
-            # this is an unfortunate design flaw on this model.
-            # ":" was chosen as delimiter to separate field_name from field value
-            # and so if a user ever enters ":" in any one of the two then we can't
-            # really reliable get the name or value, so for now ignore that field :(
+            # this is an unfortunate design flaw on this model. ":" was chosen
+            # as delimiter to separate field_name from field value and so if a
+            # user ever enters ":" in any one of the two then we can't really
+            # reliable get the name or value, so for now ignore that field :(
             if len(bits) == 2:
                 data = FieldData(label=bits[0], value=bits[1])
                 form_data.append(data)
