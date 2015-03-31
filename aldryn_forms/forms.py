@@ -245,7 +245,7 @@ class TextFieldForm(MinMaxValueForm):
 
         self.fields['max_value'].label = _(u'Max length')
         self.fields['max_value'].help_text = _(u'Maximum number of characters to type.')
-        self.fields['max_value'].required = True
+        self.fields['max_value'].required = False
 
     class Meta:
         fields = ['label', 'placeholder_text', 'help_text',

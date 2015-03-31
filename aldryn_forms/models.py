@@ -2,6 +2,7 @@
 from collections import namedtuple
 
 from django.conf import settings
+from django.core.validators import MaxLengthValidator
 from django.db import models
 from django.utils.translation import ugettext_lazy as _
 
@@ -181,16 +182,17 @@ class FieldPluginBase(CMSPlugin):
         blank=True,
         null=True,
     )
+
     max_value = models.PositiveIntegerField(
         _('Max value'),
         blank=True,
         null=True,
+        validators=[MaxLengthValidator(200)],
     )
-
     custom_classes = models.CharField(
         verbose_name=_('custom css classes'),
         max_length=200,
-        blank=True
+        blank=True,
     )
 
     class Meta:
