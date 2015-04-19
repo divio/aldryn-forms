@@ -2,7 +2,7 @@
 
 <div class="form-group{% if field.field.required %} form-required{% endif %}{% if field.errors %} has-error{% endif %}">
     {% block form_field %}
-    <textarea class="form-control" rows="3"></textarea>
+        <textarea class="form-control" row="{{ field.row }}"></textarea>
     {% endblock form_field %}
     {% block form_field_errors %}
         {% if field.errors %}
