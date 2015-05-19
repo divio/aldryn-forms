@@ -16,7 +16,9 @@
             {% endblock form_field_label %}
             {% block form_field_errors %}
                 {% if field.errors %}
-                    {% for error in field.errors %}<span class="text-danger">{{ error }}</span>{% endfor %}
+                    {% for error in field.errors %}
+                        <span class="text-danger">{{ error }}</span>
+                    {% endfor %}
                 {% endif %}
             {% endblock form_field_errors %}
         </div>
