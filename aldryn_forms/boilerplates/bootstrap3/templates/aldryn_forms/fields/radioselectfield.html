@@ -7,9 +7,6 @@
                 <label for="{{ field.auto_id }}_{{ choice.0 }}">
                     {% block form_field %}
                         <input type="radio" name="{{ field.name }}" id="{{ field.auto_id }}_{{ choice.0 }}" value="{{ field.value }}" {% if field.value == choice.0 %}checked="checked"{% endif %}>
-                        {% comment %}
-                            TODO: Need to find a way to get the "checked" value
-                        {% endcomment %}
                     {% endblock form_field %}
                     {{ choice.1 }}
                 </label>
