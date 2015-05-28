@@ -13,7 +13,7 @@
         {% block form_field %}
             <select multiple class="form-control" name="{{ field.name }}" id="{{ field.auto_id }}">
                 {% for choice in field.field.choices %}
-                    <option>
+                    <option value="{{ choice.0 }}">
                         {{ choice.1 }}
                     </option>
                 {% endfor %}
