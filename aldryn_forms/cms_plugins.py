@@ -577,6 +577,10 @@ class SelectField(Field):
     def get_form_field_kwargs(self, instance):
         kwargs = super(SelectField, self).get_form_field_kwargs(instance)
         kwargs['queryset'] = instance.option_set.all()
+        for opt in kwargs['queryset']:
+            if opt.default_value:
+                kwargs['initial'] = opt.pk
+                break
         return kwargs
 
 
@@ -604,6 +608,8 @@ class MultipleSelectField(SelectField):
         kwargs = super(MultipleSelectField, self).get_form_field_kwargs(instance)
         if hasattr(instance, 'min_value') and instance.min_value == 0:
             kwargs['required'] = False
+
+        kwargs['initial'] = [o.pk for o in kwargs['queryset'] if o.default_value]
         return kwargs
 
 
@@ -626,6 +632,10 @@ class RadioSelectField(Field):
         kwargs = super(RadioSelectField, self).get_form_field_kwargs(instance)
         kwargs['queryset'] = instance.option_set.all()
         kwargs['empty_label'] = None
+        for opt in kwargs['queryset']:
+            if opt.default_value:
+                kwargs['initial'] = opt.pk
+                break
         return kwargs
 
 
