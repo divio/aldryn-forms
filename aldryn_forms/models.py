@@ -1,17 +1,27 @@
 # -*- coding: utf-8 -*-
+import logging
 from collections import namedtuple
+from string import Template
 
 from django.conf import settings
+from django.core.exceptions import ValidationError
+from django.core.mail import get_connection
 from django.db import models
+from django.template.loader import render_to_string
 from django.utils.translation import ugettext_lazy as _
 
 from cms.models.fields import PageField
 from cms.models.pluginmodel import CMSPlugin
 from cms.utils.plugins import downcast_plugins
 
-from emailit.api import send_mail
+from parler.models import TranslatableModel, TranslatedFields
+
+from djangocms_text_ckeditor.fields import HTMLField
+
+from emailit.api import construct_mail, send_mail
 
 from filer.fields.folder import FilerFolderField
+
 from sizefield.models import FileSizeField
 
 try:
@@ -24,7 +34,86 @@ else:
 from .utils import get_form_render_data
 
 
+logger = logging.getLogger(__name__)
+
 FieldData = namedtuple('FieldData', field_names=['label', 'value'])
+
+
+class FormEmailTemplate(TranslatableModel):
+    allowed_context_variables = [
+        'first_name',
+        'last_name',
+        'full_name',
+        'form_name',
+        'form_data_html',
+        'form_data_text',
+    ]
+
+    name = models.CharField(
+        max_length=200,
+        unique=True,
+        help_text=_('A name to identify this message. Not visible to recipients.')
+    )
+    translations = TranslatedFields(
+        email_body_text=models.TextField(verbose_name=_("body (text)")),
+        email_body_html=HTMLField(verbose_name=_("body (html)")),
+    )
+
+    def __unicode__(self):
+        return self.name
+
+    def render_message(self, message, context):
+        context = {key: context.get(key, '') for key in self.allowed_context_variables}
+        template = Template(template=message)
+        return template.safe_substitute(**context)
+
+    def render_text_message(self, context):
+        return self.render_message(self.email_body_text, context)
+
+    def render_html_message(self, context):
+        return self.render_message(self.email_body_html, context)
+
+    def send_emails(self, context, recipients, language=None):
+        context['form_email_template'] = self
+
+        try:
+            connection = get_connection(fail_silently=False)
+            connection.open()
+        except Exception:
+            # I use a "catch all" in order to not couple this handler to a specific email backend
+            logger.error("Could not send notification emails.", exc_info=True)
+            return 0
+
+        def prepare_email(recipient):
+            local_context = {
+                'first_name': recipient.first_name,
+                'last_name': recipient.last_name,
+                'full_name': recipient.get_full_name(),
+                # rendered field/value pairs for both html and text versions
+                'form_data_html': render_to_string('aldryn_forms/emails/includes/form_data.html', context),
+                'form_data_text': render_to_string('aldryn_forms/emails/includes/form_data.txt', context),
+            }
+            local_context.update(context)
+
+            email = construct_mail(
+                context=local_context,
+                language=language,
+                recipients=[recipient.email],
+                template_base='aldryn_forms/emails/notification',
+            )
+            return email
+
+        emails = [prepare_email(recipient) for recipient in recipients]
+        return connection.send_messages(emails)
+
+    def clean(self):
+        context = {key: 'test' for key in self.allowed_context_variables}
+
+        try:
+            self.render_text_message(context=context)
+            self.render_html_message(context=context)
+        except Exception, e:
+            raise ValidationError(str(e))
 
 
 class FormPlugin(CMSPlugin):
@@ -69,6 +158,15 @@ class FormPlugin(CMSPlugin):
     )
     page = PageField(verbose_name=_('CMS Page'), blank=True, null=True)
     url = models.URLField(_('Absolute URL'), blank=True, null=True)
+    custom_classes = models.CharField(verbose_name=_('custom css classes'), max_length=200, blank=True)
+    form_template = models.CharField(
+        verbose_name=_('form template'),
+        max_length=200,
+        choices=FORM_TEMPLATES,
+        default=DEFAULT_FORM_TEMPLATE,
+    )
+
+    # Staff notification email settings
     recipients = models.ManyToManyField(
         to=User,
         verbose_name=_('Recipients'),
@@ -76,12 +174,19 @@ class FormPlugin(CMSPlugin):
         limit_choices_to={'is_staff': True},
         help_text=_('People who will get the form content via e-mail.')
     )
-    custom_classes = models.CharField(verbose_name=_('custom css classes'), max_length=200, blank=True)
-    form_template = models.CharField(
-        verbose_name=_('form template'),
+
+    email_notification_subject = models.CharField(
+        verbose_name=_("subject"),
         max_length=200,
-        choices=FORM_TEMPLATES,
-        default=DEFAULT_FORM_TEMPLATE,
+        blank=True
+    )
+    email_notification_template = models.ForeignKey(
+        to=FormEmailTemplate,
+        verbose_name=_('template'),
+        help_text=_('Template is rendered when sending the user '
+                    'an email notification for this form'),
+        blank=True,
+        null=True
     )
 
     def __unicode__(self):
@@ -319,14 +424,28 @@ class FormData(models.Model):
         formatted_data = [u'{0}: {1}'.format(*group) for group in grouped_data]
         self.data = u'\n'.join(formatted_data)
 
-    def send_notification_email(self, form, form_plugin):
-        recipients = self.people_notified.values_list('email', flat=True)
+    def send_staff_notification_email(self, form, form_plugin):
+        recipients = self.people_notified.exclude(email='')
+
+        form_data = get_form_render_data(form)
+
         context = {
             'form_name': form_plugin.name,
-            'form_data': get_form_render_data(form)
+            'form_data': list(form_data),
+            'form_plugin': form_plugin,
         }
-        send_mail(
-            recipients=recipients,
-            context=context,
-            template_base='aldryn_forms/emails/notification'
-        )
+
+        if form_plugin.email_notification_template_id:
+            template = form_plugin.email_notification_template
+            template.send_emails(
+                context,
+                recipients=recipients,
+                language=form_plugin.language,
+            )
+        else:
+            send_mail(
+                recipients=recipients.values_list('email', flat=True),
+                context=context,
+                template_base='aldryn_forms/emails/notification',
+                language=form_plugin.language,
+            )

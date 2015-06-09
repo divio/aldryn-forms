@@ -1,5 +1,8 @@
-{% if body_text %}{{ body_text }}
-
-{% endif %}Form name: {{ form_name }}
-
+{% load aldryn_forms_tags %}
+{% render_form_email_message form_email_template 'text' as text_message %}
+{% if text_message %}
+{{ text_message|safe }}
+{% else %}
+Form name: {{ form_name }}
 {% include "aldryn_forms/emails/includes/form_data.txt" %}
+{% endif %}
