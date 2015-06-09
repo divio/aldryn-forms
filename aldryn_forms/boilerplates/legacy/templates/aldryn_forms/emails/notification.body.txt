@@ -1,8 +1,8 @@
-{% load aldryn_forms_tags %}
+{% load aldryn_forms_tags i18n %}
 {% render_form_email_message form_email_template 'text' as text_message %}
 {% if text_message %}
 {{ text_message|safe }}
 {% else %}
-Form name: {{ form_name }}
+{% blocktrans %}Form name: {{ form_name }}{% endblocktrans %}
 {% include "aldryn_forms/emails/includes/form_data.txt" %}
 {% endif %}
