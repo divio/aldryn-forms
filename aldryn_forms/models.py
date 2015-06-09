@@ -433,6 +433,7 @@ class FormData(models.Model):
             'form_name': form_plugin.name,
             'form_data': list(form_data),
             'form_plugin': form_plugin,
+            'subject': form_plugin.email_notification_subject,
         }
 
         if form_plugin.email_notification_template_id:

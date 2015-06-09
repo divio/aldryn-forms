@@ -1,3 +1,1 @@
-{% with subject=form_plugin.email_notification_subject %}
-{% if subject %}{{ subject }}{% else %}[Form submission] {{ form_name }}{% endif %}
-{% endwith %}
+{% load i18n %}{% if subject %}{{ subject }}{% else %}{% blocktrans %}[Form submission] {{ form_name }}{% endblocktrans %}{% endif %}
