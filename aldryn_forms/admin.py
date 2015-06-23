@@ -24,6 +24,7 @@ class FormEmailTemplateAdmin(TranslatableAdmin):
     list_display = ['name']
     fields = [
         'name',
+        'theme',
         'context_variables',
         'email_body_text',
         'email_body_html',

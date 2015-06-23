@@ -179,6 +179,7 @@ class FormPlugin(FieldContainer):
             raise RuntimeError('Form is not configured properly.')
 
 
+
 class Fieldset(FieldContainer):
     render_template = 'aldryn_forms/fieldset.html'
     name = _('Fieldset')
