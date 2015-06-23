@@ -74,10 +74,6 @@ class FormPlugin(FieldContainer):
             {'fields': ['name', 'form_template', 'error_message', 'success_message', 'custom_classes']}
         ),
         (
-            'Email notification',
-            {'fields': ['recipients', 'email_notification_subject', 'email_notification_template']}
-        ),
-        (
             'Redirect',
             {'fields': ['redirect_type', 'page', 'url']}
         ),

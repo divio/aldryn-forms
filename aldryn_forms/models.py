@@ -1,5 +1,4 @@
 # -*- coding: utf-8 -*-
-import logging
 from collections import namedtuple
 
 from django.conf import settings
@@ -25,8 +24,6 @@ else:
 
 from .utils import get_form_render_data
 
-
-logger = logging.getLogger(__name__)
 
 FieldData = namedtuple('FieldData', field_names=['label', 'value'])
 
