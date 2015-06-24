@@ -31,16 +31,6 @@ class EmailNotificationInline(admin.StackedInline):
         ),
     ]
 
-    def get_readonly_fields(self, request, obj=None):
-        fields = super(EmailNotificationInline, self).get_readonly_fields(request, obj)
-
-        if obj and obj.pk:
-            # changing the template of an existing notification shouldn't be allowed.
-            # this is because the notification copies the text in the template
-            # so if template changes then they're completely out of sync.
-            fields += ['template']
-        return fields
-
 
 class EmailNotificationForm(FormPlugin):
     name = _('Email Notification Form')
