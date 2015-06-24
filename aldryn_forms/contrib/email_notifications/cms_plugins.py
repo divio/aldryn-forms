@@ -11,11 +11,15 @@ from .models import EmailNotification, EmailNotificationFormPlugin
 
 class EmailNotificationInline(admin.StackedInline):
     model = EmailNotification
-    extra = 1
+    extra = 0
     fieldsets = [
         (
             None,
-            {'fields': ['template']}
+            {'fields': ['theme']}
+        ),
+        (
+            None,
+            {'fields': ['text_variables']}
         ),
         (
             'Recipient',
@@ -30,6 +34,17 @@ class EmailNotificationInline(admin.StackedInline):
             {'fields': ['subject', 'body_text', 'body_html']}
         ),
     ]
+    readonly_fields = ['text_variables']
+    text_variables_help_text = _('variables can be used with "$" like $variable')
+
+    def text_variables(self, obj):
+        variables = obj.get_text_variables()
+        li_items = (u'<li>{} | {}</li>'.format(*var) for var in variables)
+        unordered_list = u'<ul>{}</ul>'.format(u''.join(li_items))
+        help_text = u'<p class="help">{}</p>'.format(self.context_variables_help_text)
+        return unordered_list + '\n' + help_text
+    text_variables.allow_tags = True
+    text_variables.short_description = _('available text variables')
 
 
 class EmailNotificationForm(FormPlugin):

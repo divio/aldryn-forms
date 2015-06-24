@@ -117,6 +117,9 @@ class FormPlugin(CMSPlugin):
         from .cms_plugins import FormElement
         from .utils import get_nested_plugins
 
+        if self.child_plugin_instances is None:
+            self.child_plugin_instances = self.cmsplugin_set.all()
+
         is_form_element = lambda plugin: issubclass(plugin.get_plugin_class(), FormElement)
 
         if not hasattr(self, '_form_elements'):

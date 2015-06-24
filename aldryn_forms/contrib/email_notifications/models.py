@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 import logging
+from collections import defaultdict
 
 from django.conf import settings
 from django.core.mail import get_connection
@@ -31,6 +32,27 @@ class EmailNotificationFormPlugin(FormPlugin):
             item.form = self
             item.save()
 
+    def get_fields_as_choices(self):
+        fields = self.get_form_fields()
+        occurrences = defaultdict(int)
+
+        for field in fields:
+            field_type = field.field_type
+            occurrences[field_type] += 1
+            occurrence = occurrences[field_type]
+
+            field_key = u'{}_{}'.format(field_type, occurrence)
+
+            if field.label:
+                label = field.label
+            else:
+                # get the name defined for this plugin class in cms_plugins.py
+                plugin_name = unicode(field.get_plugin_class().name)
+                # label becomes "Plugin name #1"
+                label = u'{} #{}'.format(plugin_name, occurrence)
+
+            yield (field_key, label)
+
     def send_email_notifications(self):
         try:
             connection = get_connection(fail_silently=False)
@@ -46,17 +68,11 @@ class EmailNotificationFormPlugin(FormPlugin):
 
 
 class EmailNotification(models.Model):
-    name = models.CharField(
-        max_length=200,
-        unique=True,
-        help_text=_('A name to identify this message. Not visible to recipients.')
-    )
     theme = models.CharField(
         verbose_name=_('theme'),
         max_length=200,
         help_text=_('Provides the base theme for the email.'),
-        choices=EMAIL_THEMES,
-        default=DEFAULT_EMAIL_THEME,
+        choices=EMAIL_THEMES
     )
     to_name = models.CharField(
         verbose_name=_('to name'),
@@ -90,9 +106,17 @@ class EmailNotification(models.Model):
     body_text = models.TextField(blank=True)
     body_html = HTMLField(blank=True)
     form = models.ForeignKey(
-        to=FormPlugin,
+        to=EmailNotificationFormPlugin,
         related_name='email_notifications'
     )
+
+    def __unicode__(self):
+        to_name = self.get_recipient_name()
+        to_email = self.get_recipient_email()
+        return u'{} ({})'.format(to_name, to_email)
+
+    def get_text_variables(self):
+        return list(self.form.get_fields_as_choices())
 
     def get_context(self):
         context = {}
