@@ -12,8 +12,7 @@ from .models import EmailNotification, EmailNotificationFormPlugin
 class EmailNotificationInline(admin.StackedInline):
     model = EmailNotification
     extra = 1
-    add_fieldsets = [(None, {'fields': ['template']})]
-    edit_fieldsets = [
+    fieldsets = [
         (
             None,
             {'fields': ['template']}
@@ -31,12 +30,6 @@ class EmailNotificationInline(admin.StackedInline):
             {'fields': ['subject', 'body_text', 'body_html']}
         ),
     ]
-
-    def get_fieldsets(self, request, obj=None):
-        if obj and obj.pk:
-            return self.edit_fieldsets
-        else:
-            return self.add_fieldsets
 
     def get_readonly_fields(self, request, obj=None):
         fields = super(EmailNotificationInline, self).get_readonly_fields(request, obj)

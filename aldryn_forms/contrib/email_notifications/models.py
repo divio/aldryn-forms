@@ -1,15 +1,10 @@
 # -*- coding: utf-8 -*-
 import logging
-from string import Template
 
 from django.conf import settings
-from django.core.exceptions import ValidationError
 from django.core.mail import get_connection
 from django.db import models
-from django.template.loader import render_to_string
 from django.utils.translation import ugettext_lazy as _
-
-from parler.models import TranslatableModel, TranslatedFields
 
 from djangocms_text_ckeditor.fields import HTMLField
 
@@ -51,11 +46,17 @@ class EmailNotificationFormPlugin(FormPlugin):
 
 
 class EmailNotification(models.Model):
-    template = models.ForeignKey(
-        to='EmailNotificationTemplate',
-        verbose_name=_('template'),
-        help_text=_('Template is rendered when sending the user '
-                    'an email notification for this form')
+    name = models.CharField(
+        max_length=200,
+        unique=True,
+        help_text=_('A name to identify this message. Not visible to recipients.')
+    )
+    theme = models.CharField(
+        verbose_name=_('theme'),
+        max_length=200,
+        help_text=_('Provides the base theme for the email.'),
+        choices=EMAIL_THEMES,
+        default=DEFAULT_EMAIL_THEME,
     )
     to_name = models.CharField(
         verbose_name=_('to name'),
@@ -92,13 +93,6 @@ class EmailNotification(models.Model):
         to=FormPlugin,
         related_name='email_notifications'
     )
-
-    def save(self, **kwargs):
-        if self.pk is None:
-            # copy over the template values when object is first saved.
-            self.body_text = self.template.get_email_body_text()
-            self.body_html = self.template.get_email_body_html()
-        super(EmailNotification, self).save(**kwargs)
 
     def get_context(self):
         context = {}
@@ -155,57 +149,3 @@ class EmailNotification(models.Model):
             template_base='aldryn_forms/email_notifications/emails/notification',
         )
         return email
-
-
-class EmailNotificationTemplate(TranslatableModel):
-    builtin_context_variables = [
-        'form_name',
-    ]
-
-    name = models.CharField(
-        max_length=200,
-        unique=True,
-        help_text=_('A name to identify this message. Not visible to recipients.')
-    )
-    theme = models.CharField(
-        verbose_name=_('theme'),
-        max_length=200,
-        help_text=_('Provides the base theme for the email.'),
-        choices=EMAIL_THEMES,
-        default=DEFAULT_EMAIL_THEME,
-    )
-    translations = TranslatedFields(
-        email_body_text=models.TextField(verbose_name=_("body (text)")),
-        email_body_html=HTMLField(verbose_name=_("body (html)")),
-    )
-
-    def __unicode__(self):
-        return self.name
-
-    def get_email_body_text(self):
-        text = self.safe_translation_getter(
-            field='email_body_text',
-            default='',
-            any_language=False
-        )
-        return text
-
-    def get_email_body_html(self):
-        html = self.safe_translation_getter(
-            field='email_body_html',
-            default='',
-            any_language=False
-        )
-        return html
-
-    def render_message(self, message, context):
-        return Template(template=message).safe_substitute(**context)
-
-    def render_text_message(self, context):
-        email_body_text = self.get_email_body_text()
-        return self.render_message(email_body_text, context)
-
-    def render_html_message(self, context):
-        email_body_html = self.get_email_body_html()
-        return self.render_message(email_body_html, context)
-

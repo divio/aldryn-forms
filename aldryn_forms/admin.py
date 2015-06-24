@@ -25,6 +25,9 @@ class FormDataAdmin(admin.ModelAdmin):
     model = FormData
     readonly_fields = ['name', 'data', 'language', 'sent_at', 'people_notified']
 
+    def has_add_permission(self, request):
+        return False
+
     def get_urls(self):
         from django.conf.urls import patterns, url
 
