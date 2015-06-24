@@ -1,9 +1,7 @@
 # -*- coding: utf-8 -*-
-import logging
 from collections import defaultdict
 
 from django.conf import settings
-from django.core.mail import get_connection
 from django.db import models
 from django.utils.translation import ugettext_lazy as _
 
@@ -17,8 +15,6 @@ from emailit.api import construct_mail
 ADDITIONAL_EMAIL_THEMES = getattr(settings, "ALDRYN_FORMS_EMAIL_THEMES",[])
 DEFAULT_EMAIL_THEME = [('default', _('default'))]
 EMAIL_THEMES = DEFAULT_EMAIL_THEME + ADDITIONAL_EMAIL_THEMES
-
-logger = logging.getLogger(__name__)
 
 
 class EmailNotificationFormPlugin(FormPlugin):
@@ -52,19 +48,6 @@ class EmailNotificationFormPlugin(FormPlugin):
                 label = u'{} #{}'.format(plugin_name, occurrence)
 
             yield (field_key, label)
-
-    def send_email_notifications(self):
-        try:
-            connection = get_connection(fail_silently=False)
-            connection.open()
-        except Exception:
-            # I use a "catch all" in order to not couple this handler to a specific email backend
-            logger.exception("Could not send notification emails.")
-            return 0
-
-        notifications = self.email_notifications.select_related('form')
-        emails = [notification.prepare_email() for notification in notifications]
-        return connection.send_messages(emails)
 
 
 class EmailNotification(models.Model):

@@ -1,5 +1,8 @@
 # -*- coding: utf-8 -*-
+import logging
+
 from django.contrib import admin
+from django.core.mail import get_connection
 from django.utils.translation import ugettext_lazy as _
 
 from cms.plugin_pool import plugin_pool
@@ -7,6 +10,9 @@ from cms.plugin_pool import plugin_pool
 from aldryn_forms.cms_plugins import FormPlugin
 
 from .models import EmailNotification, EmailNotificationFormPlugin
+
+
+logger = logging.getLogger(__name__)
 
 
 class EmailNotificationInline(admin.StackedInline):
@@ -53,7 +59,18 @@ class EmailNotificationForm(FormPlugin):
     inlines = [EmailNotificationInline]
 
     def send_notifications(self, instance, form):
-        pass
+        try:
+            connection = get_connection(fail_silently=False)
+            connection.open()
+        except Exception:
+            # I use a "catch all" in order to not couple this handler to a specific email backend
+            # different email backends have different exceptions.
+            logger.exception("Could not send notification emails.")
+            return 0
+
+        notifications = self.email_notifications.select_related('form')
+        emails = [notification.prepare_email() for notification in notifications]
+        return connection.send_messages(emails)
 
 
 plugin_pool.register_plugin(EmailNotificationForm)
