@@ -47,5 +47,8 @@ class EmailNotificationForm(FormPlugin):
     model = EmailNotificationFormPlugin
     inlines = [EmailNotificationInline]
 
+    def send_notifications(self, instance, form):
+        pass
+
 
 plugin_pool.register_plugin(EmailNotificationForm)

@@ -85,7 +85,9 @@ class FormPlugin(FieldContainer):
 
         context = super(FormPlugin, self).render(context, instance, placeholder)
         request = context['request']
+
         form = self.process_form(instance, request)
+
         if form.is_valid():
             context['form_success_url'] = self.get_success_url(instance)
         context['form'] = form
@@ -96,6 +98,7 @@ class FormPlugin(FieldContainer):
 
     def form_valid(self, instance, request, form):
         form.save()
+        self.send_notifications(instance, form)
         message = instance.success_message or ugettext('The form has been sent.')
         messages.success(request, message)
 
@@ -153,16 +156,15 @@ class FormPlugin(FieldContainer):
         Constructs form class basing on children plugin instances.
         """
         fields = self.get_form_fields(instance)
-        return forms.forms.DeclarativeFieldsMetaclass('AldrynDynamicForm', (FormDataBaseForm,), fields)
+        return type(FormDataBaseForm)('AldrynDynamicForm', (FormDataBaseForm,), fields)
 
     def get_form_kwargs(self, instance, request):
         kwargs = {'form_plugin': instance}
 
         if request.method in ('POST', 'PUT'):
-            data = request.POST.copy()
-            data['language'] = instance.language
-            data['form_plugin_id'] = instance.pk
-            kwargs['data'] = data
+            kwargs['data'] = request.POST.copy()
+            kwargs['data']['language'] = instance.language
+            kwargs['data']['form_plugin_id'] = instance.pk
             kwargs['files'] = request.FILES
         return kwargs
 
@@ -174,6 +176,23 @@ class FormPlugin(FieldContainer):
         else:
             raise RuntimeError('Form is not configured properly.')
 
+    def send_notifications(self, instance, form):
+        recipients = instance.recipients.values_list('email', flat=True)
+
+        form_data = get_form_render_data(form)
+
+        context = {
+            'form_name': instance.name,
+            'form_data': list(form_data),
+            'form_plugin': instance,
+        }
+
+        send_mail(
+            recipients=recipients,
+            context=context,
+            template_base='aldryn_forms/emails/notification',
+            language=instance.language,
+        )
 
 
 class Fieldset(FieldContainer):

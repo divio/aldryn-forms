@@ -159,8 +159,6 @@ class FormDataBaseForm(forms.Form):
 
         self.instance.people_notified.add(*recipients)
 
-        self.instance.send_staff_notification_email(form=self, form_plugin=self.form_plugin)
-
 
 class ExtandableErrorForm(forms.ModelForm):
 

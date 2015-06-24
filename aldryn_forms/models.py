@@ -9,8 +9,6 @@ from cms.models.fields import PageField
 from cms.models.pluginmodel import CMSPlugin
 from cms.utils.plugins import downcast_plugins
 
-from emailit.api import send_mail
-
 from filer.fields.folder import FilerFolderField
 
 from sizefield.models import FileSizeField
@@ -321,22 +319,3 @@ class FormData(models.Model):
         grouped_data = get_form_render_data(form)
         formatted_data = [u'{0}: {1}'.format(*group) for group in grouped_data]
         self.data = u'\n'.join(formatted_data)
-
-    def send_staff_notification_email(self, form, form_plugin):
-        recipients = self.people_notified.exclude(email='')
-
-        form_data = get_form_render_data(form)
-
-        context = {
-            'form_name': form_plugin.name,
-            'form_data': list(form_data),
-            'form_plugin': form_plugin,
-            'subject': form_plugin.email_notification_subject,
-        }
-
-        send_mail(
-            recipients=recipients.values_list('email', flat=True),
-            context=context,
-            template_base='aldryn_forms/emails/notification',
-            language=form_plugin.language,
-        )
