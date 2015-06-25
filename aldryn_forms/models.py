@@ -317,13 +317,7 @@ class FormData(models.Model):
         choices=settings.LANGUAGES,
         default=settings.LANGUAGE_CODE
     )
-    people_notified = models.ManyToManyField(
-        to=User,
-        verbose_name=_('admins notified'),
-        blank=True,
-        editable=False
-    )
-    people_notified_tmp = models.TextField(
+    people_notified = models.TextField(
         verbose_name=_('users notified'),
         blank=True,
         help_text=_('People who got a notification when form was submitted.'),
