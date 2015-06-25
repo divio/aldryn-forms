@@ -35,7 +35,7 @@ from .forms import (
     ImageFieldForm,
 )
 from .signals import form_pre_save, form_post_save
-from .utils import get_nested_plugins, get_form_render_data
+from .utils import get_form_render_data
 from .validators import MinChoicesValidator, MaxChoicesValidator
 
 
@@ -44,21 +44,9 @@ class FormElement(CMSPluginBase):
     cache = False
     module = _('Forms')
 
-    def get_form_fields(self, instance):
-        raise NotImplementedError()
-
 
 class FieldContainer(FormElement):
     allow_children = True
-
-    def get_form_fields(self, instance):
-        form_fields = {}
-        for child_plugin_instance in get_nested_plugins(instance):
-            plugin_instance, child_plugin = child_plugin_instance.get_plugin_instance()
-            if plugin_instance and hasattr(child_plugin, 'get_form_fields'):
-                fields = child_plugin.get_form_fields(instance=plugin_instance)
-                form_fields.update(fields)
-        return form_fields
 
 
 class FormPlugin(FieldContainer):
@@ -158,6 +146,15 @@ class FormPlugin(FieldContainer):
         fields = self.get_form_fields(instance)
         return type(FormDataBaseForm)('AldrynDynamicForm', (FormDataBaseForm,), fields)
 
+    def get_form_fields(self, instance):
+        form_fields = {}
+        form_field_plugins = instance.get_form_fields_by_name()
+
+        for field_name, field in form_field_plugins.items():
+            field_plugin = field.get_plugin_class_instance()
+            form_fields[field_name] = field_plugin.get_form_field(field)
+        return form_fields
+
     def get_form_kwargs(self, instance, request):
         kwargs = {'form_plugin': instance}
 
@@ -202,6 +199,7 @@ class Fieldset(FieldContainer):
 
 
 class Field(FormElement):
+    module = _('Form fields')
     # template name is calculated based on field
     render_template = True
     model = models.FieldPlugin
@@ -218,9 +216,6 @@ class Field(FormElement):
     fieldset_required_conf_fields = ['required', 'required_message']
     fieldset_extra_fields = ['custom_classes', 'text_area_columns', 'text_area_rows']
 
-    def get_field_name(self, instance):
-        return u'aldryn-forms-field-%d' % (instance.pk,)
-
     def serialize_value(self, instance, value, is_confirmation=False):
         if isinstance(value, query.QuerySet):
             value = u', '.join(map(unicode, value))
@@ -229,17 +224,16 @@ class Field(FormElement):
         return unicode(value)
 
     def serialize_field(self, form, instance, is_confirmation=False):
-        """Returns a (label, value) tuple for the given field.
+        """Returns a (label, value) tuple for the given field."""
 
-        Both fields will have been converted to a string object."""
-        key = self.get_field_name(instance)
-        value = self.serialize_value(instance, form.cleaned_data[key],
-                                     is_confirmation)
+        key = form.form_plugin.get_form_field_name(field=instance)
+        value = self.serialize_value(
+            instance,
+            form.cleaned_data[key],
+            is_confirmation
+        )
         name = instance.label or instance.placeholder_text or key
-        return name, value
-
-    def get_form_fields(self, instance):
-        return {self.get_field_name(instance=instance): self.get_form_field(instance=instance)}
+        return (name, value)
 
     def get_form_field(self, instance):
         form_field_class = self.get_form_field_class(instance)
@@ -301,9 +295,12 @@ class Field(FormElement):
         templates = self.get_template_names(instance)
         self.render_template = select_template(templates)
         context = super(Field, self).render(context, instance, placeholder)
+
         form = context.get('form')
-        if form:
-            field_name = self.get_field_name(instance=instance)
+
+        if form and hasattr(form, 'form_plugin'):
+            form_plugin = form.form_plugin
+            field_name = form_plugin.get_form_field_name(field=instance)
             context['field'] = form[field_name]
         return context
 
@@ -386,6 +383,7 @@ class TextField(Field):
 
     def get_form_field_validators(self, instance):
         validators = []
+
         if instance.min_value:
             validators.append(MinLengthValidator(instance.min_value))
         return validators
@@ -445,7 +443,8 @@ class EmailField(TextField):
         )
 
     def form_post_save(self, instance, form, **kwargs):
-        field_name = self.get_field_name(instance)
+        field_name = form.form_plugin.get_form_field_name(field=instance)
+
         email = form.cleaned_data.get(field_name)
 
         if email and instance.email_send_notification:
@@ -488,13 +487,16 @@ class FileField(Field):
         else:
             return '-'
 
-    def form_pre_save(self, instance, form, request, **kwargs):
+    def form_pre_save(self, instance, form, **kwargs):
         """Save the uploaded file to django-filer
 
         The type of model (file or image) is automatically chosen by trying to
         open the uploaded file.
         """
-        field_name = self.get_field_name(instance)
+        request = kwargs['request']
+
+        field_name = form.form_plugin.get_form_field_name(field=instance)
+
         uploaded_file = form.cleaned_data[field_name]
 
         if uploaded_file is None:
@@ -679,9 +681,6 @@ class SubmitButton(FormElement):
     render_template = 'aldryn_forms/submit_button.html'
     name = _('Submit Button')
     model = models.FormButtonPlugin
-
-    def get_form_fields(self, instance):
-        return {}
 
 
 plugin_pool.register_plugin(BooleanField)

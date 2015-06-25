@@ -1,8 +1,9 @@
 # -*- coding: utf-8 -*-
-from collections import namedtuple
+from collections import defaultdict, namedtuple
 
 from django.conf import settings
 from django.db import models
+from django.utils.datastructures import SortedDict
 from django.utils.translation import ugettext_lazy as _
 
 from cms.models.fields import PageField
@@ -42,6 +43,9 @@ class FormPlugin(CMSPlugin):
         (REDIRECT_TO_PAGE, _('CMS Page')),
         (REDIRECT_TO_URL, _('Absolute URL')),
     ]
+
+    _form_elements = None
+    _form_field_key_cache = None
 
     name = models.CharField(
         verbose_name=_('Name'),
@@ -102,6 +106,7 @@ class FormPlugin(CMSPlugin):
 
         for element in form_elements:
             plugin_class = element.get_plugin_class()
+
             if issubclass(plugin_class, SubmitButton):
                 return element
         return
@@ -113,6 +118,33 @@ class FormPlugin(CMSPlugin):
         is_form_field = lambda plugin: issubclass(plugin.get_plugin_class(), Field)
         return [plugin for plugin in form_elements if is_form_field(plugin)]
 
+    def get_form_field_name(self, field):
+        if self._form_field_key_cache is None:
+            self._form_field_key_cache = {}
+
+        if not field.pk in self._form_field_key_cache:
+            fields_by_key = self.get_form_fields_by_name()
+
+            for key, _field in fields_by_key.items():
+                self._form_field_key_cache[_field.pk] = key
+        return self._form_field_key_cache[field.pk]
+
+    def get_form_fields_by_name(self):
+        occurrences = defaultdict(int)
+
+        fields = self.get_form_fields()
+        fields_by_key = SortedDict()
+
+        for field in fields:
+            field_type = field.field_type
+            occurrences[field_type] += 1
+            occurrence = occurrences[field_type]
+
+            field_key = u'{}_{}'.format(field_type, occurrence)
+
+            fields_by_key[field_key] = field
+        return fields_by_key
+
     def get_form_elements(self):
         from .cms_plugins import FormElement
         from .utils import get_nested_plugins
@@ -122,7 +154,7 @@ class FormPlugin(CMSPlugin):
 
         is_form_element = lambda plugin: issubclass(plugin.get_plugin_class(), FormElement)
 
-        if not hasattr(self, '_form_elements'):
+        if self._form_elements is None:
             children = get_nested_plugins(self)
             children_instances = downcast_plugins(children)
             self._form_elements = [plugin for plugin in children_instances if is_form_element(plugin)]
@@ -290,6 +322,12 @@ class FormData(models.Model):
         verbose_name=_('admins notified'),
         blank=True,
         editable=False
+    )
+    people_notified_tmp = models.TextField(
+        verbose_name=_('users notified'),
+        blank=True,
+        help_text=_('People who got a notification when form was submitted.'),
+        editable=False,
     )
     sent_at = models.DateTimeField(auto_now_add=True)
 
