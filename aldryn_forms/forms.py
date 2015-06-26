@@ -16,7 +16,6 @@ from sizefield.utils import filesizeformat
 from .models import (
     FormData,
     FormPlugin,
-    SerializedFormField,
     User,
 )
 from .utils import add_form_error
@@ -166,8 +165,8 @@ class FormDataBaseForm(forms.Form):
         """
         for field in self.form_plugin.get_form_fields():
             plugin = field.get_plugin_instance()[1]
-            name, label, value = plugin.serialize_field(self, field, is_confirmation)
-            yield SerializedFormField(name=name, label=label, value=value)
+            serialized_field = plugin.serialize_field(self, field, is_confirmation)
+            yield serialized_field
 
     def get_render_data(self, is_confirmation=False):
         """Renders the form data in a format suitable to be serialized.

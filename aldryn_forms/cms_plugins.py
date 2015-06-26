@@ -40,6 +40,9 @@ from .signals import form_pre_save, form_post_save
 from .validators import MinChoicesValidator, MaxChoicesValidator
 
 
+SerializedFormField = models.SerializedFormField
+
+
 class FormElement(CMSPluginBase):
     # Don't cache anything.
     cache = False
@@ -231,16 +234,15 @@ class Field(FormElement):
         return unicode(value)
 
     def serialize_field(self, form, instance, is_confirmation=False):
-        """Returns a (key, label, value) tuple for the given field."""
-
-        key = form.form_plugin.get_form_field_name(field=instance)
+        """Returns a (key, label, value) named tuple for the given field."""
+        name = form.form_plugin.get_form_field_name(field=instance)
         value = self.serialize_value(
             instance,
-            form.cleaned_data[key],
+            form.cleaned_data[name],
             is_confirmation
         )
-        name = instance.label or instance.placeholder_text or key
-        return (key, name, value)
+        label = instance.label or instance.placeholder_text or name
+        return SerializedFormField(name=name, label=label, value=value)
 
     def get_form_field(self, instance):
         form_field_class = self.get_form_field_class(instance)
