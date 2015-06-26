@@ -8,6 +8,7 @@ from django.utils.translation import ugettext_lazy as _
 from cms.plugin_pool import plugin_pool
 
 from aldryn_forms.cms_plugins import FormPlugin
+from aldryn_forms.utils import get_form_render_data
 
 from .models import EmailNotification, EmailNotificationFormPlugin
 
@@ -68,8 +69,11 @@ class EmailNotificationForm(FormPlugin):
             logger.exception("Could not send notification emails.")
             return 0
 
+        form_data = get_form_render_data(form)
+
         notifications = self.email_notifications.select_related('form')
-        emails = [notification.prepare_email() for notification in notifications]
+        emails = [notification.prepare_email(form_data=form_data)
+                  for notification in notifications]
         return connection.send_messages(emails)
 
 

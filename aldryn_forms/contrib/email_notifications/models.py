@@ -140,7 +140,7 @@ class EmailNotification(models.Model):
             email = ''
         return email
 
-    def prepare_email(self):
+    def prepare_email(self, form_data):
         form_plugin = self.form
 
         context = self.get_context()
