@@ -21,10 +21,15 @@ except ImportError:  # django < 1.5
 else:
     User = get_user_model()
 
-from .utils import get_form_render_data
 
-
-FieldData = namedtuple('FieldData', field_names=['label', 'value'])
+FieldData = namedtuple(
+    'FieldData',
+    field_names=['label', 'value']
+)
+SerializedFormField = namedtuple(
+    'SerializedFormField',
+    field_names=['name', 'label', 'value']
+)
 
 
 class FormPlugin(CMSPlugin):
@@ -140,7 +145,7 @@ class FormPlugin(CMSPlugin):
             occurrences[field_type] += 1
             occurrence = occurrences[field_type]
 
-            field_key = u'{}_{}'.format(field_type, occurrence)
+            field_key = u'{0}_{1}'.format(field_type, occurrence)
 
             fields_by_key[field_key] = field
         return fields_by_key
@@ -351,7 +356,7 @@ class FormData(models.Model):
         return form_data
 
     def set_form_data(self, form):
-        grouped_data = get_form_render_data(form)
+        grouped_data = form.get_render_data()
         formatted_data = [u'{0}: {1}'.format(*group) for group in grouped_data]
         self.data = u'\n'.join(formatted_data)
 

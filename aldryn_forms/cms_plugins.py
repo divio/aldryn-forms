@@ -37,7 +37,6 @@ from .forms import (
     ImageFieldForm,
 )
 from .signals import form_pre_save, form_post_save
-from .utils import get_form_render_data
 from .validators import MinChoicesValidator, MaxChoicesValidator
 
 
@@ -87,8 +86,11 @@ class FormPlugin(FieldContainer):
         return instance.form_template
 
     def form_valid(self, instance, request, form):
-        self.send_notifications(instance, form)
+        recipients = self.send_notifications(instance, form)
+
+        form.instance.set_users_notified(recipients)
         form.save()
+
         message = instance.success_message or ugettext('The form has been sent.')
         messages.success(request, message)
 
@@ -178,11 +180,11 @@ class FormPlugin(FieldContainer):
     def send_notifications(self, instance, form):
         users = instance.recipients.only('first_name', 'last_name', 'email')
 
-        form_data = get_form_render_data(form)
+        form_data = form.get_render_data()
 
         context = {
             'form_name': instance.name,
-            'form_data': list(form_data),
+            'form_data': form_data,
             'form_plugin': instance,
         }
 
@@ -194,8 +196,7 @@ class FormPlugin(FieldContainer):
         )
 
         users_notified = [(user.get_full_name(), user.email) for user in users]
-
-        form.instance.set_users_notified(map(formataddr, users_notified))
+        return map(formataddr, users_notified)
 
 
 class Fieldset(FieldContainer):
@@ -438,7 +439,7 @@ class EmailField(TextField):
     def send_notification_email(self, email, form, form_field_instance):
         context = {
             'form_name': form.instance.name,
-            'form_data': get_form_render_data(form, is_confirmation=True),
+            'form_data': form.get_render_data(is_confirmation=True),
             'body_text': form_field_instance.email_body,
         }
         send_mail(

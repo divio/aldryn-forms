@@ -8,7 +8,6 @@ from django.utils.translation import ugettext_lazy as _
 from cms.plugin_pool import plugin_pool
 
 from aldryn_forms.cms_plugins import FormPlugin
-from aldryn_forms.utils import get_form_cleaned_data
 
 from .models import EmailNotification, EmailNotificationFormPlugin
 
@@ -46,9 +45,9 @@ class EmailNotificationInline(admin.StackedInline):
 
     def text_variables(self, obj):
         variables = obj.get_text_variables()
-        li_items = (u'<li>{} | {}</li>'.format(*var) for var in variables)
-        unordered_list = u'<ul>{}</ul>'.format(u''.join(li_items))
-        help_text = u'<p class="help">{}</p>'.format(self.text_variables_help_text)
+        li_items = (u'<li>{0} | {1}</li>'.format(*var) for var in variables)
+        unordered_list = u'<ul>{0}</ul>'.format(u''.join(li_items))
+        help_text = u'<p class="help">{0}</p>'.format(self.text_variables_help_text)
         return unordered_list + '\n' + help_text
     text_variables.allow_tags = True
     text_variables.short_description = _('available text variables')
@@ -69,17 +68,15 @@ class EmailNotificationForm(FormPlugin):
             logger.exception("Could not send notification emails.")
             return 0
 
-        form_data = get_form_cleaned_data(form)
+        form_data = form.get_cleaned_data()
 
         notifications = instance.email_notifications.select_related('form')
 
         emails = [notification.prepare_email(form_data=form_data)
                   for notification in notifications]
 
-        recipients = (email.to[0] for email in emails if email.to)
-
-        form.instance.set_users_notified(recipients)
-        return connection.send_messages(emails)
+        recipients = [email.to[0] for email in emails if email.to]
+        return recipients
 
 
 plugin_pool.register_plugin(EmailNotificationForm)

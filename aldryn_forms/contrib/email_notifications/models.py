@@ -138,13 +138,15 @@ class EmailNotification(models.Model):
         return email
 
     def get_email_context(self, form_data):
+        get_template = partial(get_theme_template_name, theme=self.theme)
+
         context = {
             'data': form_data,
             'form_plugin': self.form,
             'form_name': self.form.name,
             'email_notification': self,
-            'email_html_theme': get_theme_template_name(self.theme, 'html'),
-            'email_txt_theme': get_theme_template_name(self.theme, 'txt'),
+            'email_html_theme': get_template('html'),
+            'email_txt_theme': get_template('txt'),
         }
         context.update(form_data)
         return context
@@ -182,8 +184,7 @@ class EmailNotification(models.Model):
 
     def prepare_email(self, form_data):
         email_kwargs = self.get_email_kwargs(form_data)
-        email = construct_mail(**email_kwargs)
-        return email
+        return construct_mail(**email_kwargs)
 
     def render_body_text(self, context):
         return render_text(self.body_text, context)

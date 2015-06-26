@@ -13,7 +13,12 @@ from django.utils.translation import ugettext_lazy as _
 
 from sizefield.utils import filesizeformat
 
-from .models import FormData, FormPlugin, User
+from .models import (
+    FormData,
+    FormPlugin,
+    SerializedFormField,
+    User,
+)
 from .utils import add_form_error
 
 
@@ -152,6 +157,29 @@ class FormDataBaseForm(forms.Form):
             self._errors[field].append(message)
         except KeyError:
             self._errors[field] = self.error_class([message])
+
+    def get_serialized_fields(self, is_confirmation=False):
+        """
+        The `is_confirmation` flag indicates if the data will be used in a
+        confirmation email sent to the user submitting the form or if it will be
+        used to render the data for the recipients/admin site.
+        """
+        for field in self.form_plugin.get_form_fields():
+            plugin = field.get_plugin_instance()[1]
+            name, label, value = plugin.serialize_field(self, field, is_confirmation)
+            yield SerializedFormField(name=name, label=label, value=value)
+
+    def get_render_data(self, is_confirmation=False):
+        """Renders the form data in a format suitable to be serialized.
+        """
+        fields = self.get_serialized_fields(is_confirmation)
+        fields = [(field.label, field.value) for field in fields]
+        return fields
+
+    def get_cleaned_data(self, is_confirmation=False):
+        fields = self.get_serialized_fields(is_confirmation)
+        form_data = dict((field.name, field.value) for field in fields)
+        return form_data
 
     def save(self, commit=False):
         self.instance.set_form_data(self)
