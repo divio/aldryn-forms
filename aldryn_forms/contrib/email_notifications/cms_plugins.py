@@ -58,6 +58,17 @@ class EmailNotificationForm(FormPlugin):
     model = EmailNotificationFormPlugin
     inlines = [EmailNotificationInline]
 
+    fieldsets = [
+        (
+            'General options',
+            {'fields': ['name', 'form_template', 'error_message', 'success_message', 'custom_classes']}
+        ),
+        (
+            'Redirect',
+            {'fields': ['redirect_type', 'page', 'url']}
+        )
+    ]
+
     def send_notifications(self, instance, form):
         try:
             connection = get_connection(fail_silently=False)

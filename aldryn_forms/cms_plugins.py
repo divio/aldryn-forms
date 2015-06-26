@@ -63,12 +63,12 @@ class FormPlugin(FieldContainer):
     fieldsets = [
         (
             'General options',
-            {'fields': ['name', 'form_template', 'error_message', 'success_message', 'custom_classes']}
+            {'fields': ['name', 'form_template', 'error_message', 'success_message', 'recipients', 'custom_classes']}
         ),
         (
             'Redirect',
             {'fields': ['redirect_type', 'page', 'url']}
-        ),
+        )
     ]
 
     def render(self, context, instance, placeholder):
