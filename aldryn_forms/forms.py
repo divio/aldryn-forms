@@ -141,8 +141,10 @@ class FormDataBaseForm(forms.Form):
     def __init__(self, *args, **kwargs):
         self.form_plugin = kwargs.pop('form_plugin')
         super(FormDataBaseForm, self).__init__(*args, **kwargs)
-        self.instance = FormData(name=self.form_plugin.name)
-        self.fields['language'].initial = self.form_plugin.language
+        language = self.form_plugin.language
+
+        self.instance = FormData(language=language, name=self.form_plugin.name)
+        self.fields['language'].initial = language
         self.fields['form_plugin_id'].initial = self.form_plugin.pk
 
     def _add_error(self, message, field=NON_FIELD_ERRORS):

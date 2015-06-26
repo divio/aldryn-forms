@@ -72,8 +72,13 @@ class EmailNotificationForm(FormPlugin):
         form_data = get_form_cleaned_data(form)
 
         notifications = instance.email_notifications.select_related('form')
+
         emails = [notification.prepare_email(form_data=form_data)
                   for notification in notifications]
+
+        recipients = (email.to[0] for email in emails if email.to)
+
+        form.instance.set_users_notified(recipients)
         return connection.send_messages(emails)
 
 

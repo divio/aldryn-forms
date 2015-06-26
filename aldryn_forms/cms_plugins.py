@@ -1,4 +1,6 @@
 # -*- coding: utf-8 -*-
+from email.utils import formataddr
+
 from PIL import Image
 
 from django import forms
@@ -193,7 +195,7 @@ class FormPlugin(FieldContainer):
 
         users_notified = [(user.get_full_name(), user.email) for user in users]
 
-        form.instance.set_users_notified(users_notified)
+        form.instance.set_users_notified(map(formataddr, users_notified))
 
 
 class Fieldset(FieldContainer):

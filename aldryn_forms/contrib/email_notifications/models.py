@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 from collections import defaultdict
-from functools import partial
 from email.utils import formataddr
+from functools import partial
 
 from django.conf import settings
 from django.core.exceptions import ValidationError
@@ -14,16 +14,14 @@ from aldryn_forms.models import FormPlugin
 
 from emailit.api import construct_mail
 
-from .helpers import render_text
+from .helpers import get_theme_template_name, render_text
 
 
-ADDITIONAL_EMAIL_THEMES = getattr(settings, "ALDRYN_FORMS_EMAIL_THEMES", [])
-DEFAULT_EMAIL_THEME = getattr(
+EMAIL_THEMES = getattr(
     settings,
-    "ALDRYN_FORMS_EMAIL_DEFAULT_THEME",
+    "ALDRYN_FORMS_EMAIL_THEMES",
     [('default', _('default'))]
 )
-EMAIL_THEMES = DEFAULT_EMAIL_THEME + ADDITIONAL_EMAIL_THEMES
 
 
 class EmailNotificationFormPlugin(FormPlugin):
@@ -46,7 +44,7 @@ class EmailNotificationFormPlugin(FormPlugin):
             occurrences[field_type] += 1
             occurrence = occurrences[field_type]
 
-            field_key = u'{}_{}'.format(field_type, occurrence)
+            field_key = u'{0}_{1}'.format(field_type, occurrence)
 
             if field.label:
                 label = field.label
@@ -54,7 +52,7 @@ class EmailNotificationFormPlugin(FormPlugin):
                 # get the name defined for this plugin class in cms_plugins.py
                 plugin_name = unicode(field.get_plugin_class().name)
                 # label becomes "Plugin name #1"
-                label = u'{} #{}'.format(plugin_name, occurrence)
+                label = u'{0} #{1}'.format(plugin_name, occurrence)
 
             yield (field_key, label)
 
@@ -71,8 +69,9 @@ class EmailNotification(models.Model):
         max_length=200,
         blank=True
     )
-    to_email = models.EmailField(
+    to_email = models.CharField(
         verbose_name=_('to email'),
+        max_length=200,
         blank=True
     )
     to_user = models.ForeignKey(
@@ -87,8 +86,9 @@ class EmailNotification(models.Model):
         max_length=200,
         blank=True
     )
-    from_email = models.EmailField(
+    from_email = models.CharField(
         verbose_name=_('from email'),
+        max_length=200,
         blank=True
     )
     subject = models.CharField(
@@ -105,7 +105,7 @@ class EmailNotification(models.Model):
     def __unicode__(self):
         to_name = self.get_recipient_name()
         to_email = self.get_recipient_email()
-        return u'{} ({})'.format(to_name, to_email)
+        return u'{0} ({1})'.format(to_name, to_email)
 
     def clean(self):
         recipient_email = self.get_recipient_email()
@@ -143,6 +143,8 @@ class EmailNotification(models.Model):
             'form_plugin': self.form,
             'form_name': self.form.name,
             'email_notification': self,
+            'email_html_theme': get_theme_template_name(self.theme, 'html'),
+            'email_txt_theme': get_theme_template_name(self.theme, 'txt'),
         }
         context.update(form_data)
         return context
@@ -153,7 +155,7 @@ class EmailNotification(models.Model):
         kwargs = {
             'context': context,
             'language': self.form.language,
-            'template_base': 'aldryn_forms/email_notifications/emails/notification'
+            'template_base': 'aldryn_forms/email_notifications/emails/notification',
         }
         render = partial(render_text, context=context)
 

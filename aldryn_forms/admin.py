@@ -9,6 +9,7 @@ from django.shortcuts import redirect, render_to_response
 from django.template.context import RequestContext
 # we use SortedDict to remain compatible across python versions
 from django.utils.datastructures import SortedDict
+from django.utils.html import escape
 from django.utils.translation import ugettext, ugettext_lazy as _
 
 from django_tablib.views import export
@@ -38,12 +39,8 @@ class FormDataAdmin(admin.ModelAdmin):
         people_list = obj.people_notified.split(':::')
 
         def format_person(person):
-            display_name, sep, email = person.rpartition('|')
-
-            if email:
-                display_name = u'{0} ({1})'.format(display_name, email)
-            return u'<li>{0}</li>'.format(display_name)
-        li_items = (format_person(person) for person in people_list if '|' in person)
+            return u'<li>{0}</li>'.format(escape(person))
+        li_items = (format_person(person) for person in people_list)
         unordered_list = u'<ul>{0}</ul>'.format(u''.join(li_items))
         return unordered_list
     get_people_notified.allow_tags = True
