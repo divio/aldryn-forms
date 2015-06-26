@@ -193,7 +193,7 @@ class FormPlugin(FieldContainer):
         }
 
         send_mail(
-            recipients=[user.email for user in users],
+            recipients=[user.email for user in users if user.email],
             context=context,
             template_base='aldryn_forms/emails/notification',
             language=instance.language,
