@@ -20,13 +20,34 @@ from .models import FormData
 class FormDataAdmin(admin.ModelAdmin):
 
     date_hierarchy = 'sent_at'
-    list_display = ['__unicode__', 'sent_at']
-    list_filter = ['name', 'people_notified']
+    list_display = ['__unicode__', 'sent_at', 'language']
+    list_filter = ['name', 'language', 'people_notified']
     model = FormData
-    readonly_fields = ['name', 'data', 'language', 'sent_at', 'people_notified']
+    readonly_fields = [
+        'name',
+        'data',
+        'language',
+        'sent_at',
+        'get_people_notified'
+    ]
 
     def has_add_permission(self, request):
         return False
+
+    def get_people_notified(self, obj):
+        people_list = obj.people_notified.split(':::')
+
+        def format_person(person):
+            display_name, sep, email = person.rpartition('|')
+
+            if email:
+                display_name = u'{0} ({1})'.format(display_name, email)
+            return u'<li>{0}</li>'.format(display_name)
+        li_items = (format_person(person) for person in people_list if '|' in person)
+        unordered_list = u'<ul>{0}</ul>'.format(u''.join(li_items))
+        return unordered_list
+    get_people_notified.allow_tags = True
+    get_people_notified.short_description = _('people notified')
 
     def get_urls(self):
         from django.conf.urls import patterns, url

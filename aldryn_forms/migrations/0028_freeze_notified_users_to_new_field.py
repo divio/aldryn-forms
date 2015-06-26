@@ -15,9 +15,7 @@ class Migration(DataMigration):
                 full_name = '%s %s' % (user.first_name, user.last_name)
                 full_name = full_name.strip()
                 user_notified = full_name or user.username
-
-                if user.email:
-                    user_notified = '%s|%s' % (user_notified, user.email)
+                user_notified = '%s|%s' % (user_notified, user.email)
                 people_notified.append(user_notified)
 
             form_data.people_notified_tmp = ':::'.join(people_notified)
