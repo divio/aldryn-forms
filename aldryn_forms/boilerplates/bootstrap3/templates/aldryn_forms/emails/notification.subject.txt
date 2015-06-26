@@ -1,1 +1,1 @@
-{% load i18n %}{% if subject %}{{ subject }}{% else %}{% blocktrans %}[Form submission] {{ form_name }}{% endblocktrans %}{% endif %}
+[Form submission] {{ form_name }}

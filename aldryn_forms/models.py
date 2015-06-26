@@ -152,7 +152,7 @@ class FormPlugin(CMSPlugin):
             fields_by_key = self.get_form_fields_by_name()
 
             for name, _field in fields_by_key.items():
-                self._form_field_key_cache[_field.pk] = name
+                self._form_field_key_cache[_field.plugin_instance.pk] = name
         return self._form_field_key_cache[field.pk]
 
     def get_form_fields_as_choices(self):
