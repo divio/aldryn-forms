@@ -101,9 +101,6 @@ class FormPlugin(CMSPlugin):
         for recipient in oldinstance.recipients.all():
             self.recipients.add(recipient)
 
-    def get_notification_emails(self):
-        return [x.email for x in self.recipients.all()]
-
     def get_submit_button(self):
         from .cms_plugins import SubmitButton
 
