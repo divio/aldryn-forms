@@ -354,3 +354,12 @@ class FormData(models.Model):
         grouped_data = get_form_render_data(form)
         formatted_data = [u'{0}: {1}'.format(*group) for group in grouped_data]
         self.data = u'\n'.join(formatted_data)
+
+    def set_users_notified(self, users):
+        people_notified = []
+
+        for full_name, email in users:
+            user_notified = '%s|%s' % (full_name, email)
+            people_notified.append(user_notified)
+
+        self.people_notified_tmp = ':::'.join(people_notified)

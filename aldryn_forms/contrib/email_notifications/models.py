@@ -1,9 +1,12 @@
 # -*- coding: utf-8 -*-
 from collections import defaultdict
+from functools import partial
+from email.utils import formataddr
 
 from django.conf import settings
+from django.core.exceptions import ValidationError
 from django.db import models
-from django.utils.translation import ugettext_lazy as _
+from django.utils.translation import ugettext, ugettext_lazy as _
 
 from djangocms_text_ckeditor.fields import HTMLField
 
@@ -11,9 +14,15 @@ from aldryn_forms.models import FormPlugin
 
 from emailit.api import construct_mail
 
+from .helpers import render_text
 
-ADDITIONAL_EMAIL_THEMES = getattr(settings, "ALDRYN_FORMS_EMAIL_THEMES",[])
-DEFAULT_EMAIL_THEME = [('default', _('default'))]
+
+ADDITIONAL_EMAIL_THEMES = getattr(settings, "ALDRYN_FORMS_EMAIL_THEMES", [])
+DEFAULT_EMAIL_THEME = getattr(
+    settings,
+    "ALDRYN_FORMS_EMAIL_DEFAULT_THEME",
+    [('default', _('default'))]
+)
 EMAIL_THEMES = DEFAULT_EMAIL_THEME + ADDITIONAL_EMAIL_THEMES
 
 
@@ -98,27 +107,15 @@ class EmailNotification(models.Model):
         to_email = self.get_recipient_email()
         return u'{} ({})'.format(to_name, to_email)
 
+    def clean(self):
+        recipient_email = self.get_recipient_email()
+
+        if not recipient_email:
+            message = ugettext('Please provide a recipient.')
+            raise ValidationError(message)
+
     def get_text_variables(self):
         return list(self.form.get_fields_as_choices())
-
-    def get_context(self):
-        context = {}
-
-        recipient_email = self.get_recipient_email()
-        recipient_name = self.get_recipient_name()
-
-        if recipient_email:
-            context['to_email'] = recipient_email
-
-        if recipient_name:
-            context['to_name'] = recipient_name
-
-        if self.from_name:
-            context['from_name'] = self.from_name
-
-        if self.from_email:
-            context['from_email'] = self.from_email
-        return context
 
     def get_recipient_name(self):
         if self.to_name:
@@ -140,19 +137,57 @@ class EmailNotification(models.Model):
             email = ''
         return email
 
-    def prepare_email(self, form_data):
-        form_plugin = self.form
+    def get_email_context(self, form_data):
+        context = {
+            'data': form_data,
+            'form_plugin': self.form,
+            'form_name': self.form.name,
+            'email_notification': self,
+        }
+        context.update(form_data)
+        return context
 
-        context = self.get_context()
-        context['form_name'] = form_plugin.name
-        context['form_plugin'] = form_plugin.form
+    def get_email_kwargs(self, form_data):
+        context = self.get_email_context(form_data)
+
+        kwargs = {
+            'context': context,
+            'language': self.form.language,
+            'template_base': 'aldryn_forms/email_notifications/emails/notification'
+        }
+        render = partial(render_text, context=context)
+
+        recipient_name = self.get_recipient_name()
 
         recipient_email = self.get_recipient_email()
+        recipient_email = render(recipient_email)
 
-        email = construct_mail(
-            context=context,
-            language=form_plugin.language,
-            recipients=[recipient_email],
-            template_base='aldryn_forms/email_notifications/emails/notification',
-        )
+        if recipient_name:
+            recipient_name = render(recipient_name)
+            recipient_email = formataddr((recipient_name, recipient_email))
+
+        kwargs['recipients'] = [recipient_email]
+
+        if self.from_email:
+            from_email = render(self.from_email)
+
+            if self.from_name:
+                from_name = render(self.from_name)
+                from_email = formataddr((from_name, from_email))
+
+            kwargs['from_email'] = from_email
+        return kwargs
+
+    def prepare_email(self, form_data):
+        email_kwargs = self.get_email_kwargs(form_data)
+        email = construct_mail(**email_kwargs)
         return email
+
+    def render_body_text(self, context):
+        return render_text(self.body_text, context)
+
+    def render_body_html(self, context):
+        return render_text(self.body_html, context)
+
+    def render_subject(self, context):
+        return render_text(self.subject, context)

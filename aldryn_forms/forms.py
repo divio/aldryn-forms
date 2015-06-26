@@ -151,13 +151,9 @@ class FormDataBaseForm(forms.Form):
         except KeyError:
             self._errors[field] = self.error_class([message])
 
-    def save(self):
-        recipients = self.form_plugin.recipients.all()
-
+    def save(self, commit=False):
         self.instance.set_form_data(self)
         self.instance.save()
-
-        self.instance.people_notified.add(*recipients)
 
 
 class ExtandableErrorForm(forms.ModelForm):

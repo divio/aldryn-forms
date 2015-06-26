@@ -2,6 +2,6 @@
 from string import Template
 
 
-def render_message(self, message, context):
+def render_text(message, context):
     template = Template(template=message)
     return template.safe_substitute(**context)

@@ -85,8 +85,8 @@ class FormPlugin(FieldContainer):
         return instance.form_template
 
     def form_valid(self, instance, request, form):
-        form.save()
         self.send_notifications(instance, form)
+        form.save()
         message = instance.success_message or ugettext('The form has been sent.')
         messages.success(request, message)
 
@@ -174,7 +174,7 @@ class FormPlugin(FieldContainer):
             raise RuntimeError('Form is not configured properly.')
 
     def send_notifications(self, instance, form):
-        recipients = instance.recipients.values_list('email', flat=True)
+        users = instance.recipients.only('first_name', 'last_name', 'email')
 
         form_data = get_form_render_data(form)
 
@@ -185,11 +185,15 @@ class FormPlugin(FieldContainer):
         }
 
         send_mail(
-            recipients=recipients,
+            recipients=[user.email for user in users],
             context=context,
             template_base='aldryn_forms/emails/notification',
             language=instance.language,
         )
+
+        users_notified = [(user.get_full_name(), user.email) for user in users]
+
+        form.instance.set_users_notified(users_notified)
 
 
 class Fieldset(FieldContainer):
@@ -224,7 +228,7 @@ class Field(FormElement):
         return unicode(value)
 
     def serialize_field(self, form, instance, is_confirmation=False):
-        """Returns a (label, value) tuple for the given field."""
+        """Returns a (key, label, value) tuple for the given field."""
 
         key = form.form_plugin.get_form_field_name(field=instance)
         value = self.serialize_value(
@@ -233,7 +237,7 @@ class Field(FormElement):
             is_confirmation
         )
         name = instance.label or instance.placeholder_text or key
-        return (name, value)
+        return (key, name, value)
 
     def get_form_field(self, instance):
         form_field_class = self.get_form_field_class(instance)

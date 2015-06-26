@@ -68,4 +68,14 @@ def get_form_render_data(form, is_confirmation=False):
     """
     for field in form.form_plugin.get_form_fields():
         plugin = field.get_plugin_instance()[1]
-        yield plugin.serialize_field(form, field, is_confirmation)
+        yield plugin.serialize_field(form, field, is_confirmation)[1:]
+
+
+def get_form_cleaned_data(form, is_confirmation=False):
+    form_data = {}
+
+    for field in form.form_plugin.get_form_fields():
+        plugin = field.get_plugin_instance()[1]
+        key, name, value = plugin.serialize_field(form, field, is_confirmation)
+        form_data[key] = value
+    return form_data

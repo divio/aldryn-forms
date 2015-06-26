@@ -1,7 +1,7 @@
-{% extends base_email_template_html %}
+{# {% extends base_email_template_html %} #}
 {% load aldryn_forms_tags i18n %}
 
 {% block email_content %}
-{% render_form_email_message form_email_template 'html' as html_message %}
+{% render_notification_text email_notification 'body_html' as html_message %}
 {{ html_message|safe }}
 {% endblock email_content %}

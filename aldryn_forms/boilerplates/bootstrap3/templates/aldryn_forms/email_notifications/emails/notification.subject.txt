@@ -1,1 +1,1 @@
-{% load i18n %}{% if subject %}{{ subject }}{% else %}{% blocktrans %}[Form submission] {{ form_name }}{% endblocktrans %}{% endif %}
+{% load aldryn_forms_tags %}{% render_notification_text email_notification 'subject' as subject %}{{ subject }}
