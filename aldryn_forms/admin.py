@@ -38,11 +38,14 @@ class FormDataAdmin(admin.ModelAdmin):
     def get_people_notified(self, obj):
         people_list = obj.people_notified.split(':::')
 
-        def format_person(person):
-            return u'<li>{0}</li>'.format(escape(person))
-        li_items = (format_person(person) for person in people_list)
-        unordered_list = u'<ul>{0}</ul>'.format(u''.join(li_items))
-        return unordered_list
+        li_items = [u'<li>{0}</li>'.format(escape(person))
+                    for person in people_list if person]
+
+        if li_items:
+            markup = u'<ul>{0}</ul>'.format(u''.join(li_items))
+        else:
+            markup = ''
+        return markup
     get_people_notified.allow_tags = True
     get_people_notified.short_description = _('people notified')
 
