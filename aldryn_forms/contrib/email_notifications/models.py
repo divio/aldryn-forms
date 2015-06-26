@@ -35,27 +35,6 @@ class EmailNotificationFormPlugin(FormPlugin):
             item.form = self
             item.save()
 
-    def get_fields_as_choices(self):
-        fields = self.get_form_fields()
-        occurrences = defaultdict(int)
-
-        for field in fields:
-            field_type = field.field_type
-            occurrences[field_type] += 1
-            occurrence = occurrences[field_type]
-
-            field_key = u'{0}_{1}'.format(field_type, occurrence)
-
-            if field.label:
-                label = field.label
-            else:
-                # get the name defined for this plugin class in cms_plugins.py
-                plugin_name = unicode(field.get_plugin_class().name)
-                # label becomes "Plugin name #1"
-                label = u'{0} #{1}'.format(plugin_name, occurrence)
-
-            yield (field_key, label)
-
 
 class EmailNotification(models.Model):
     theme = models.CharField(

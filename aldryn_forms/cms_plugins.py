@@ -155,11 +155,12 @@ class FormPlugin(FieldContainer):
 
     def get_form_fields(self, instance):
         form_fields = {}
-        form_field_plugins = instance.get_form_fields_by_name()
+        fields = instance.get_form_fields()
 
-        for field_name, field in form_field_plugins.items():
-            field_plugin = field.get_plugin_class_instance()
-            form_fields[field_name] = field_plugin.get_form_field(field)
+        for field in fields:
+            plugin_instance = field.plugin_instance
+            field_plugin = plugin_instance.get_plugin_class_instance()
+            form_fields[field.name] = field_plugin.get_form_field(plugin_instance)
         return form_fields
 
     def get_form_kwargs(self, instance, request):
@@ -233,16 +234,14 @@ class Field(FormElement):
             value = '-'
         return unicode(value)
 
-    def serialize_field(self, form, instance, is_confirmation=False):
+    def serialize_field(self, form, field, is_confirmation=False):
         """Returns a (key, label, value) named tuple for the given field."""
-        name = form.form_plugin.get_form_field_name(field=instance)
         value = self.serialize_value(
-            instance,
-            form.cleaned_data[name],
-            is_confirmation
+            instance=field.plugin_instance,
+            value=form.cleaned_data[field.name],
+            is_confirmation=is_confirmation
         )
-        label = instance.label or instance.placeholder_text or name
-        return SerializedFormField(name=name, label=label, value=value)
+        return SerializedFormField(name=field.name, label=field.label, value=value)
 
     def get_form_field(self, instance):
         form_field_class = self.get_form_field_class(instance)

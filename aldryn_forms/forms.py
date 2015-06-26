@@ -164,7 +164,7 @@ class FormDataBaseForm(forms.Form):
         used to render the data for the recipients/admin site.
         """
         for field in self.form_plugin.get_form_fields():
-            plugin = field.get_plugin_instance()[1]
+            plugin = field.plugin_instance.get_plugin_class_instance()
             serialized_field = plugin.serialize_field(self, field, is_confirmation)
             yield serialized_field
 

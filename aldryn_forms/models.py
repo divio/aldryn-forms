@@ -26,6 +26,10 @@ FieldData = namedtuple(
     'FieldData',
     field_names=['label', 'value']
 )
+FormField = namedtuple(
+    'FormField',
+    field_names=['name', 'label', 'plugin_instance', 'occurrence']
+)
 SerializedFormField = namedtuple(
     'SerializedFormField',
     field_names=['name', 'label', 'value']
@@ -116,9 +120,29 @@ class FormPlugin(CMSPlugin):
     def get_form_fields(self):
         from .cms_plugins import Field
 
+        fields = []
+        occurrences = defaultdict(int)
+
         form_elements = self.get_form_elements()
         is_form_field = lambda plugin: issubclass(plugin.get_plugin_class(), Field)
-        return [plugin for plugin in form_elements if is_form_field(plugin)]
+        field_plugins = [plugin for plugin in form_elements if is_form_field(plugin)]
+
+        for field_plugin in field_plugins:
+            field_type = field_plugin.field_type
+            occurrences[field_type] += 1
+            occurrence = occurrences[field_type]
+
+            field_name = u'{0}_{1}'.format(field_type, occurrence)
+            field_label = field_plugin.get_label() or field_name
+
+            field = FormField(
+                name=field_name,
+                label=field_label,
+                plugin_instance=field_plugin,
+                occurrence=occurrence,
+            )
+            fields.append(field)
+        return fields
 
     def get_form_field_name(self, field):
         if self._form_field_key_cache is None:
@@ -127,25 +151,20 @@ class FormPlugin(CMSPlugin):
         if not field.pk in self._form_field_key_cache:
             fields_by_key = self.get_form_fields_by_name()
 
-            for key, _field in fields_by_key.items():
-                self._form_field_key_cache[_field.pk] = key
+            for name, _field in fields_by_key.items():
+                self._form_field_key_cache[_field.pk] = name
         return self._form_field_key_cache[field.pk]
 
-    def get_form_fields_by_name(self):
-        occurrences = defaultdict(int)
-
+    def get_form_fields_as_choices(self):
         fields = self.get_form_fields()
-        fields_by_key = SortedDict()
 
         for field in fields:
-            field_type = field.field_type
-            occurrences[field_type] += 1
-            occurrence = occurrences[field_type]
+            yield (field.name, field.label)
 
-            field_key = u'{0}_{1}'.format(field_type, occurrence)
-
-            fields_by_key[field_key] = field
-        return fields_by_key
+    def get_form_fields_by_name(self):
+        fields = self.get_form_fields()
+        fields_by_name = SortedDict((field.name, field) for field in fields)
+        return fields_by_name
 
     def get_form_elements(self):
         from .cms_plugins import FormElement
@@ -217,6 +236,9 @@ class FieldPluginBase(CMSPlugin):
     @property
     def field_type(self):
         return self.plugin_type.lower()
+
+    def get_label(self):
+        return self.label or self.placeholder_text
 
 
 class FieldPlugin(FieldPluginBase):
