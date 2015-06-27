@@ -74,8 +74,16 @@ class EmailNotification(models.Model):
         verbose_name=_("subject"),
         max_length=200,
     )
-    body_text = models.TextField(blank=True)
-    body_html = HTMLField(blank=True)
+    body_text = models.TextField(
+        verbose_name=_('email body (txt)'),
+        blank=True,
+        help_text=_('used when rendering the email in text only mode.')
+    )
+    body_html = HTMLField(
+        verbose_name=_('email body (html)'),
+        blank=True,
+        help_text=_('used when rendering the email in html.')
+    )
     form = models.ForeignKey(
         to=EmailNotificationFormPlugin,
         related_name='email_notifications'
@@ -94,7 +102,7 @@ class EmailNotification(models.Model):
             raise ValidationError(message)
 
     def get_text_variables(self):
-        return list(self.form.get_fields_as_choices())
+        return list(self.form.get_form_fields_as_choices())
 
     def get_recipient_name(self):
         if self.to_name:
@@ -124,8 +132,8 @@ class EmailNotification(models.Model):
             'form_plugin': self.form,
             'form_name': self.form.name,
             'email_notification': self,
-            'email_html_theme': get_template('html'),
-            'email_txt_theme': get_template('txt'),
+            'email_html_theme': get_template(format='html'),
+            'email_txt_theme': get_template(format='txt'),
         }
         context.update(form_data)
         return context

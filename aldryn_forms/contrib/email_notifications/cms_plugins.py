@@ -10,6 +10,7 @@ from cms.plugin_pool import plugin_pool
 from aldryn_forms.cms_plugins import FormPlugin
 
 from .models import EmailNotification, EmailNotificationFormPlugin
+from .validators import is_valid_recipient
 
 
 logger = logging.getLogger(__name__)
@@ -77,16 +78,30 @@ class EmailNotificationForm(FormPlugin):
             # I use a "catch all" in order to not couple this handler to a specific email backend
             # different email backends have different exceptions.
             logger.exception("Could not send notification emails.")
-            return 0
+            return []
 
         form_data = form.get_cleaned_data()
 
         notifications = instance.email_notifications.select_related('form')
 
-        emails = [notification.prepare_email(form_data=form_data)
-                  for notification in notifications]
+        emails = []
+        recipients = []
 
-        recipients = [email.to[0] for email in emails if email.to]
+        for notification in notifications:
+            email = notification.prepare_email(form_data=form_data)
+
+            to_email = email.to[0]
+
+            if is_valid_recipient(to_email):
+                emails.append(email)
+                recipients.append(to_email)
+
+        try:
+            connection.send_messages(emails)
+        except:
+            # again, we catch all exceptions to be backend agnostic
+            logger.exception("Could not send notification emails.")
+            recipients = []
         return recipients
 
 
