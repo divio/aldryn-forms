@@ -1,0 +1,7 @@
+{% extends email_html_theme %}
+{% load aldryn_forms_tags i18n %}
+
+{% block email_content %}
+{% render_notification_text email_notification 'body_html' as html_message %}
+{{ html_message|safe }}
+{% endblock email_content %}

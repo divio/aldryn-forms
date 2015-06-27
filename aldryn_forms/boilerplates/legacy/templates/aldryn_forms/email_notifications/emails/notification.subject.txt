@@ -1,0 +1,1 @@
+{% load aldryn_forms_tags %}{% render_notification_text email_notification 'subject' as subject %}{{ subject }}
