@@ -73,6 +73,7 @@ class EmailNotification(models.Model):
     subject = models.CharField(
         verbose_name=_("subject"),
         max_length=200,
+        blank=True
     )
     body_text = models.TextField(
         verbose_name=_('email body (txt)'),
