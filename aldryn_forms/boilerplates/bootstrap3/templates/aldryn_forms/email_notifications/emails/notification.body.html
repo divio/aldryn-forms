@@ -3,5 +3,9 @@
 
 {% block email_content %}
 {% render_notification_text email_notification 'body_html' as html_message %}
-{{ html_message|safe }}
+{% if html_message %}
+    {{ html_message|safe }}
+{% else %}
+    <p>{% blocktrans %}Form name: {{ form_name }}{% endblocktrans %}</p>
+    {% include "aldryn_forms/emails/includes/form_data.html" %}
 {% endblock email_content %}
