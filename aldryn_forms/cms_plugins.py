@@ -184,6 +184,8 @@ class FormPlugin(FieldContainer):
     def send_notifications(self, instance, form):
         users = instance.recipients.only('first_name', 'last_name', 'email')
 
+        recipients = [user for user in users if user.email]
+
         context = {
             'form_name': instance.name,
             'form_data': form.get_render_data(),
@@ -191,13 +193,13 @@ class FormPlugin(FieldContainer):
         }
 
         send_mail(
-            recipients=[user.email for user in users if user.email],
+            recipients=[user.email for user in recipients],
             context=context,
             template_base='aldryn_forms/emails/notification',
             language=instance.language,
         )
 
-        users_notified = [(user.get_full_name(), user.email) for user in users]
+        users_notified = [(user.get_full_name(), user.email) for user in recipients]
         return map(formataddr, users_notified)
 
 
