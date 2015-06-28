@@ -22,7 +22,7 @@ class FormDataAdmin(admin.ModelAdmin):
 
     date_hierarchy = 'sent_at'
     list_display = ['__unicode__', 'sent_at', 'language']
-    list_filter = ['name', 'language', 'people_notified']
+    list_filter = ['name', 'language']
     model = FormData
     readonly_fields = [
         'name',
