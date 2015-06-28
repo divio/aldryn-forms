@@ -9,14 +9,13 @@ register = template.Library()
 
 @register.assignment_tag(takes_context=True)
 def render_notification_text(context, email_notification, email_type):
-    if not email_notification:
+    text_context = context.get('text_context')
+
+    if not (text_context or email_notification):
         return
 
-    safe_context = context['data']
-    safe_context['form_name'] = context['form_name']
-
     render_func = 'render_%s' % email_type
-    message = getattr(email_notification, render_func)(context=safe_context)
+    message = getattr(email_notification, render_func)(context=text_context)
     return mark_safe(message)
 
 

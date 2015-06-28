@@ -184,11 +184,9 @@ class FormPlugin(FieldContainer):
     def send_notifications(self, instance, form):
         users = instance.recipients.only('first_name', 'last_name', 'email')
 
-        form_data = form.get_render_data()
-
         context = {
             'form_name': instance.name,
-            'form_data': form_data,
+            'form_data': form.get_render_data(),
             'form_plugin': instance,
         }
 

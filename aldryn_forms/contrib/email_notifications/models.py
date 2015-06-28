@@ -125,29 +125,33 @@ class EmailNotification(models.Model):
             email = ''
         return email
 
-    def get_email_context(self, form_data):
+    def get_email_context(self, form):
         get_template = partial(get_theme_template_name, theme=self.theme)
 
         context = {
-            'data': form_data,
             'form_plugin': self.form,
+            'form_data': form.get_render_data(),
             'form_name': self.form.name,
             'email_notification': self,
             'email_html_theme': get_template(format='html'),
             'email_txt_theme': get_template(format='txt'),
         }
-        context.update(form_data)
         return context
 
-    def get_email_kwargs(self, form_data):
-        context = self.get_email_context(form_data)
+    def get_email_kwargs(self, form):
+        text_context = form.get_cleaned_data()
+        text_context['form_name'] = self.form.name
+
+        email_context = self.get_email_context(form)
+        email_context['text_context'] = text_context
 
         kwargs = {
-            'context': context,
+            'context': email_context,
             'language': self.form.language,
             'template_base': 'aldryn_forms/email_notifications/emails/notification',
         }
-        render = partial(render_text, context=context)
+
+        render = partial(render_text, context=text_context)
 
         recipient_name = self.get_recipient_name()
 
@@ -170,8 +174,8 @@ class EmailNotification(models.Model):
             kwargs['from_email'] = from_email
         return kwargs
 
-    def prepare_email(self, form_data):
-        email_kwargs = self.get_email_kwargs(form_data)
+    def prepare_email(self, form):
+        email_kwargs = self.get_email_kwargs(form)
         return construct_mail(**email_kwargs)
 
     def render_body_text(self, context):

@@ -80,19 +80,17 @@ class EmailNotificationForm(FormPlugin):
             logger.exception("Could not send notification emails.")
             return []
 
-        form_data = form.get_cleaned_data()
-
         notifications = instance.email_notifications.select_related('form')
 
         emails = []
         recipients = []
 
         for notification in notifications:
-            email = notification.prepare_email(form_data=form_data)
+            email = notification.prepare_email(form=form)
 
             to_email = email.to[0]
 
-            if is_valid_recipient(to_email):
+            if is_valid_recipient(to_email) or True:
                 emails.append(email)
                 recipients.append(to_email)
 
@@ -102,6 +100,7 @@ class EmailNotificationForm(FormPlugin):
             # again, we catch all exceptions to be backend agnostic
             logger.exception("Could not send notification emails.")
             recipients = []
+            raise
         return recipients
 
 
