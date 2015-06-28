@@ -42,7 +42,8 @@ class EmailNotificationInline(admin.StackedInline):
         ),
     ]
     readonly_fields = ['text_variables']
-    text_variables_help_text = _('variables can be used with "$" like $variable')
+    text_variables_help_text = _('variables can be used with by '
+                                 'wrapping with "${variable}" like ${variable}')
 
     def text_variables(self, obj):
         variables = obj.get_text_variables()
@@ -90,7 +91,7 @@ class EmailNotificationForm(FormPlugin):
 
             to_email = email.to[0]
 
-            if is_valid_recipient(to_email) or True:
+            if is_valid_recipient(to_email):
                 emails.append(email)
                 recipients.append(to_email)
 
