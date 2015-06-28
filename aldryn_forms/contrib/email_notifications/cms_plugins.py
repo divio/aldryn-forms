@@ -101,7 +101,6 @@ class EmailNotificationForm(FormPlugin):
             # again, we catch all exceptions to be backend agnostic
             logger.exception("Could not send notification emails.")
             recipients = []
-            raise
         return recipients
 
 
