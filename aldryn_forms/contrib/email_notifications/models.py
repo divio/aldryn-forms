@@ -1,5 +1,4 @@
 # -*- coding: utf-8 -*-
-from collections import defaultdict
 from email.utils import formataddr
 from functools import partial
 
