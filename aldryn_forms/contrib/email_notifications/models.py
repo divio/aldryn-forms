@@ -101,7 +101,7 @@ class EmailNotification(models.Model):
             message = ugettext('Please provide a recipient.')
             raise ValidationError(message)
 
-    def get_text_variables(self):
+    def get_text_variable_choices(self):
         return list(self.form.get_form_fields_as_choices())
 
     def get_recipient_name(self):

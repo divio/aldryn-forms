@@ -47,7 +47,7 @@ class EmailNotificationInline(admin.StackedInline):
 
     def text_variables(self, obj):
         # list of tuples - [('value', 'label')]
-        variable_choices = obj.get_text_variables()
+        variable_choices = obj.get_text_variable_choices()
         li_items = (u'<li>{0} | {1}</li>'.format(*var) for var in variable_choices)
         unordered_list = u'<ul>{0}</ul>'.format(u''.join(li_items))
         help_text = u'<p class="help">{0}</p>'.format(self.text_variables_help_text)
