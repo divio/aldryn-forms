@@ -11,7 +11,7 @@ register = template.Library()
 def render_notification_text(context, email_notification, email_type):
     text_context = context.get('text_context')
 
-    if not (text_context or email_notification):
+    if not text_context or not email_notification:
         return
 
     render_func = 'render_%s' % email_type
