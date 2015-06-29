@@ -1,3 +1,4 @@
+{% load i18n %}
 {% if body_text %}
 {{ body_text }}
 {% else %}
