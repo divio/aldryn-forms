@@ -38,7 +38,11 @@ from .forms import (
 )
 from .models import SerializedFormField
 from .signals import form_pre_save, form_post_save
-from .validators import MinChoicesValidator, MaxChoicesValidator
+from .validators import (
+    is_valid_recipient,
+    MinChoicesValidator,
+    MaxChoicesValidator
+)
 
 
 class FormElement(CMSPluginBase):
@@ -182,7 +186,8 @@ class FormPlugin(FieldContainer):
     def send_notifications(self, instance, form):
         users = instance.recipients.only('first_name', 'last_name', 'email')
 
-        recipients = [user for user in users if user.email]
+        recipients = [user for user in users.exclude(email='')
+                      if is_valid_recipient(user.email)]
 
         context = {
             'form_name': instance.name,
