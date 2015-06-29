@@ -186,7 +186,7 @@ class FormPlugin(FieldContainer):
 
         context = {
             'form_name': instance.name,
-            'form_data': form.get_render_data(),
+            'form_data': form.get_serialized_field_choices(),
             'form_plugin': instance,
         }
 
@@ -438,7 +438,7 @@ class EmailField(TextField):
     def send_notification_email(self, email, form, form_field_instance):
         context = {
             'form_name': form.instance.name,
-            'form_data': form.get_render_data(is_confirmation=True),
+            'form_data': form.get_serialized_field_choices(is_confirmation=True),
             'body_text': form_field_instance.email_body,
         }
         send_mail(

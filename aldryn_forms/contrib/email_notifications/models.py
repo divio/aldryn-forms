@@ -129,7 +129,7 @@ class EmailNotification(models.Model):
 
         context = {
             'form_plugin': self.form,
-            'form_data': form.get_render_data(),
+            'form_data': form.get_serialized_field_choices(),
             'form_name': self.form.name,
             'email_notification': self,
             'email_html_theme': get_template(format='html'),

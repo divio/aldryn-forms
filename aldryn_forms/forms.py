@@ -168,7 +168,7 @@ class FormDataBaseForm(forms.Form):
             serialized_field = plugin.serialize_field(self, field, is_confirmation)
             yield serialized_field
 
-    def get_render_data(self, is_confirmation=False):
+    def get_serialized_field_choices(self, is_confirmation=False):
         """Renders the form data in a format suitable to be serialized.
         """
         fields = self.get_serialized_fields(is_confirmation)

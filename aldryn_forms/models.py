@@ -375,7 +375,7 @@ class FormData(models.Model):
         return form_data
 
     def set_form_data(self, form):
-        grouped_data = form.get_render_data()
+        grouped_data = form.get_serialized_field_choices()
         formatted_data = [u'{0}: {1}'.format(*group) for group in grouped_data]
         self.data = u'\n'.join(formatted_data)
 
