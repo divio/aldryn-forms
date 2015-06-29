@@ -32,6 +32,7 @@ Update ``INSTALLED_APPS`` with ::
         …
         'absolute',
         'aldryn_forms',
+        'aldryn_forms.contrib.email_notifications',
         'captcha',
         'emailit',
         'filer',

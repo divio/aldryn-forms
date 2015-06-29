@@ -1,4 +1,6 @@
 # -*- coding: utf-8 -*-
+from email.utils import formataddr
+
 from PIL import Image
 
 from django import forms
@@ -34,9 +36,13 @@ from .forms import (
     FileFieldForm,
     ImageFieldForm,
 )
+from .models import SerializedFormField
 from .signals import form_pre_save, form_post_save
-from .utils import get_nested_plugins, get_form_render_data
-from .validators import MinChoicesValidator, MaxChoicesValidator
+from .validators import (
+    is_valid_recipient,
+    MinChoicesValidator,
+    MaxChoicesValidator
+)
 
 
 class FormElement(CMSPluginBase):
@@ -44,21 +50,9 @@ class FormElement(CMSPluginBase):
     cache = False
     module = _('Forms')
 
-    def get_form_fields(self, instance):
-        raise NotImplementedError()
-
 
 class FieldContainer(FormElement):
     allow_children = True
-
-    def get_form_fields(self, instance):
-        form_fields = {}
-        for child_plugin_instance in get_nested_plugins(instance):
-            plugin_instance, child_plugin = child_plugin_instance.get_plugin_instance()
-            if plugin_instance and hasattr(child_plugin, 'get_form_fields'):
-                fields = child_plugin.get_form_fields(instance=plugin_instance)
-                form_fields.update(fields)
-        return form_fields
 
 
 class FormPlugin(FieldContainer):
@@ -85,7 +79,9 @@ class FormPlugin(FieldContainer):
 
         context = super(FormPlugin, self).render(context, instance, placeholder)
         request = context['request']
+
         form = self.process_form(instance, request)
+
         if form.is_valid():
             context['form_success_url'] = self.get_success_url(instance)
         context['form'] = form
@@ -95,7 +91,11 @@ class FormPlugin(FieldContainer):
         return instance.form_template
 
     def form_valid(self, instance, request, form):
+        recipients = self.send_notifications(instance, form)
+
+        form.instance.set_users_notified(recipients)
         form.save()
+
         message = instance.success_message or ugettext('The form has been sent.')
         messages.success(request, message)
 
@@ -153,16 +153,25 @@ class FormPlugin(FieldContainer):
         Constructs form class basing on children plugin instances.
         """
         fields = self.get_form_fields(instance)
-        return forms.forms.DeclarativeFieldsMetaclass('AldrynDynamicForm', (FormDataBaseForm,), fields)
+        return type(FormDataBaseForm)('AldrynDynamicForm', (FormDataBaseForm,), fields)
+
+    def get_form_fields(self, instance):
+        form_fields = {}
+        fields = instance.get_form_fields()
+
+        for field in fields:
+            plugin_instance = field.plugin_instance
+            field_plugin = plugin_instance.get_plugin_class_instance()
+            form_fields[field.name] = field_plugin.get_form_field(plugin_instance)
+        return form_fields
 
     def get_form_kwargs(self, instance, request):
         kwargs = {'form_plugin': instance}
 
         if request.method in ('POST', 'PUT'):
-            data = request.POST.copy()
-            data['language'] = instance.language
-            data['form_plugin_id'] = instance.pk
-            kwargs['data'] = data
+            kwargs['data'] = request.POST.copy()
+            kwargs['data']['language'] = instance.language
+            kwargs['data']['form_plugin_id'] = instance.pk
             kwargs['files'] = request.FILES
         return kwargs
 
@@ -174,6 +183,29 @@ class FormPlugin(FieldContainer):
         else:
             raise RuntimeError('Form is not configured properly.')
 
+    def send_notifications(self, instance, form):
+        users = instance.recipients.only('first_name', 'last_name', 'email')
+
+        recipients = [user for user in users.exclude(email='')
+                      if is_valid_recipient(user.email)]
+
+        context = {
+            'form_name': instance.name,
+            'form_data': form.get_serialized_field_choices(),
+            'form_plugin': instance,
+        }
+
+        send_mail(
+            recipients=[user.email for user in recipients],
+            context=context,
+            template_base='aldryn_forms/emails/notification',
+            language=instance.language,
+        )
+
+        users_notified = [
+            formataddr((user.get_full_name(), user.email)) for user in recipients]
+        return users_notified
+
 
 class Fieldset(FieldContainer):
     render_template = 'aldryn_forms/fieldset.html'
@@ -182,6 +214,7 @@ class Fieldset(FieldContainer):
 
 
 class Field(FormElement):
+    module = _('Form fields')
     # template name is calculated based on field
     render_template = True
     model = models.FieldPlugin
@@ -198,9 +231,6 @@ class Field(FormElement):
     fieldset_required_conf_fields = ['required', 'required_message']
     fieldset_extra_fields = ['custom_classes', 'text_area_columns', 'text_area_rows']
 
-    def get_field_name(self, instance):
-        return u'aldryn-forms-field-%d' % (instance.pk,)
-
     def serialize_value(self, instance, value, is_confirmation=False):
         if isinstance(value, query.QuerySet):
             value = u', '.join(map(unicode, value))
@@ -208,18 +238,14 @@ class Field(FormElement):
             value = '-'
         return unicode(value)
 
-    def serialize_field(self, form, instance, is_confirmation=False):
-        """Returns a (label, value) tuple for the given field.
-
-        Both fields will have been converted to a string object."""
-        key = self.get_field_name(instance)
-        value = self.serialize_value(instance, form.cleaned_data[key],
-                                     is_confirmation)
-        name = instance.label or instance.placeholder_text or key
-        return name, value
-
-    def get_form_fields(self, instance):
-        return {self.get_field_name(instance=instance): self.get_form_field(instance=instance)}
+    def serialize_field(self, form, field, is_confirmation=False):
+        """Returns a (key, label, value) named tuple for the given field."""
+        value = self.serialize_value(
+            instance=field.plugin_instance,
+            value=form.cleaned_data[field.name],
+            is_confirmation=is_confirmation
+        )
+        return SerializedFormField(name=field.name, label=field.label, value=value)
 
     def get_form_field(self, instance):
         form_field_class = self.get_form_field_class(instance)
@@ -281,9 +307,12 @@ class Field(FormElement):
         templates = self.get_template_names(instance)
         self.render_template = select_template(templates)
         context = super(Field, self).render(context, instance, placeholder)
+
         form = context.get('form')
-        if form:
-            field_name = self.get_field_name(instance=instance)
+
+        if form and hasattr(form, 'form_plugin'):
+            form_plugin = form.form_plugin
+            field_name = form_plugin.get_form_field_name(field=instance)
             context['field'] = form[field_name]
         return context
 
@@ -366,6 +395,7 @@ class TextField(Field):
 
     def get_form_field_validators(self, instance):
         validators = []
+
         if instance.min_value:
             validators.append(MinLengthValidator(instance.min_value))
         return validators
@@ -414,7 +444,7 @@ class EmailField(TextField):
     def send_notification_email(self, email, form, form_field_instance):
         context = {
             'form_name': form.instance.name,
-            'form_data': get_form_render_data(form, is_confirmation=True),
+            'form_data': form.get_serialized_field_choices(is_confirmation=True),
             'body_text': form_field_instance.email_body,
         }
         send_mail(
@@ -425,7 +455,8 @@ class EmailField(TextField):
         )
 
     def form_post_save(self, instance, form, **kwargs):
-        field_name = self.get_field_name(instance)
+        field_name = form.form_plugin.get_form_field_name(field=instance)
+
         email = form.cleaned_data.get(field_name)
 
         if email and instance.email_send_notification:
@@ -468,13 +499,16 @@ class FileField(Field):
         else:
             return '-'
 
-    def form_pre_save(self, instance, form, request, **kwargs):
+    def form_pre_save(self, instance, form, **kwargs):
         """Save the uploaded file to django-filer
 
         The type of model (file or image) is automatically chosen by trying to
         open the uploaded file.
         """
-        field_name = self.get_field_name(instance)
+        request = kwargs['request']
+
+        field_name = form.form_plugin.get_form_field_name(field=instance)
+
         uploaded_file = form.cleaned_data[field_name]
 
         if uploaded_file is None:
@@ -659,9 +693,6 @@ class SubmitButton(FormElement):
     render_template = 'aldryn_forms/submit_button.html'
     name = _('Submit Button')
     model = models.FormButtonPlugin
-
-    def get_form_fields(self, instance):
-        return {}
 
 
 plugin_pool.register_plugin(BooleanField)
