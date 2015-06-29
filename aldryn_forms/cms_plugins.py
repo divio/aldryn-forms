@@ -686,6 +686,10 @@ else:
         form_field_widget = CaptchaTextInput
         form_field_enabled_options = ['label', 'error_messages']
 
+        def serialize_field(self, *args, **kwargs):
+            # None means don't serialize me
+            return None
+
     plugin_pool.register_plugin(CaptchaField)
 
 
