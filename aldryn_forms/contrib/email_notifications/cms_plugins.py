@@ -19,8 +19,7 @@ logger = logging.getLogger(__name__)
 class EmailNotificationInline(admin.StackedInline):
     model = EmailNotification
     extra = 1
-    add_fieldsets = [(None, {'fields': ['theme']})]
-    edit_fieldsets = [
+    fieldsets = [
         (
             None,
             {'fields': ['theme']}
@@ -46,12 +45,6 @@ class EmailNotificationInline(admin.StackedInline):
     readonly_fields = ['text_variables']
     text_variables_help_text = _('variables can be used with by '
                                  'wrapping with "${variable}" like ${variable}')
-
-    def get_fieldsets(self, request, obj=None):
-        if obj and obj.pk:
-            return self.edit_fieldsets
-        else:
-            return self.add_fieldsets
 
     def text_variables(self, obj):
         if obj.pk is None:
