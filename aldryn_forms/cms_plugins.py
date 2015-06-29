@@ -36,11 +36,9 @@ from .forms import (
     FileFieldForm,
     ImageFieldForm,
 )
+from .models import SerializedFormField
 from .signals import form_pre_save, form_post_save
 from .validators import MinChoicesValidator, MaxChoicesValidator
-
-
-SerializedFormField = models.SerializedFormField
 
 
 class FormElement(CMSPluginBase):
