@@ -76,7 +76,7 @@ class EmailNotificationForm(FormPlugin):
         try:
             connection = get_connection(fail_silently=False)
             connection.open()
-        except Exception:
+        except:
             # I use a "catch all" in order to not couple this handler to a specific email backend
             # different email backends have different exceptions.
             logger.exception("Could not send notification emails.")
