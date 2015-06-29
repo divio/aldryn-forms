@@ -197,8 +197,9 @@ class FormPlugin(FieldContainer):
             language=instance.language,
         )
 
-        users_notified = [(user.get_full_name(), user.email) for user in recipients]
-        return map(formataddr, users_notified)
+        users_notified = [
+            formataddr((user.get_full_name(), user.email)) for user in recipients]
+        return users_notified
 
 
 class Fieldset(FieldContainer):
