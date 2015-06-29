@@ -6,6 +6,12 @@ from django.core.validators import validate_email
 
 
 def is_valid_recipient(recipient):
+    """
+    recipient - a string in any of the following formats (RFC 2822):
+        name
+        useremail@gmail.com
+        name <useremail@mail.com>
+    """
     if not recipient:
         return False
 
