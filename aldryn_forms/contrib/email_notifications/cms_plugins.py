@@ -16,9 +16,20 @@ from .models import EmailNotification, EmailNotificationFormPlugin
 logger = logging.getLogger(__name__)
 
 
-class EmailNotificationInline(admin.StackedInline):
-    model = EmailNotification
+class NewEmailNotificationInline(admin.StackedInline):
     extra = 1
+    fields = ['theme']
+    model = EmailNotification
+    verbose_name = _('new email notification')
+    verbose_name_plural = _('new email notifications')
+
+    def get_queryset(self, request):
+        queryset = super(NewEmailNotificationInline, self).get_queryset(request)
+        return queryset.none()
+
+
+class ExistingEmailNotificationInline(admin.StackedInline):
+    model = EmailNotification
     fieldsets = [
         (
             None,
@@ -46,6 +57,9 @@ class EmailNotificationInline(admin.StackedInline):
     text_variables_help_text = _('variables can be used with by '
                                  'wrapping with "${variable}" like ${variable}')
 
+    def has_add_permission(self, request):
+        return False
+
     def text_variables(self, obj):
         if obj.pk is None:
             return ''
@@ -63,7 +77,10 @@ class EmailNotificationInline(admin.StackedInline):
 class EmailNotificationForm(FormPlugin):
     name = _('Email Notification Form')
     model = EmailNotificationFormPlugin
-    inlines = [EmailNotificationInline]
+    inlines = [
+        ExistingEmailNotificationInline,
+        NewEmailNotificationInline
+    ]
 
     fieldsets = [
         (
@@ -75,6 +92,16 @@ class EmailNotificationForm(FormPlugin):
             {'fields': ['redirect_type', 'page', 'url']}
         )
     ]
+
+    def get_inline_instances(self, request, obj=None):
+        inlines = super(EmailNotificationForm, self).get_inline_instances(request, obj)
+
+        if obj is None:
+            # remove ExistingEmailNotificationInline inline instance
+            # if we're first creating this object.
+            inlines = [inline for inline in inlines
+                       if not isinstance(inline, ExistingEmailNotificationInline)]
+        return inlines
 
     def send_notifications(self, instance, form):
         try:
