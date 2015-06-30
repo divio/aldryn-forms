@@ -97,9 +97,10 @@ class EmailNotificationForm(FormPlugin):
         inlines = super(EmailNotificationForm, self).get_inline_instances(request, obj)
 
         if obj is None:
-            # remove the first inline which is ExistingEmailNotificationInline
+            # remove ExistingEmailNotificationInline inline instance
             # if we're first creating this object.
-            inlines = inlines[1:]
+            inlines = [inline for inline in inlines
+                       if not isinstance(inline, ExistingEmailNotificationInline)]
         return inlines
 
     def send_notifications(self, instance, form):
