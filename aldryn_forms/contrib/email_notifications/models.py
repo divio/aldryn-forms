@@ -34,6 +34,15 @@ class EmailNotificationFormPlugin(FormPlugin):
             item.form = self
             item.save()
 
+    def get_text_context(self, form):
+        text_context = form.get_cleaned_data()
+        text_context['form_name'] = self.form.name
+        return text_context
+
+    def get_text_variable_choices(self):
+        choices =  ['', list(self.form.get_form_fields_as_choices())]
+        return choices
+
 
 class EmailNotification(models.Model):
     theme = models.CharField(
@@ -138,8 +147,7 @@ class EmailNotification(models.Model):
         return context
 
     def get_email_kwargs(self, form):
-        text_context = form.get_cleaned_data()
-        text_context['form_name'] = self.form.name
+        text_context = self.form.get_text_context(form)
 
         email_context = self.get_email_context(form)
         email_context['text_context'] = text_context
