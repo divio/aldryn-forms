@@ -1,7 +1,7 @@
 Changelog
 =========
 
-0.3.4 (2015-02-06)
+0.4.0 (2015-02-06)
 ------------------
 * added email notification contrib app which includes new email notification form
 * added html version to admin notification email text
