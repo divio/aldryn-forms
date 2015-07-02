@@ -1,6 +1,14 @@
 Changelog
 =========
 
+0.3.4 (2015-02-06)
+------------------
+* added email notification contrib app which includes new email notification form
+* added html version to admin notification email text
+* changed the users_notified field to a text field to support non user recipients
+* hides the captcha field/value from serialized data
+* cleaned up field serialization logic.
+
 0.3.3 (2015-29-05)
 ------------------
 * added support for default values in selectfields, multiselectfields and radioselects (bootstrap).
