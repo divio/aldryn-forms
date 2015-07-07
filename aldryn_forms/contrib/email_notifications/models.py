@@ -29,8 +29,6 @@ EMAIL_THEMES = getattr(
 
 class EmailNotificationFormPlugin(FormPlugin):
 
-    custom_text_context_keys = None
-
     class Meta:
         proxy = True
 
