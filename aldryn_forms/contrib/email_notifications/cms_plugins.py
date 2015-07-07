@@ -48,10 +48,6 @@ class ExistingEmailNotificationInline(admin.StackedInline):
             'Sender',
             {'fields': [('from_name', 'from_email')]}
         ),
-        (
-            'Email body',
-            {'fields': ['subject', 'body_text', 'body_html']}
-        ),
     ]
 
     readonly_fields = ['text_variables']
@@ -60,6 +56,31 @@ class ExistingEmailNotificationInline(admin.StackedInline):
 
     def has_add_permission(self, request):
         return False
+
+    def get_fieldsets(self, request, obj=None):
+        fieldsets = super(ExistingEmailNotificationInline, self).get_fieldsets(request, obj)
+
+        if obj is None:
+            return fieldsets
+
+        email_fieldset = self.get_email_fieldset(obj)
+        fieldsets = list(fieldsets) + email_fieldset
+        return fieldsets
+
+    def get_email_fieldset(self, obj):
+        fields = ['subject']
+
+        notification_conf = obj.get_notification_conf()
+
+        if notification_conf.txt_email_format_configurable:
+            # add the body_text field only if it's configurable
+            fields.append('body_text')
+
+        if notification_conf.html_email_format_enabled:
+            # add the body_html field only if email is allowed
+            # to be sent in html version.
+            fields.append('body_html')
+        return [('Email', {'fields': fields})]
 
     def text_variables(self, obj):
         if obj.pk is None:
