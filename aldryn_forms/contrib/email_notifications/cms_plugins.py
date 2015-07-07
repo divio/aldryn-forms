@@ -10,6 +10,7 @@ from cms.plugin_pool import plugin_pool
 from aldryn_forms.cms_plugins import FormPlugin
 from aldryn_forms.validators import is_valid_recipient
 
+from .notification import DefaultNotificationConf
 from .models import EmailNotification, EmailNotificationFormPlugin
 
 
@@ -81,6 +82,7 @@ class EmailNotificationForm(FormPlugin):
         ExistingEmailNotificationInline,
         NewEmailNotificationInline
     ]
+    notification_conf_class = DefaultNotificationConf
 
     fieldsets = [
         (

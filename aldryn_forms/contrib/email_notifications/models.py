@@ -13,7 +13,11 @@ from aldryn_forms.models import FormPlugin
 
 from emailit.api import construct_mail
 
-from .helpers import get_theme_template_name, render_text
+from .helpers import (
+    get_email_template_name,
+    get_theme_template_name,
+    render_text
+)
 
 
 EMAIL_THEMES = getattr(
@@ -25,6 +29,8 @@ EMAIL_THEMES = getattr(
 
 class EmailNotificationFormPlugin(FormPlugin):
 
+    custom_text_context_keys = None
+
     class Meta:
         proxy = True
 
@@ -34,13 +40,18 @@ class EmailNotificationFormPlugin(FormPlugin):
             item.form = self
             item.save()
 
-    def get_text_context(self, form):
-        text_context = form.get_cleaned_data()
-        text_context['form_name'] = self.form.name
+    def get_notification_conf(self):
+        plugin_class = self.get_plugin_class()
+        return plugin_class.notification_conf_class(form_plugin=self)
+
+    def get_notification_text_context(self, form):
+        notification_conf = self.get_notification_conf()
+        text_context = notification_conf.get_text_context()
         return text_context
 
-    def get_text_variable_choices(self):
-        choices =  ['', list(self.form.get_form_fields_as_choices())]
+    def get_notification_text_context_keys_as_choices(self):
+        notification_conf = self.get_notification_conf()
+        choices =  notification_conf.get_text_context_keys_as_choices()
         return choices
 
 
@@ -110,9 +121,6 @@ class EmailNotification(models.Model):
             message = ugettext('Please provide a recipient.')
             raise ValidationError(message)
 
-    def get_text_variable_choices(self):
-        return list(self.form.get_form_fields_as_choices())
-
     def get_recipient_name(self):
         if self.to_name:
             # manual name takes precedence over user relationship.
@@ -147,16 +155,27 @@ class EmailNotification(models.Model):
         return context
 
     def get_email_kwargs(self, form):
-        text_context = self.form.get_text_context(form)
+        form_plugin = self.form
+
+        text_context = form_plugin.get_text_context(form)
 
         email_context = self.get_email_context(form)
         email_context['text_context'] = text_context
 
+        notification_conf = form_plugin.get_notification_conf()
+
         kwargs = {
             'context': email_context,
-            'language': self.form.language,
-            'template_base': 'aldryn_forms/email_notifications/emails/notification',
+            'language': form_plugin.language,
+            # needs to be empty string because emailit expects a string
+            # it's empty so the template lookup fails.
+            'template_base': '',
+            'body_templates': [get_email_template_name('txt')],
         }
+
+        if notification_conf.html_email_format_enabled:
+            # we only want to render html template if html format is enabled.
+            kwargs['html_templates'] = [get_email_template_name('html')]
 
         render = partial(render_text, context=text_context)
 
