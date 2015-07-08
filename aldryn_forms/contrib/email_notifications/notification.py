@@ -7,7 +7,7 @@ class BaseNotificationConf(object):
     # format should be:
     # [(Title, [(field_1, field_1_label), (field_2, field_2_label)])]
     # fields have to be valid python identifiers
-    custom_text_context_choices = None
+    custom_context_choices = None
 
     # should we allow the user to configure the email txt format?
     # this is not the same as the html option above
@@ -27,12 +27,12 @@ class BaseNotificationConf(object):
         text_context = form.get_cleaned_data()
         text_context['form_name'] = self.form_plugin.name
 
-        if self.custom_text_context_choices:
-            custom_context = self.get_custom_text_context(form)
+        if self.custom_context_choices:
+            custom_context = self.get_custom_context(form)
             text_context.update(custom_context)
         return text_context
 
-    def get_custom_text_context(self, form):
+    def get_custom_context(self, form):
         return {}
 
     def get_context_keys_as_choices(self):
@@ -43,8 +43,8 @@ class BaseNotificationConf(object):
             ),
         ]
 
-        if self.custom_text_context_choices:
-            choices += list(self.custom_text_context_choices)
+        if self.custom_context_choices:
+            choices += list(self.custom_context_choices)
         return choices
 
 
