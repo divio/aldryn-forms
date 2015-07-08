@@ -147,8 +147,8 @@ class EmailNotification(models.Model):
             'form_data': form.get_serialized_field_choices(),
             'form_name': self.form.name,
             'email_notification': self,
-            'email_html_theme': get_template(format='html'),
-            'email_txt_theme': get_template(format='txt'),
+            'email_html_theme': get_template(suffix='html'),
+            'email_txt_theme': get_template(suffix='txt'),
         }
         return context
 
@@ -168,12 +168,13 @@ class EmailNotification(models.Model):
             # needs to be empty string because emailit expects a string
             # it's empty so the template lookup fails.
             'template_base': '',
-            'body_templates': [get_email_template_name('txt')],
+            'body_templates': [get_email_template_name(name='body', suffix='txt')],
+            'subject_templates': [get_email_template_name(name='subject', suffix='txt')],
         }
 
         if notification_conf.html_email_format_enabled:
             # we only want to render html template if html format is enabled.
-            kwargs['html_templates'] = [get_email_template_name('html')]
+            kwargs['html_templates'] = [get_email_template_name(name='body', suffix='html')]
 
         render = partial(render_text, context=text_context)
 

@@ -1,30 +1,31 @@
 # -*- coding: utf-8 -*-
+import os
+
 from string import Template
 
-
-def get_template_name(base, name, format='txt'):
-    filename = '{0}.{1}'.format(name, format)
-
-    if not base.endswith('/'):
-        base += '/'
-    return '{0}{1}'.format(base, filename)
+from emailit.utils import get_template_name
 
 
-def get_email_template_name(format='txt'):
+EMAIL_TEMPLATES_BASE = 'aldryn_forms/email_notifications/emails/'
+
+EMAIL_THEMES_PATH = os.path.join(EMAIL_TEMPLATES_BASE, 'themes')
+EMAIL_NOTIFICATIONS_PATH = os.path.join(EMAIL_TEMPLATES_BASE, 'notification')
+
+
+def get_email_template_name(name='body', suffix='txt'):
     template_name = get_template_name(
-        base='aldryn_forms/email_notifications/emails/',
-        name='body',
-        format=format,
+        # we don't care about language specific templates
+        language=None,
+        base=EMAIL_NOTIFICATIONS_PATH,
+        part=name,
+        suffix=suffix,
     )
     return template_name
 
 
-def get_theme_template_name(theme, format='txt'):
-    template_name = get_template_name(
-        base='aldryn_forms/email_notifications/emails/themes',
-        name=theme,
-        format=format,
-    )
+def get_theme_template_name(theme, suffix='txt'):
+    filename = '{0}.{1}'.format(theme, suffix)
+    template_name = os.path.join(EMAIL_THEMES_PATH, filename)
     return template_name
 
 
