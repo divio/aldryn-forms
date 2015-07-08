@@ -44,7 +44,7 @@ class BaseNotificationConf(object):
         ]
 
         if self.custom_text_context_choices:
-            choices += self.custom_text_context_choices
+            choices += list(self.custom_text_context_choices)
         return choices
 
 
