@@ -44,7 +44,7 @@ class EmailNotificationFormPlugin(FormPlugin):
 
     def get_notification_text_context(self, form):
         notification_conf = self.get_notification_conf()
-        text_context = notification_conf.get_text_context()
+        text_context = notification_conf.get_context(form)
         return text_context
 
     def get_notification_text_context_keys_as_choices(self):
@@ -155,7 +155,7 @@ class EmailNotification(models.Model):
     def get_email_kwargs(self, form):
         form_plugin = self.form
 
-        text_context = form_plugin.get_text_context(form)
+        text_context = form_plugin.get_notification_text_context(form)
 
         email_context = self.get_email_context(form)
         email_context['text_context'] = text_context

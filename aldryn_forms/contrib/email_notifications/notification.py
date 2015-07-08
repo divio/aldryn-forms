@@ -5,7 +5,8 @@ from django.utils.translation import ugettext
 class BaseNotificationConf(object):
     # list of extra context keys available for email content/headers
     # format should be:
-    # [(Title, [field_1, field_2])]
+    # [(Title, [(field_1, field_1_label), (field_2, field_2_label)])]
+    # fields have to be valid python identifiers
     custom_text_context_choices = None
 
     # should we allow the user to configure the email txt format?
@@ -25,7 +26,14 @@ class BaseNotificationConf(object):
     def get_context(self, form):
         text_context = form.get_cleaned_data()
         text_context['form_name'] = self.form_plugin.name
+
+        if self.custom_text_context_choices:
+            custom_context = self.get_custom_text_context(form)
+            text_context.update(custom_context)
         return text_context
+
+    def get_custom_text_context(self, form):
+        return {}
 
     def get_context_keys_as_choices(self):
         choices =  [
