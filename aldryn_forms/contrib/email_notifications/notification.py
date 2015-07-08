@@ -4,7 +4,9 @@ from django.utils.translation import ugettext
 
 class BaseNotificationConf(object):
     # list of extra context keys available for email content/headers
-    custom_text_context_keys = None
+    # format should be:
+    # [(Title, [field_1, field_2])]
+    custom_text_context_choices = None
 
     # should we allow the user to configure the email txt format?
     # this is not the same as the html option above
@@ -33,8 +35,8 @@ class BaseNotificationConf(object):
             ),
         ]
 
-        if self.custom_text_context_keys:
-            choices += self.custom_text_context_keys
+        if self.custom_text_context_choices:
+            choices += self.custom_text_context_choices
         return choices
 
 

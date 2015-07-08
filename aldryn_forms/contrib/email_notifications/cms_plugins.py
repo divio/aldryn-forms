@@ -86,9 +86,18 @@ class ExistingEmailNotificationInline(admin.StackedInline):
         if obj.pk is None:
             return ''
 
-        # list of tuples - [('value', 'label')]
-        variable_choices = obj.form.get_notification_text_context_keys_as_choices()
-        li_items = (u'<li>{0} | {1}</li>'.format(*var) for var in variable_choices)
+        # list of tuples - [('category', [('value', 'label')])]
+        choices_by_category = obj.form.get_notification_text_context_keys_as_choices()
+
+        li_items = []
+
+        for category, choices in choices_by_category:
+            # <li>field_1</li><li>field_2</li>
+            fields_li = u''.join((u'<li>{0} | {1}</li>'.format(*var) for var in choices))
+
+            if fields_li:
+                li_item = u'<li>{0}</li><ul>{1}</ul>'.format(category, fields_li)
+                li_items.append(li_item)
         unordered_list = u'<ul>{0}</ul>'.format(u''.join(li_items))
         help_text = u'<p class="help">{0}</p>'.format(self.text_variables_help_text)
         return unordered_list + '\n' + help_text
