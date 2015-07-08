@@ -590,7 +590,7 @@ class BooleanField(Field):
     ]
 
     def serialize_value(self, instance, value, is_confirmation=False):
-        return _('Yes') if value else _('No')
+        return ugettext('Yes') if value else ugettext('No')
 
 
 class SelectOptionInline(TabularInline):
