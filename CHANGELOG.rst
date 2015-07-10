@@ -5,7 +5,7 @@ Changelog
 ------------------
 * added notification config class to support custom text variables
 * allow disabling email html version
-* allow hiding of email body txt field
+* allow hiding of email body txt format field
 * fixed bug with serialized boolean value
 
 0.4.0 (2015-02-07)
