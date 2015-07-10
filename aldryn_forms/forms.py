@@ -144,6 +144,7 @@ class FormDataBaseForm(forms.Form):
 
     def __init__(self, *args, **kwargs):
         self.form_plugin = kwargs.pop('form_plugin')
+        self.request = kwargs.pop('request')
         super(FormDataBaseForm, self).__init__(*args, **kwargs)
         language = self.form_plugin.language
 
