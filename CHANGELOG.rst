@@ -1,6 +1,13 @@
 Changelog
 =========
 
+0.4.1 (2015-10-07)
+------------------
+* added notification config class to support custom text variables
+* allow disabling email html version
+* allow hiding of email body txt field
+* fixed bug with serialized boolean value
+
 0.4.0 (2015-02-06)
 ------------------
 * added email notification contrib app which includes new email notification form
