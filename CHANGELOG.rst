@@ -8,7 +8,7 @@ Changelog
 * allow hiding of email body txt field
 * fixed bug with serialized boolean value
 
-0.4.0 (2015-02-06)
+0.4.0 (2015-02-07)
 ------------------
 * added email notification contrib app which includes new email notification form
 * added html version to admin notification email text
