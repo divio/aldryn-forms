@@ -9,4 +9,4 @@ def is_form_element(plugin):
     cms_plugin = plugin.get_plugin_class_instance(None)
     is_orphan_plugin = cms_plugin.model != plugin.__class__
     is_element_subclass = issubclass(plugin.get_plugin_class(), FormElement)
-    return not is_orphan_plugin and is_element_subclass
+    return (not is_orphan_plugin) and is_element_subclass
