@@ -21,6 +21,8 @@ except ImportError:  # django < 1.5
 else:
     User = get_user_model()
 
+from .helpers import is_form_element
+
 
 FieldData = namedtuple(
     'FieldData',
@@ -167,13 +169,10 @@ class FormPlugin(CMSPlugin):
         return fields_by_name
 
     def get_form_elements(self):
-        from .cms_plugins import FormElement
         from .utils import get_nested_plugins
 
         if self.child_plugin_instances is None:
             self.child_plugin_instances = self.get_descendants().order_by('tree_id', 'level', 'position')
-
-        is_form_element = lambda plugin: issubclass(plugin.get_plugin_class(), FormElement)
 
         if self._form_elements is None:
             children = get_nested_plugins(self)
