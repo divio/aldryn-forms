@@ -13,12 +13,8 @@ from django.utils.translation import ugettext_lazy as _
 
 from sizefield.utils import filesizeformat
 
-from .models import (
-    FormData,
-    FormPlugin,
-    User,
-)
-from .utils import add_form_error
+from .models import FormData, FormPlugin
+from .utils import add_form_error, get_user_model
 
 
 class FileSizeCheckMixin(object):
@@ -200,8 +196,9 @@ class FormPluginForm(ExtandableErrorForm):
 
     def __init__(self, *args, **kwargs):
         super(FormPluginForm, self).__init__(*args, **kwargs)
+
         if getattr(settings, 'ALDRYN_FORMS_SHOW_ALL_RECIPIENTS', False):
-            self.fields['recipients'].queryset = User.objects.all()
+            self.fields['recipients'].queryset = get_user_model().objects.all()
 
     def clean(self):
         redirect_type = self.cleaned_data.get('redirect_type')

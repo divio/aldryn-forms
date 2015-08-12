@@ -14,15 +14,10 @@ from filer.fields.folder import FilerFolderField
 
 from sizefield.models import FileSizeField
 
-try:
-    from django.contrib.auth import get_user_model
-except ImportError:  # django < 1.5
-    from django.contrib.auth.models import User
-else:
-    User = get_user_model()
-
 from .helpers import is_form_element
 
+
+AUTH_USER_MODEL = getattr(settings, 'AUTH_USER_MODEL', 'auth.User')
 
 FieldData = namedtuple(
     'FieldData',
@@ -93,7 +88,7 @@ class FormPlugin(CMSPlugin):
 
     # Staff notification email settings
     recipients = models.ManyToManyField(
-        to=User,
+        to=AUTH_USER_MODEL,
         verbose_name=_('Recipients'),
         blank=True,
         limit_choices_to={'is_staff': True},
