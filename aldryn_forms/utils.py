@@ -8,6 +8,20 @@ except ImportError:
     from cms.plugins.utils import downcast_plugins, build_plugin_tree
 
 
+def get_user_model():
+    """
+    Wrapper for get_user_model with compatibility for 1.5
+    """
+    # Notice these imports happen here to be compatible with django 1.7
+    try:
+        from django.contrib.auth import get_user_model as _get_user_model
+    except ImportError:  # django < 1.5
+        from django.contrib.auth.models import User
+    else:
+        User = _get_user_model()
+    return User
+
+
 def get_nested_plugins(parent_plugin, include_self=False):
     """
     Returns a flat list of plugins from parent_plugin
