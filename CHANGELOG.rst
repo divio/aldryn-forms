@@ -1,6 +1,11 @@
 Changelog
 =========
 
+0.5.0 (2015-19-08)
+------------------
+* added django 1.7 & 1.8 compatibility
+* fixes AttributeError with orphan plugins
+
 0.4.1 (2015-10-07)
 ------------------
 * added notification config class to support custom text variables
