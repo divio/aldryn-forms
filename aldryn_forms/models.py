@@ -19,7 +19,7 @@ from sizefield.models import FileSizeField
 from .helpers import is_form_element
 
 
-USES_TREEBEARD = LooseVersion(cms.__version__) >= LooseVersion('3.1')
+USES_TREEBEARD_ORDERING = LooseVersion(cms.__version__) >= LooseVersion('3.1')
 AUTH_USER_MODEL = getattr(settings, 'AUTH_USER_MODEL', 'auth.User')
 
 FieldData = namedtuple(
@@ -171,13 +171,13 @@ class FormPlugin(CMSPlugin):
 
         if self.child_plugin_instances is None:
             # 3.1 and 3.0 compatibility
-            if USES_TREEBEARD:
+            if USES_TREEBEARD_ORDERING:
                 # default ordering is by path
-                self.child_plugin_instances = self.get_descendants().order_by(
-                    'path', 'position')
+                ordering = ('path', 'position')
             else:
-                self.child_plugin_instances = self.get_descendants().order_by(
-                    'tree_id', 'level', 'position')
+                ordering = ('tree_id', 'level', 'position')
+            self.child_plugin_instances = self.get_descendants().order_by(
+                *ordering)
 
         if self._form_elements is None:
             children = get_nested_plugins(self)
