@@ -173,7 +173,8 @@ class FormPlugin(CMSPlugin):
             # 3.1 and 3.0 compatibility
             if USES_TREEBEARD:
                 # default ordering is by path
-                self.child_plugin_instances = self.get_descendants()
+                self.child_plugin_instances = self.get_descendants().order_by(
+                    'path', 'position')
             else:
                 self.child_plugin_instances = self.get_descendants().order_by(
                     'tree_id', 'level', 'position')
