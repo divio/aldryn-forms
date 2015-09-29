@@ -1,11 +1,13 @@
 # -*- coding: utf-8 -*-
 from collections import defaultdict, namedtuple
+from distutils.version import LooseVersion
 
 from django.conf import settings
 from django.db import models
 from django.utils.datastructures import SortedDict
 from django.utils.translation import ugettext_lazy as _
 
+import cms
 from cms.models.fields import PageField
 from cms.models.pluginmodel import CMSPlugin
 from cms.utils.plugins import downcast_plugins
@@ -17,6 +19,7 @@ from sizefield.models import FileSizeField
 from .helpers import is_form_element
 
 
+CMS_31 = LooseVersion(cms.__version__) >= LooseVersion('3.1')
 AUTH_USER_MODEL = getattr(settings, 'AUTH_USER_MODEL', 'auth.User')
 
 FieldData = namedtuple(
@@ -167,7 +170,13 @@ class FormPlugin(CMSPlugin):
         from .utils import get_nested_plugins
 
         if self.child_plugin_instances is None:
-            self.child_plugin_instances = self.get_descendants().order_by('tree_id', 'level', 'position')
+            # 3.1 and 3.0 compatibility
+            if CMS_31:
+                # default ordering is by path
+                ordering = ('path', 'position')
+            else:
+                ordering = ('tree_id', 'level', 'position')
+            self.child_plugin_instances = self.get_descendants().order_by(*ordering)
 
         if self._form_elements is None:
             children = get_nested_plugins(self)
