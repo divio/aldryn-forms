@@ -51,8 +51,12 @@ class FormDataAdmin(admin.ModelAdmin):
 
     def get_urls(self):
         from django.conf.urls import patterns, url
-
-        info = "%s_%s" % (self.model._meta.app_label, getattr(self.model._meta, 'module_name', 'model_name'))
+        try:
+            model_name = self.model._meta.model_name
+        except AttributeError:
+        # django <= 1.5 compat
+            model_name = self.model._meta.module_name
+        info = "%s_%s" % (self.model._meta.app_label, model_name)
 
         def pattern(regex, fn, name):
             args = [regex, self.admin_site.admin_view(fn)]
