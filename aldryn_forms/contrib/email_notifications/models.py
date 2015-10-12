@@ -168,13 +168,16 @@ class EmailNotification(models.Model):
             # needs to be empty string because emailit expects a string
             # it's empty so the template lookup fails.
             'template_base': '',
-            'body_templates': [get_email_template_name(name='body', suffix='txt')],
-            'subject_templates': [get_email_template_name(name='subject', suffix='txt')],
+            'body_templates': [
+                notification_conf.get_txt_email_template_name()],
+            'subject_templates': [
+                get_email_template_name(name='subject', suffix='txt')],
         }
 
         if notification_conf.html_email_format_enabled:
             # we only want to render html template if html format is enabled.
-            kwargs['html_templates'] = [get_email_template_name(name='body', suffix='html')]
+            kwargs['html_templates'] = [
+                notification_conf.get_txt_email_template_name()]
 
         render = partial(render_text, context=text_context)
 
