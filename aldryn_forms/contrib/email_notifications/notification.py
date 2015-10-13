@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
 from django.utils.translation import ugettext
 
+from .helpers import get_email_template_name
+
 
 class BaseNotificationConf(object):
     # list of extra context keys available for email content/headers
@@ -14,14 +16,25 @@ class BaseNotificationConf(object):
     # we can't disable txt format but we can choose to not display
     # it on the admin.
     txt_email_format_configurable = True
-
+    # default lookup template name, doesn't includes the extension
+    txt_email_template_name = 'body'
     # should we send out an html version of the email?
     # by design if the html version of email is enabled
     # then is configurable via the admin.
     html_email_format_enabled = True
+    # default lookup template name, doesn't includes the extension
+    html_email_template_name = 'body'
 
     def __init__(self, form_plugin):
         self.form_plugin = form_plugin
+
+    def get_txt_email_template_name(self):
+        return get_email_template_name(
+            name=self.txt_email_template_name, suffix='txt')
+
+    def get_html_email_template_name(self):
+        return get_email_template_name(
+            name=self.html_email_template_name, suffix='html')
 
     def get_context(self, form):
         text_context = form.get_cleaned_data()
