@@ -177,7 +177,7 @@ class EmailNotification(models.Model):
         if notification_conf.html_email_format_enabled:
             # we only want to render html template if html format is enabled.
             kwargs['html_templates'] = [
-                notification_conf.get_txt_email_template_name()]
+                notification_conf.get_html_email_template_name()]
 
         render = partial(render_text, context=text_context)
 
