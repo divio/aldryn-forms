@@ -183,8 +183,8 @@ class FormPlugin(CMSPlugin):
                 ordering = ('path', 'position')
             else:
                 ordering = ('tree_id', 'level', 'position')
-            descendants = self.get_descendants()
-            self.child_plugin_instances = descendants.order_by(*ordering)
+            descendants = self.get_descendants().order_by(*ordering)
+            self.child_plugin_instances = descendants
 
         if self._form_elements is None:
             children = get_nested_plugins(self)
