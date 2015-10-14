@@ -398,7 +398,7 @@ class FormData(models.Model):
             # as delimiter to separate field_name from field value and so if a
             # user ever enters ":" in any one of the two then we can't really
             # reliable get the name or value, so for now ignore that field :(
-             if len(bits) == 2:
+            if len(bits) == 2:
                 data = FieldData(label=bits[0], value=bits[1])
                 form_data.append(data)
         return form_data
