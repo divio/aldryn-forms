@@ -4,6 +4,7 @@ from aldryn_forms import __version__
 
 REQUIREMENTS = [
     'django-emailit',
+    'djangocms-text-ckeditor',
     'django-simple-captcha',
     'django-tablib',
     'South>=0.8.1',

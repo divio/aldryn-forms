@@ -1,31 +1,40 @@
 # -*- coding: utf-8 -*-
-from collections import namedtuple
+from collections import defaultdict, namedtuple
+from distutils.version import LooseVersion
 
 from django.conf import settings
 from django.core.validators import MaxLengthValidator
 from django.db import models
+from django.utils.datastructures import SortedDict
 from django.utils.translation import ugettext_lazy as _
 
+import cms
 from cms.models.fields import PageField
 from cms.models.pluginmodel import CMSPlugin
 from cms.utils.plugins import downcast_plugins
 
-from emailit.api import send_mail
-
 from filer.fields.folder import FilerFolderField
+
 from sizefield.models import FileSizeField
 
-try:
-    from django.contrib.auth import get_user_model
-except ImportError:  # django < 1.5
-    from django.contrib.auth.models import User
-else:
-    User = get_user_model()
-
-from .utils import get_form_render_data
+from .helpers import is_form_element
 
 
-FieldData = namedtuple('FieldData', field_names=['label', 'value'])
+CMS_31 = LooseVersion(cms.__version__) >= LooseVersion('3.1')
+AUTH_USER_MODEL = getattr(settings, 'AUTH_USER_MODEL', 'auth.User')
+
+FieldData = namedtuple(
+    'FieldData',
+    field_names=['label', 'value']
+)
+FormField = namedtuple(
+    'FormField',
+    field_names=['name', 'label', 'plugin_instance', 'occurrence']
+)
+SerializedFormField = namedtuple(
+    'SerializedFormField',
+    field_names=['name', 'label', 'value']
+)
 
 
 class FormPlugin(CMSPlugin):
@@ -46,6 +55,9 @@ class FormPlugin(CMSPlugin):
         (REDIRECT_TO_URL, _('Absolute URL')),
     ]
 
+    _form_elements = None
+    _form_field_key_cache = None
+
     name = models.CharField(
         verbose_name=_('Name'),
         max_length=50,
@@ -55,8 +67,8 @@ class FormPlugin(CMSPlugin):
         verbose_name=_('Error message'),
         blank=True,
         null=True,
-        help_text=_("An error message that will be displayed if the form "
-                    "doesn't validate.")
+        help_text=_('An error message that will be displayed if the form '
+                    'doesn\'t validate.')
     )
     success_message = models.TextField(
         verbose_name=_('Success message'),
@@ -68,28 +80,27 @@ class FormPlugin(CMSPlugin):
         verbose_name=_('Redirect to'),
         max_length=20,
         choices=REDIRECT_CHOICES,
-        help_text=_("Where to redirect the user when the form has been "
-                    "successfully sent?")
+        help_text=_('Where to redirect the user when the form has been '
+                    'successfully sent?')
     )
     page = PageField(verbose_name=_('CMS Page'), blank=True, null=True)
     url = models.URLField(_('Absolute URL'), blank=True, null=True)
-    recipients = models.ManyToManyField(
-        to=User,
-        verbose_name=_('Recipients'),
-        blank=True,
-        limit_choices_to={'is_staff': True},
-        help_text=_('People who will get the form content via e-mail.')
-    )
     custom_classes = models.CharField(
-        verbose_name=_('custom css classes'),
-        max_length=200,
-        blank=True
-    )
+        verbose_name=_('custom css classes'), max_length=200, blank=True)
     form_template = models.CharField(
         verbose_name=_('form template'),
         max_length=200,
         choices=FORM_TEMPLATES,
         default=DEFAULT_FORM_TEMPLATE,
+    )
+
+    # Staff notification email settings
+    recipients = models.ManyToManyField(
+        to=AUTH_USER_MODEL,
+        verbose_name=_('Recipients'),
+        blank=True,
+        limit_choices_to={'is_staff': True},
+        help_text=_('People who will get the form content via e-mail.')
     )
 
     def __unicode__(self):
@@ -99,9 +110,6 @@ class FormPlugin(CMSPlugin):
         for recipient in oldinstance.recipients.all():
             self.recipients.add(recipient)
 
-    def get_notification_emails(self):
-        return [x.email for x in self.recipients.all()]
-
     def get_submit_button(self):
         from .cms_plugins import SubmitButton
 
@@ -109,6 +117,7 @@ class FormPlugin(CMSPlugin):
 
         for element in form_elements:
             plugin_class = element.get_plugin_class()
+
             if issubclass(plugin_class, SubmitButton):
                 return element
         return
@@ -116,19 +125,68 @@ class FormPlugin(CMSPlugin):
     def get_form_fields(self):
         from .cms_plugins import Field
 
+        fields = []
+        occurrences = defaultdict(int)
+
         form_elements = self.get_form_elements()
         is_form_field = lambda plugin: issubclass(
             plugin.get_plugin_class(), Field)
-        return [plugin for plugin in form_elements if is_form_field(plugin)]
+        field_plugins = [
+            plugin for plugin in form_elements if is_form_field(plugin)]
+
+        for field_plugin in field_plugins:
+            field_type = field_plugin.field_type
+            occurrences[field_type] += 1
+            occurrence = occurrences[field_type]
+
+            field_name = u'{0}_{1}'.format(field_type, occurrence)
+            field_label = field_plugin.get_label() or field_name
+
+            field = FormField(
+                name=field_name,
+                label=field_label,
+                plugin_instance=field_plugin,
+                occurrence=occurrence,
+            )
+            fields.append(field)
+        return fields
+
+    def get_form_field_name(self, field):
+        if self._form_field_key_cache is None:
+            self._form_field_key_cache = {}
+
+        if not field.pk in self._form_field_key_cache:
+            fields_by_key = self.get_form_fields_by_name()
+
+            for name, _field in fields_by_key.items():
+                self._form_field_key_cache[_field.plugin_instance.pk] = name
+        return self._form_field_key_cache[field.pk]
+
+    def get_form_fields_as_choices(self):
+        fields = self.get_form_fields()
+
+        for field in fields:
+            yield (field.name, field.label)
+
+    def get_form_fields_by_name(self):
+        fields = self.get_form_fields()
+        fields_by_name = SortedDict((field.name, field) for field in fields)
+        return fields_by_name
 
     def get_form_elements(self):
-        from .cms_plugins import FormElement
         from .utils import get_nested_plugins
 
-        is_form_element = lambda plugin: issubclass(
-            plugin.get_plugin_class(), FormElement)
+        if self.child_plugin_instances is None:
+            # 3.1 and 3.0 compatibility
+            if CMS_31:
+                # default ordering is by path
+                ordering = ('path', 'position')
+            else:
+                ordering = ('tree_id', 'level', 'position')
+            self.child_plugin_instances = self.get_descendants().order_by(
+                *ordering)
 
-        if not hasattr(self, '_form_elements'):
+        if self._form_elements is None:
             children = get_nested_plugins(self)
             children_instances = downcast_plugins(children)
             self._form_elements = [
@@ -140,10 +198,7 @@ class FieldsetPlugin(CMSPlugin):
 
     legend = models.CharField(_('Legend'), max_length=50, blank=True)
     custom_classes = models.CharField(
-        verbose_name=_('custom css classes'),
-        max_length=200,
-        blank=True
-    )
+        verbose_name=_('custom css classes'), max_length=200, blank=True)
 
     def __unicode__(self):
         return self.legend or unicode(self.pk)
@@ -178,22 +233,17 @@ class FieldPluginBase(CMSPlugin):
     # for text field those are min and max length
     # for multiple select those are min and max number of choices
     min_value = models.PositiveIntegerField(
-        _('Min value'),
-        blank=True,
-        null=True,
-    )
+        _('Min value'), blank=True, null=True)
 
     max_value = models.PositiveIntegerField(
         _('Max value'),
         blank=True,
         null=True,
-        validators=[MaxLengthValidator(200)],
+        validators=[MaxLengthValidator(200)]
     )
+
     custom_classes = models.CharField(
-        verbose_name=_('custom css classes'),
-        max_length=200,
-        blank=True,
-    )
+        verbose_name=_('custom css classes'), max_length=200, blank=True)
 
     class Meta:
         abstract = True
@@ -211,6 +261,9 @@ class FieldPluginBase(CMSPlugin):
     def field_type(self):
         return self.plugin_type.lower()
 
+    def get_label(self):
+        return self.label or self.placeholder_text
+
 
 class FieldPlugin(FieldPluginBase):
 
@@ -224,15 +277,9 @@ class FieldPlugin(FieldPluginBase):
 class TextAreaFieldPlugin(FieldPluginBase):
 
     text_area_columns = models.PositiveIntegerField(
-        verbose_name=_('columns'),
-        blank=True,
-        null=True,
-    )
+        verbose_name=_('columns'), blank=True, null=True)
     text_area_rows = models.PositiveIntegerField(
-        verbose_name=_('rows'),
-        blank=True,
-        null=True,
-    )
+        verbose_name=_('rows'), blank=True, null=True)
 
 
 class EmailFieldPlugin(FieldPluginBase):
@@ -307,10 +354,7 @@ class FormButtonPlugin(CMSPlugin):
 
     label = models.CharField(_('Label'), max_length=50)
     custom_classes = models.CharField(
-        verbose_name=_('custom css classes'),
-        max_length=200,
-        blank=True
-    )
+        verbose_name=_('custom css classes'), max_length=200, blank=True)
 
     def __unicode__(self):
         return self.label
@@ -326,11 +370,11 @@ class FormData(models.Model):
         choices=settings.LANGUAGES,
         default=settings.LANGUAGE_CODE
     )
-    people_notified = models.ManyToManyField(
-        to=User,
-        verbose_name=_('admins notified'),
+    people_notified = models.TextField(
+        verbose_name=_('users notified'),
         blank=True,
-        editable=False
+        help_text=_('People who got a notification when form was submitted.'),
+        editable=False,
     )
     sent_at = models.DateTimeField(auto_now_add=True)
 
@@ -354,24 +398,15 @@ class FormData(models.Model):
             # as delimiter to separate field_name from field value and so if a
             # user ever enters ":" in any one of the two then we can't really
             # reliable get the name or value, so for now ignore that field :(
-            if len(bits) == 2:
+             if len(bits) == 2:
                 data = FieldData(label=bits[0], value=bits[1])
                 form_data.append(data)
         return form_data
 
     def set_form_data(self, form):
-        grouped_data = get_form_render_data(form)
+        grouped_data = form.get_serialized_field_choices()
         formatted_data = [u'{0}: {1}'.format(*group) for group in grouped_data]
         self.data = u'\n'.join(formatted_data)
 
-    def send_notification_email(self, form, form_plugin):
-        recipients = self.people_notified.values_list('email', flat=True)
-        context = {
-            'form_name': form_plugin.name,
-            'form_data': get_form_render_data(form)
-        }
-        send_mail(
-            recipients=recipients,
-            context=context,
-            template_base='aldryn_forms/emails/notification'
-        )
+    def set_users_notified(self, recipients):
+        self.people_notified = ':::'.join(recipients)

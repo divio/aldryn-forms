@@ -8,6 +8,20 @@ except ImportError:
     from cms.plugins.utils import downcast_plugins, build_plugin_tree
 
 
+def get_user_model():
+    """
+    Wrapper for get_user_model with compatibility for 1.5
+    """
+    # Notice these imports happen here to be compatible with django 1.7
+    try:
+        from django.contrib.auth import get_user_model as _get_user_model
+    except ImportError:  # django < 1.5
+        from django.contrib.auth.models import User
+    else:
+        User = _get_user_model()
+    return User
+
+
 def get_nested_plugins(parent_plugin, include_self=False):
     """
     Returns a flat list of plugins from parent_plugin
@@ -57,15 +71,3 @@ def add_form_error(form, message, field=NON_FIELD_ERRORS):
         form._errors[field].append(message)
     except KeyError:
         form._errors[field] = form.error_class([message])
-
-
-def get_form_render_data(form, is_confirmation=False):
-    """Renders the form data in a format suitable to be serialized.
-
-    The `is_confirmation` flag indicates if the data will be used in a
-    confirmation email sent to the user submitting the form or if it will be
-    used to render the data for the recipients/admin site.
-    """
-    for field in form.form_plugin.get_form_fields():
-        plugin = field.get_plugin_instance()[1]
-        yield plugin.serialize_field(form, field, is_confirmation)

@@ -9,6 +9,7 @@ from django.shortcuts import redirect, render_to_response
 from django.template.context import RequestContext
 # we use SortedDict to remain compatible across python versions
 from django.utils.datastructures import SortedDict
+from django.utils.html import escape
 from django.utils.translation import ugettext, ugettext_lazy as _
 
 from django_tablib.views import export
@@ -20,15 +21,44 @@ from .models import FormData
 class FormDataAdmin(admin.ModelAdmin):
 
     date_hierarchy = 'sent_at'
-    list_display = ['__unicode__', 'sent_at']
-    list_filter = ['name', 'people_notified']
+    list_display = ['__unicode__', 'sent_at', 'language']
+    list_filter = ['name', 'language']
     model = FormData
-    readonly_fields = ['name', 'data', 'language', 'sent_at', 'people_notified']
+    readonly_fields = [
+        'name',
+        'data',
+        'language',
+        'sent_at',
+        'get_people_notified'
+    ]
+
+    def has_add_permission(self, request):
+        return False
+
+    def get_people_notified(self, obj):
+        people_list = obj.people_notified.split(':::')
+
+        li_items = [u'<li>{0}</li>'.format(escape(person))
+                    for person in people_list if person]
+
+        if li_items:
+            markup = u'<ul>{0}</ul>'.format(u''.join(li_items))
+        else:
+            markup = ''
+        return markup
+    get_people_notified.allow_tags = True
+    get_people_notified.short_description = _('people notified')
 
     def get_urls(self):
         from django.conf.urls import patterns, url
 
-        info = "%s_%s" % (self.model._meta.app_label, self.model._meta.module_name)
+        try:
+            model_name = self.model._meta.model_name
+        except AttributeError:
+            # django <= 1.5 compat
+            model_name = self.model._meta.module_name
+
+        info = "%s_%s" % (self.model._meta.app_label, model_name)
 
         def pattern(regex, fn, name):
             args = [regex, self.admin_site.admin_view(fn)]
@@ -131,5 +161,6 @@ class FormDataAdmin(admin.ModelAdmin):
             'original': 'Export',
         })
         return render_to_response('admin/aldryn_forms/export.html', context)
+
 
 admin.site.register(FormData, FormDataAdmin)

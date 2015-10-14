@@ -2,10 +2,14 @@
 Aldryn Forms App
 ================
 
-This add-on allows you to:
+Aldryn Forms allows you to build flexible HTML forms for your `Aldryn <http://aldryn.com>`_ and `django CMS 
+<http://django-cms>`_ projects, and to integrate them directly in your pages.
 
-- create forms
-- display them on CMS pages
+Forms can be assembled using the form builder, with the familiar simple drag-and-drop interface of the django CMS
+plugin system.
+
+Submitted data is stored in the Django database, and can be explored and exported using the admin, while forms can 
+be configured to send a confirmation message to users.
 
 Installation
 ============
@@ -28,6 +32,7 @@ Update ``INSTALLED_APPS`` with ::
         …
         'absolute',
         'aldryn_forms',
+        'aldryn_forms.contrib.email_notifications',
         'captcha',
         'emailit',
         'filer',

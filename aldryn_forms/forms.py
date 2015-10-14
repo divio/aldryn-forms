@@ -13,8 +13,8 @@ from django.utils.translation import ugettext_lazy as _
 
 from sizefield.utils import filesizeformat
 
-from .models import FormData, FormPlugin, User
-from .utils import add_form_error
+from .models import FormData, FormPlugin
+from .utils import add_form_error, get_user_model
 
 
 class FileSizeCheckMixin(object):
@@ -140,9 +140,12 @@ class FormDataBaseForm(forms.Form):
 
     def __init__(self, *args, **kwargs):
         self.form_plugin = kwargs.pop('form_plugin')
+        self.request = kwargs.pop('request')
         super(FormDataBaseForm, self).__init__(*args, **kwargs)
-        self.instance = FormData(name=self.form_plugin.name)
-        self.fields['language'].initial = self.form_plugin.language
+        language = self.form_plugin.language
+
+        self.instance = FormData(language=language, name=self.form_plugin.name)
+        self.fields['language'].initial = language
         self.fields['form_plugin_id'].initial = self.form_plugin.pk
 
     def _add_error(self, message, field=NON_FIELD_ERRORS):
@@ -151,15 +154,36 @@ class FormDataBaseForm(forms.Form):
         except KeyError:
             self._errors[field] = self.error_class([message])
 
-    def save(self):
-        recipients = self.form_plugin.recipients.all()
+    def get_serialized_fields(self, is_confirmation=False):
+        """
+        The `is_confirmation` flag indicates if the data will be used in a
+        confirmation email sent to the user submitting the form or if it will be
+        used to render the data for the recipients/admin site.
+        """
+        for field in self.form_plugin.get_form_fields():
+            plugin = field.plugin_instance.get_plugin_class_instance()
+            # serialize_field can be None or SerializedFormField  namedtuple instance.
+            # if None then it means we shouldn't serialize this field.
+            serialized_field = plugin.serialize_field(self, field, is_confirmation)
 
+            if serialized_field:
+                yield serialized_field
+
+    def get_serialized_field_choices(self, is_confirmation=False):
+        """Renders the form data in a format suitable to be serialized.
+        """
+        fields = self.get_serialized_fields(is_confirmation)
+        fields = [(field.label, field.value) for field in fields]
+        return fields
+
+    def get_cleaned_data(self, is_confirmation=False):
+        fields = self.get_serialized_fields(is_confirmation)
+        form_data = dict((field.name, field.value) for field in fields)
+        return form_data
+
+    def save(self, commit=False):
         self.instance.set_form_data(self)
         self.instance.save()
-
-        self.instance.people_notified.add(*recipients)
-
-        self.instance.send_notification_email(form=self, form_plugin=self.form_plugin)
 
 
 class ExtandableErrorForm(forms.ModelForm):
@@ -172,8 +196,10 @@ class FormPluginForm(ExtandableErrorForm):
 
     def __init__(self, *args, **kwargs):
         super(FormPluginForm, self).__init__(*args, **kwargs)
-        if getattr(settings, 'ALDRYN_FORMS_SHOW_ALL_RECIPIENTS', False):
-            self.fields['recipients'].queryset = User.objects.all()
+
+        if (getattr(settings, 'ALDRYN_FORMS_SHOW_ALL_RECIPIENTS', False) and
+                'recipients' in self.fields):
+            self.fields['recipients'].queryset = get_user_model().objects.all()
 
     def clean(self):
         redirect_type = self.cleaned_data.get('redirect_type')

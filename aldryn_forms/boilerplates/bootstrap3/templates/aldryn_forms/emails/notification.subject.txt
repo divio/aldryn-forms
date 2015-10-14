@@ -1,1 +1,1 @@
-[Form submission] {{ form_name }} 
+{% load i18n %}{% blocktrans %}[Form submission] {{ form_name }}{% endblocktrans %}
