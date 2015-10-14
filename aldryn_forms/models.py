@@ -183,8 +183,8 @@ class FormPlugin(CMSPlugin):
                 ordering = ('path', 'position')
             else:
                 ordering = ('tree_id', 'level', 'position')
-            self.child_plugin_instances = self.get_descendants().order_by(
-                *ordering)
+            descendants = self.get_descendants()
+            self.child_plugin_instances = descendants.order_by(*ordering)
 
         if self._form_elements is None:
             children = get_nested_plugins(self)
@@ -239,7 +239,7 @@ class FieldPluginBase(CMSPlugin):
         _('Max value'),
         blank=True,
         null=True,
-        validators=[MaxLengthValidator(200)]
+        validators=[MaxLengthValidator(255)]
     )
 
     custom_classes = models.CharField(
