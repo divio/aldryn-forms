@@ -1,6 +1,10 @@
 Changelog
 =========
 
+1.0.0 (2015-11-03)
+------------------
+* Stable release
+
 0.6.0 (2015-10-14)
 ------------------
 * adds validator on max_length fields
