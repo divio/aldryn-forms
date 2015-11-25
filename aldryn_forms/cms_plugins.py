@@ -96,8 +96,7 @@ class FormPlugin(FieldContainer):
         form.instance.set_users_notified(recipients)
         form.save()
 
-        message = instance.success_message or ugettext('The form has been sent.')
-        messages.success(request, message)
+        self.send_success_message(instance, request)
 
     def form_invalid(self, instance, request, form):
         if instance.error_message:
@@ -185,6 +184,14 @@ class FormPlugin(FieldContainer):
             return instance.url
         else:
             raise RuntimeError('Form is not configured properly.')
+
+    def send_success_message(self, instance, request):
+        """
+        Sends a success message to the request user
+        using django's contrib.messages app.
+        """
+        message = instance.success_message or ugettext('The form has been sent.')
+        messages.success(request, message)
 
     def send_notifications(self, instance, form):
         users = instance.recipients.only('first_name', 'last_name', 'email')
