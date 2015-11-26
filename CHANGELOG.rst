@@ -1,6 +1,10 @@
 Changelog
 =========
 
+1.0.1 (2015-11-26)
+------------------
+* Allows for custom forms to opt out of a success message.
+
 1.0.0 (2015-11-03)
 ------------------
 * Stable release
