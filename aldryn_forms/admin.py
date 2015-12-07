@@ -8,6 +8,7 @@ from django.core.urlresolvers import reverse
 from django.shortcuts import redirect, render_to_response
 from django.template.context import RequestContext
 # we use SortedDict to remain compatible across python versions
+from django.template.loader import render_to_string
 from django.utils.datastructures import SortedDict
 from django.utils.html import escape
 from django.utils.translation import ugettext, ugettext_lazy as _
@@ -24,7 +25,7 @@ class BaseFormSubmissionAdmin(admin.ModelAdmin):
     list_filter = ['name', 'language']
     readonly_fields = [
         'name',
-        'data',
+        'get_data_for_display',
         'language',
         'sent_at',
         'get_people_notified_for_display'
@@ -33,6 +34,16 @@ class BaseFormSubmissionAdmin(admin.ModelAdmin):
 
     def has_add_permission(self, request):
         return False
+
+    def get_data_for_display(self, obj):
+        data = obj.get_form_data()
+        html = render_to_string(
+            template_name='admin/aldryn_forms/display/submission_data.html',
+            dictionary={'data': data}
+        )
+        return html
+    get_data_for_display.allow_tags = True
+    get_data_for_display.short_description = _('data')
 
     def get_people_notified_for_display(self, obj):
         people_list = obj.get_people_notified()
@@ -165,6 +176,13 @@ class BaseFormSubmissionAdmin(admin.ModelAdmin):
 class FormDataAdmin(BaseFormSubmissionAdmin):
     change_list_template = 'admin/aldryn_forms/formsubmission/change_list.html'
     export_form = FormDataExportForm
+    readonly_fields = [
+        'name',
+        'data',
+        'language',
+        'sent_at',
+        'get_people_notified_for_display'
+    ]
 
 
 class FormSubmissionAdmin(BaseFormSubmissionAdmin):
