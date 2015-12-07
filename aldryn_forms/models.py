@@ -3,7 +3,7 @@ from collections import defaultdict, namedtuple
 from distutils.version import LooseVersion
 
 from django.conf import settings
-from django.core.validators import MaxLengthValidator
+from django.core.validators import MaxValueValidator
 from django.db import models
 from django.utils.datastructures import SortedDict
 from django.utils.translation import ugettext_lazy as _
@@ -239,7 +239,7 @@ class FieldPluginBase(CMSPlugin):
         _('Max value'),
         blank=True,
         null=True,
-        validators=[MaxLengthValidator(255)]
+        validators=[MaxValueValidator(255)]
     )
 
     custom_classes = models.CharField(
