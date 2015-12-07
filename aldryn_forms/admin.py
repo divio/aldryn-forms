@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 from collections import defaultdict
+from email.utils import formataddr
 from functools import partial
 
 from django.contrib import admin
@@ -10,7 +11,6 @@ from django.template.context import RequestContext
 # we use SortedDict to remain compatible across python versions
 from django.template.loader import render_to_string
 from django.utils.datastructures import SortedDict
-from django.utils.html import escape
 from django.utils.translation import ugettext, ugettext_lazy as _
 
 from django_tablib.views import export
@@ -28,7 +28,7 @@ class BaseFormSubmissionAdmin(admin.ModelAdmin):
         'get_data_for_display',
         'language',
         'sent_at',
-        'get_people_notified_for_display'
+        'get_recipients_for_display'
     ]
     export_form = None
 
@@ -45,19 +45,21 @@ class BaseFormSubmissionAdmin(admin.ModelAdmin):
     get_data_for_display.allow_tags = True
     get_data_for_display.short_description = _('data')
 
-    def get_people_notified_for_display(self, obj):
-        people_list = obj.get_people_notified()
+    def get_recipients(self, obj):
+        recipients = obj.get_recipients()
+        formatted = [formataddr((recipient.name, recipient.email))
+                     for recipient in recipients]
+        return formatted
 
-        li_items = [u'<li>{0}</li>'.format(escape(person))
-                    for person in people_list if person]
-
-        if li_items:
-            markup = u'<ul>{0}</ul>'.format(u''.join(li_items))
-        else:
-            markup = ''
-        return markup
-    get_people_notified_for_display.allow_tags = True
-    get_people_notified_for_display.short_description = _('people notified')
+    def get_recipients_for_display(self, obj):
+        people_list = self.get_recipients(obj)
+        html = render_to_string(
+            template_name='admin/aldryn_forms/display/recipients.html',
+            dictionary={'people': people_list}
+        )
+        return html
+    get_recipients_for_display.allow_tags = True
+    get_recipients_for_display.short_description = _('people notified')
 
     def get_urls(self):
         from django.conf.urls import patterns, url
@@ -181,8 +183,11 @@ class FormDataAdmin(BaseFormSubmissionAdmin):
         'data',
         'language',
         'sent_at',
-        'get_people_notified_for_display'
+        'get_recipients_for_display'
     ]
+
+    def get_recipients(self, obj):
+        return obj.get_recipients()
 
 
 class FormSubmissionAdmin(BaseFormSubmissionAdmin):

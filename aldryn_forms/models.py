@@ -32,6 +32,10 @@ FormField = namedtuple(
     'FormField',
     field_names=['name', 'label', 'plugin_instance', 'occurrence']
 )
+Recipient = namedtuple(
+    'Recipient',
+    field_names=['name', 'email']
+)
 SerializedFormField = namedtuple(
     'SerializedFormField',
     field_names=['name', 'label', 'value']
@@ -415,14 +419,14 @@ class FormData(models.Model):
         formatted_data = [u'{0}: {1}'.format(*group) for group in grouped_data]
         self.data = u'\n'.join(formatted_data)
 
-    def get_people_notified(self):
+    def get_recipients(self):
         return self.people_notified.split(':::')
 
-    def set_people_notified(self, recipients):
+    def set_recipients(self, recipients):
         self.people_notified = ':::'.join(recipients)
 
     def set_users_notified(self, recipients):
-        self.set_people_notified(recipients)
+        self.set_recipients(recipients)
 
 
 class FormSubmission(models.Model):
@@ -433,7 +437,7 @@ class FormSubmission(models.Model):
         editable=False
     )
     data = models.TextField(blank=True, editable=False)
-    people_notified = models.TextField(
+    recipients = models.TextField(
         verbose_name=_('users notified'),
         blank=True,
         help_text=_('People who got a notification when form was submitted.'),
@@ -459,16 +463,33 @@ class FormSubmission(models.Model):
     def __unicode__(self):
         return self.name
 
-    def _data_hook(self, data):
+    def _form_data_hook(self, data):
         return SerializedFormField(**data)
+
+    def _recipients_hook(self, data):
+        return Recipient(**data)
 
     def get_form_data(self):
         try:
-            form_data = json.loads(self.data, object_hook=self._data_hook)
+            form_data = json.loads(
+                self.data,
+                object_hook=self._form_data_hook
+            )
         except ValueError:
             # TODO: Log this?
             form_data = []
         return form_data
+
+    def get_recipients(self):
+        try:
+            recipients = json.loads(
+                self.recipients,
+                object_hook=self._recipients_hook
+            )
+        except ValueError:
+            # TODO: Log this?
+            recipients = []
+        return recipients
 
     def set_form_data(self, form):
         fields = form.get_serialized_fields(is_confirmation=False)
@@ -476,8 +497,7 @@ class FormSubmission(models.Model):
 
         self.data = json.dumps(fields_as_dicts)
 
-    def get_people_notified(self):
-        return self.people_notified
-
-    def set_people_notified(self, recipients):
-        self.people_notified = json.dumps(recipients)
+    def set_recipients(self, recipients):
+        raw_recipients = [
+            {'name': rec[0], 'email': rec[1]} for rec in recipients]
+        self.recipients = json.dumps(raw_recipients)
