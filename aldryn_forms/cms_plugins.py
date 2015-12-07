@@ -93,7 +93,7 @@ class FormPlugin(FieldContainer):
     def form_valid(self, instance, request, form):
         recipients = self.send_notifications(instance, form)
 
-        form.instance.set_people_notified(recipients)
+        form.instance.set_recipients(recipients)
         form.save()
 
         self.send_success_message(instance, request)
