@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 from django.forms.forms import NON_FIELD_ERRORS
-import json
+
 from cms.utils.moderator import get_cmsplugin_queryset
 try:
     from cms.utils.plugins import downcast_plugins, build_plugin_tree
