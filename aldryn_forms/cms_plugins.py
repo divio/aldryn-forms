@@ -24,7 +24,7 @@ from .forms import (
     RestrictedFileField,
     RestrictedImageField,
     EmailFieldForm,
-    FormDataBaseForm,
+    FormSubmissionBaseForm,
     FormPluginForm,
     TextFieldForm,
     TextAreaFieldForm,
@@ -152,7 +152,11 @@ class FormPlugin(FieldContainer):
         Constructs form class basing on children plugin instances.
         """
         fields = self.get_form_fields(instance)
-        return type(FormDataBaseForm)('AldrynDynamicForm', (FormDataBaseForm,), fields)
+        formClass = (
+            type(FormSubmissionBaseForm)
+            ('AldrynDynamicForm', (FormSubmissionBaseForm,), fields)
+        )
+        return formClass
 
     def get_form_fields(self, instance):
         form_fields = {}
