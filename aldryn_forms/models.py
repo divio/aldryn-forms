@@ -399,6 +399,9 @@ class FormData(models.Model):
         verbose_name = _('Form submission (Old)')
         verbose_name_plural = _('Form submissions (Old)')
 
+    def __unicode__(self):
+        return self.name
+
     def get_data(self):
         return self.get_form_data()
 
