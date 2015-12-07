@@ -13,7 +13,7 @@ from django.utils.translation import ugettext_lazy as _
 
 from sizefield.utils import filesizeformat
 
-from .models import FormData, FormPlugin
+from .models import FormData, FormSubmission, FormPlugin
 from .utils import add_form_error, get_user_model
 
 
@@ -128,7 +128,7 @@ class FormExportForm(forms.Form):
         return queryset
 
 
-class FormDataBaseForm(forms.Form):
+class FormSubmissionBaseForm(forms.Form):
 
     # these fields are internal.
     # by default we ignore all hidden fields when saving form data to db.
@@ -141,10 +141,14 @@ class FormDataBaseForm(forms.Form):
     def __init__(self, *args, **kwargs):
         self.form_plugin = kwargs.pop('form_plugin')
         self.request = kwargs.pop('request')
-        super(FormDataBaseForm, self).__init__(*args, **kwargs)
+        super(FormSubmissionBaseForm, self).__init__(*args, **kwargs)
         language = self.form_plugin.language
 
-        self.instance = FormData(language=language, name=self.form_plugin.name)
+        self.instance = FormSubmission(
+            name=self.form_plugin.name,
+            language=language,
+            form_url=self.request.build_absolute_uri(self.request.path),
+        )
         self.fields['language'].initial = language
         self.fields['form_plugin_id'].initial = self.form_plugin.pk
 
