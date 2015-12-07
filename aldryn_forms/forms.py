@@ -69,14 +69,14 @@ class RestrictedImageField(FileSizeCheckMixin, forms.ImageField):
         return data
 
 
-def form_choices():
-    form_names = FormData.objects.values_list('name', flat=True).distinct()
+def form_choices(modelClass):
+    form_names = modelClass.objects.values_list('name', flat=True).distinct()
 
     for name in form_names.order_by('name'):
         yield (name, name)
 
 
-class FormExportForm(forms.Form):
+class BaseFormExportForm(forms.Form):
     excel_limit = 65536
     export_filename = 'export-{form_name}-%Y-%m-%d'
 
@@ -93,8 +93,8 @@ class FormExportForm(forms.Form):
     )
 
     def __init__(self, *args, **kwargs):
-        super(FormExportForm, self).__init__(*args, **kwargs)
-        self.fields['form_name'].choices = form_choices()
+        super(BaseFormExportForm, self).__init__(*args, **kwargs)
+        self.fields['form_name'].choices = form_choices(modelClass=self.model)
 
     def clean(self):
         queryset = self.get_queryset()
@@ -115,7 +115,7 @@ class FormExportForm(forms.Form):
         data = self.cleaned_data
         from_date, to_date = data.get('from_date'), data.get('to_date')
 
-        queryset = FormData.objects.filter(name=data['form_name'])
+        queryset = self.model.objects.filter(name=data['form_name'])
 
         if from_date:
             lower = datetime(*from_date.timetuple()[:6]) # inclusive
@@ -126,6 +126,14 @@ class FormExportForm(forms.Form):
             queryset = queryset.filter(sent_at__lt=upper)
 
         return queryset
+
+
+class FormDataExportForm(BaseFormExportForm):
+    model = FormData
+
+
+class FormSubmissionExportForm(BaseFormExportForm):
+    model = FormSubmission
 
 
 class FormSubmissionBaseForm(forms.Form):

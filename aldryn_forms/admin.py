@@ -14,29 +14,28 @@ from django.utils.translation import ugettext, ugettext_lazy as _
 
 from django_tablib.views import export
 
-from .forms import FormExportForm
-from .models import FormData
+from .forms import FormDataExportForm, FormSubmissionExportForm
+from .models import FormData, FormSubmission
 
 
-class FormDataAdmin(admin.ModelAdmin):
-
+class BaseFormSubmissionAdmin(admin.ModelAdmin):
     date_hierarchy = 'sent_at'
     list_display = ['__unicode__', 'sent_at', 'language']
     list_filter = ['name', 'language']
-    model = FormData
     readonly_fields = [
         'name',
         'data',
         'language',
         'sent_at',
-        'get_people_notified'
+        'get_people_notified_for_display'
     ]
+    export_form = None
 
     def has_add_permission(self, request):
         return False
 
-    def get_people_notified(self, obj):
-        people_list = obj.people_notified.split(':::')
+    def get_people_notified_for_display(self, obj):
+        people_list = obj.get_people_notified()
 
         li_items = [u'<li>{0}</li>'.format(escape(person))
                     for person in people_list if person]
@@ -46,8 +45,8 @@ class FormDataAdmin(admin.ModelAdmin):
         else:
             markup = ''
         return markup
-    get_people_notified.allow_tags = True
-    get_people_notified.short_description = _('people notified')
+    get_people_notified_for_display.allow_tags = True
+    get_people_notified_for_display.short_description = _('people notified')
 
     def get_urls(self):
         from django.conf.urls import patterns, url
@@ -68,13 +67,13 @@ class FormDataAdmin(admin.ModelAdmin):
             pattern(r'export/$', self.form_export, 'export'),
         )
 
-        return url_patterns + super(FormDataAdmin, self).get_urls()
+        return url_patterns + super(BaseFormSubmissionAdmin, self).get_urls()
 
     def form_export(self, request):
         opts = self.model._meta
         app_label = opts.app_label
         context = RequestContext(request)
-        form = FormExportForm(request.POST or None)
+        form = self.export_form(request.POST or None)
 
         if form.is_valid():
             entries = form.get_queryset()
@@ -99,7 +98,7 @@ class FormDataAdmin(admin.ModelAdmin):
                         value = ''
 
                         try:
-                            field = obj.get_data()[position]
+                            field = obj.get_form_data()[position]
                         except IndexError:
                             pass
 
@@ -111,7 +110,7 @@ class FormDataAdmin(admin.ModelAdmin):
                         return value
                     return _clean_data
 
-                fields = first_entry.get_data()
+                fields = first_entry.get_form_data()
 
                 # used to keep track of occurrences
                 # in case a field with the same name appears multiple times in the form.
@@ -163,4 +162,15 @@ class FormDataAdmin(admin.ModelAdmin):
         return render_to_response('admin/aldryn_forms/export.html', context)
 
 
+class FormDataAdmin(BaseFormSubmissionAdmin):
+    change_list_template = 'admin/aldryn_forms/formsubmission/change_list.html'
+    export_form = FormDataExportForm
+
+
+class FormSubmissionAdmin(BaseFormSubmissionAdmin):
+    readonly_fields = BaseFormSubmissionAdmin.readonly_fields + ['form_url']
+    export_form = FormSubmissionExportForm
+
+
 admin.site.register(FormData, FormDataAdmin)
+admin.site.register(FormSubmission, FormSubmissionAdmin)
