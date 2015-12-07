@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+import json
 from collections import defaultdict, namedtuple
 from distutils.version import LooseVersion
 
@@ -361,7 +362,10 @@ class FormButtonPlugin(CMSPlugin):
 
 
 class FormData(models.Model):
-
+    """
+    DEPRECATED: This model will be removed.
+    Replaced by FormSubmission model.
+    """
     name = models.CharField(max_length=50, db_index=True, editable=False)
     data = models.TextField(blank=True, null=True, editable=False)
     language = models.CharField(
@@ -379,13 +383,13 @@ class FormData(models.Model):
     sent_at = models.DateTimeField(auto_now_add=True)
 
     class Meta:
-        verbose_name = _('Form submission')
-        verbose_name_plural = _('Form submissions')
-
-    def __unicode__(self):
-        return self.name
+        verbose_name = _('Form submission (Old)')
+        verbose_name_plural = _('Form submissions (Old)')
 
     def get_data(self):
+        return self.get_form_data()
+
+    def get_form_data(self):
         fields = self.data.splitlines()
         # this will be a list of dictionaries mapping field name to value. we
         # use this approach because using field name as key might result in
@@ -408,5 +412,69 @@ class FormData(models.Model):
         formatted_data = [u'{0}: {1}'.format(*group) for group in grouped_data]
         self.data = u'\n'.join(formatted_data)
 
-    def set_users_notified(self, recipients):
+    def get_people_notified(self):
+        return self.people_notified.split(':::')
+
+    def set_people_notified(self, recipients):
         self.people_notified = ':::'.join(recipients)
+
+    def set_users_notified(self, recipients):
+        self.set_people_notified(recipients)
+
+
+class FormSubmission(models.Model):
+    name = models.CharField(
+        max_length=50,
+        verbose_name=_('form name'),
+        db_index=True,
+        editable=False
+    )
+    data = models.TextField(blank=True, editable=False)
+    people_notified = models.TextField(
+        verbose_name=_('users notified'),
+        blank=True,
+        help_text=_('People who got a notification when form was submitted.'),
+        editable=False,
+    )
+    language = models.CharField(
+        verbose_name=_('form language'),
+        max_length=10,
+        choices=settings.LANGUAGES,
+        default=settings.LANGUAGE_CODE
+    )
+    form_url = models.CharField(
+        verbose_name=_('form url'),
+        max_length=255,
+        blank=True,
+    )
+    sent_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        verbose_name = _('Form submission')
+        verbose_name_plural = _('Form submissions')
+
+    def __unicode__(self):
+        return self.name
+
+    def _data_hook(self, data):
+        return SerializedFormField(**data)
+
+    def get_form_data(self):
+        try:
+            form_data = json.loads(self.data, object_hook=self._data_hook)
+        except ValueError:
+            # TODO: Log this?
+            form_data = []
+        return form_data
+
+    def set_form_data(self, form):
+        fields = form.get_serialized_fields(is_confirmation=False)
+        fields_as_dicts = [field._asdict() for field in fields]
+
+        self.data = json.dumps(fields_as_dicts)
+
+    def get_people_notified(self):
+        return self.people_notified
+
+    def set_people_notified(self, recipients):
+        self.people_notified = json.dumps(recipients)
