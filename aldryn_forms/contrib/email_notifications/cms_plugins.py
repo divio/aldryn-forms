@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
 import logging
 
+from email.utils import parseaddr
+
 from django.contrib import admin
 from django.core.mail import get_connection
 from django.utils.translation import ugettext_lazy as _
@@ -157,7 +159,7 @@ class EmailNotificationForm(FormPlugin):
 
             if is_valid_recipient(to_email):
                 emails.append(email)
-                recipients.append(to_email)
+                recipients.append(parseaddr(to_email))
 
         try:
             connection.send_messages(emails)
