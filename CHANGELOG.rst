@@ -1,6 +1,12 @@
 Changelog
 =========
 
+1.0.2 (2015-12-08)
+------------------
+* Fixes plugin ordering bug.
+* Fixes TypeError on some fields because of the validator.
+* Marks some strings as translatable.
+
 1.0.1 (2015-11-26)
 ------------------
 * Allows for custom forms to opt out of a success message.
