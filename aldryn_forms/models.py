@@ -470,6 +470,7 @@ class FormSubmission(models.Model):
     sent_at = models.DateTimeField(auto_now_add=True)
 
     class Meta:
+        ordering = ['-sent_at']
         verbose_name = _('Form submission')
         verbose_name_plural = _('Form submissions')
 
