@@ -1,6 +1,10 @@
 Changelog
 =========
 
+1.0.3 (2015-12-08)
+------------------
+* Fixes critical bug with nested plugins.
+
 1.0.2 (2015-12-08)
 ------------------
 * Fixes plugin ordering bug.
