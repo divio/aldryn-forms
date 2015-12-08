@@ -11,7 +11,7 @@ from django.utils.translation import ugettext_lazy as _
 import cms
 from cms.models.fields import PageField
 from cms.models.pluginmodel import CMSPlugin
-from cms.utils.plugins import downcast_plugins
+from cms.utils.plugins import build_plugin_tree, downcast_plugins
 
 from filer.fields.folder import FilerFolderField
 
@@ -180,11 +180,16 @@ class FormPlugin(CMSPlugin):
             # 3.1 and 3.0 compatibility
             if CMS_31:
                 # default ordering is by path
-                ordering = ('path', 'position')
+                ordering = ('path',)
             else:
                 ordering = ('tree_id', 'level', 'position')
+
             descendants = self.get_descendants().order_by(*ordering)
-            self.child_plugin_instances = descendants
+            # Important that this is a list in order to modify
+            # the current instance
+            descendants_with_self = [self] + list(descendants)
+            # Let the cms build the tree
+            build_plugin_tree(descendants_with_self)
 
         if self._form_elements is None:
             children = get_nested_plugins(self)
