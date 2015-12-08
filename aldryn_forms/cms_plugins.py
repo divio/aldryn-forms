@@ -64,11 +64,11 @@ class FormPlugin(FieldContainer):
 
     fieldsets = [
         (
-            'General options',
+            _('General options'),
             {'fields': ['name', 'form_template', 'error_message', 'success_message', 'recipients', 'custom_classes']}
         ),
         (
-            'Redirect',
+            _('Redirect'),
             {'fields': ['redirect_type', 'page', 'url']}
         )
     ]
