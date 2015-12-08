@@ -185,11 +185,19 @@ class FormPlugin(CMSPlugin):
                 ordering = ('tree_id', 'level', 'position')
 
             descendants = self.get_descendants().order_by(*ordering)
+            # Set parent_id to None in order to
+            # fool the build_plugin_tree function.
+            # This is sadly necessary to avoid getting all nodes
+            # higher than the form.
+            parent_id = self.parent_id
+            self.parent_id = None
             # Important that this is a list in order to modify
             # the current instance
             descendants_with_self = [self] + list(descendants)
             # Let the cms build the tree
             build_plugin_tree(descendants_with_self)
+            # Set back the original parent
+            self.parent_id = parent_id
 
         if self._form_elements is None:
             children = get_nested_plugins(self)
