@@ -1,8 +1,7 @@
-{% spaceless %}
 {% load i18n %}
-{% for field in data %}
+{% filter linebreaksbr %}{% spaceless %}{% for field in data %}
 {% trans "Field" %}: {{ field.name }}
 {% trans "Label" %}: {{ field.label }}
 {% trans "Value" %}: {{ field.value }}
-{% endfor %}
-{% endspaceless %}
+{% endfor %}{% endspaceless %}
+{% endfilter %}
