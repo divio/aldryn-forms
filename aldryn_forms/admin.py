@@ -64,23 +64,25 @@ class BaseFormSubmissionAdmin(admin.ModelAdmin):
     def get_urls(self):
         from django.conf.urls import patterns, url
 
-        try:
-            model_name = self.model._meta.model_name
-        except AttributeError:
-            # django <= 1.5 compat
-            model_name = self.model._meta.module_name
-
-        info = "%s_%s" % (self.model._meta.app_label, model_name)
-
         def pattern(regex, fn, name):
             args = [regex, self.admin_site.admin_view(fn)]
-            return url(*args, name='%s_%s' % (info, name))
+            return url(*args, name=self.get_admin_url(name))
 
         url_patterns = patterns('',
             pattern(r'export/$', self.form_export, 'export'),
         )
 
         return url_patterns + super(BaseFormSubmissionAdmin, self).get_urls()
+
+    def get_admin_url(self, name):
+        try:
+            model_name = self.model._meta.model_name
+        except AttributeError:
+            # django <= 1.5 compat
+            model_name = self.model._meta.module_name
+
+        url_name = "%s_%s_%s" % (self.model._meta.app_label, model_name, name)
+        return url_name
 
     def form_export(self, request):
         opts = self.model._meta
@@ -158,7 +160,8 @@ class BaseFormSubmissionAdmin(admin.ModelAdmin):
                 return response
             else:
                 self.message_user(request, _("No records found"), level=messages.WARNING)
-                return redirect('admin:aldryn_forms_formdata_export')
+                export_url = 'admin:{}'.format(self.get_admin_url('export'))
+                return redirect(export_url)
         else:
             context['errors'] = form.errors
 
