@@ -1,6 +1,12 @@
 Changelog
 =========
 
+2.0.0 (2015-12-14)
+------------------
+* Refactor the FormData model into FormSubmission.
+* FormData is now a deprecated model.
+* Form exports are now limited to one language at a time.
+
 1.0.3 (2015-12-08)
 ------------------
 * Fixes critical bug with nested plugins.
