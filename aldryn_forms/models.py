@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+import json
 from collections import defaultdict, namedtuple
 from distutils.version import LooseVersion
 
@@ -30,6 +31,10 @@ FieldData = namedtuple(
 FormField = namedtuple(
     'FormField',
     field_names=['name', 'label', 'plugin_instance', 'occurrence']
+)
+Recipient = namedtuple(
+    'Recipient',
+    field_names=['name', 'email']
 )
 SerializedFormField = namedtuple(
     'SerializedFormField',
@@ -374,7 +379,10 @@ class FormButtonPlugin(CMSPlugin):
 
 
 class FormData(models.Model):
-
+    """
+    DEPRECATED: This model will be removed.
+    Replaced by FormSubmission model.
+    """
     name = models.CharField(max_length=50, db_index=True, editable=False)
     data = models.TextField(blank=True, null=True, editable=False)
     language = models.CharField(
@@ -392,13 +400,16 @@ class FormData(models.Model):
     sent_at = models.DateTimeField(auto_now_add=True)
 
     class Meta:
-        verbose_name = _('Form submission')
-        verbose_name_plural = _('Form submissions')
+        verbose_name = _('Form submission (Old)')
+        verbose_name_plural = _('Form submissions (Old)')
 
     def __unicode__(self):
         return self.name
 
     def get_data(self):
+        return self.get_form_data()
+
+    def get_form_data(self):
         fields = self.data.splitlines()
         # this will be a list of dictionaries mapping field name to value. we
         # use this approach because using field name as key might result in
@@ -421,5 +432,86 @@ class FormData(models.Model):
         formatted_data = [u'{0}: {1}'.format(*group) for group in grouped_data]
         self.data = u'\n'.join(formatted_data)
 
-    def set_users_notified(self, recipients):
+    def get_recipients(self):
+        return self.people_notified.split(':::')
+
+    def set_recipients(self, recipients):
         self.people_notified = ':::'.join(recipients)
+
+    def set_users_notified(self, recipients):
+        self.set_recipients(recipients)
+
+
+class FormSubmission(models.Model):
+    name = models.CharField(
+        max_length=50,
+        verbose_name=_('form name'),
+        db_index=True,
+        editable=False
+    )
+    data = models.TextField(blank=True, editable=False)
+    recipients = models.TextField(
+        verbose_name=_('users notified'),
+        blank=True,
+        help_text=_('People who got a notification when form was submitted.'),
+        editable=False,
+    )
+    language = models.CharField(
+        verbose_name=_('form language'),
+        max_length=10,
+        choices=settings.LANGUAGES,
+        default=settings.LANGUAGE_CODE
+    )
+    form_url = models.CharField(
+        verbose_name=_('form url'),
+        max_length=255,
+        blank=True,
+    )
+    sent_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        ordering = ['-sent_at']
+        verbose_name = _('Form submission')
+        verbose_name_plural = _('Form submissions')
+
+    def __unicode__(self):
+        return self.name
+
+    def _form_data_hook(self, data):
+        return SerializedFormField(**data)
+
+    def _recipients_hook(self, data):
+        return Recipient(**data)
+
+    def get_form_data(self):
+        try:
+            form_data = json.loads(
+                self.data,
+                object_hook=self._form_data_hook
+            )
+        except ValueError:
+            # TODO: Log this?
+            form_data = []
+        return form_data
+
+    def get_recipients(self):
+        try:
+            recipients = json.loads(
+                self.recipients,
+                object_hook=self._recipients_hook
+            )
+        except ValueError:
+            # TODO: Log this?
+            recipients = []
+        return recipients
+
+    def set_form_data(self, form):
+        fields = form.get_serialized_fields(is_confirmation=False)
+        fields_as_dicts = [field._asdict() for field in fields]
+
+        self.data = json.dumps(fields_as_dicts)
+
+    def set_recipients(self, recipients):
+        raw_recipients = [
+            {'name': rec[0], 'email': rec[1]} for rec in recipients]
+        self.recipients = json.dumps(raw_recipients)

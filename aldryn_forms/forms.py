@@ -13,7 +13,7 @@ from django.utils.translation import ugettext_lazy as _
 
 from sizefield.utils import filesizeformat
 
-from .models import FormData, FormPlugin
+from .models import FormData, FormSubmission, FormPlugin
 from .utils import add_form_error, get_user_model
 
 
@@ -69,16 +69,16 @@ class RestrictedImageField(FileSizeCheckMixin, forms.ImageField):
         return data
 
 
-def form_choices():
-    form_names = FormData.objects.values_list('name', flat=True).distinct()
+def form_choices(modelClass):
+    form_names = modelClass.objects.values_list('name', flat=True).distinct()
 
     for name in form_names.order_by('name'):
         yield (name, name)
 
 
-class FormExportForm(forms.Form):
+class BaseFormExportForm(forms.Form):
     excel_limit = 65536
-    export_filename = 'export-{form_name}-%Y-%m-%d'
+    export_filename = 'export-{language}-{form_name}-%Y-%m-%d'
 
     form_name = forms.ChoiceField(choices=[])
     from_date = forms.DateField(
@@ -91,12 +91,19 @@ class FormExportForm(forms.Form):
         required=False,
         widget=AdminDateWidget
     )
+    language = forms.ChoiceField(
+        label=_('language'),
+        choices=settings.LANGUAGES
+    )
 
     def __init__(self, *args, **kwargs):
-        super(FormExportForm, self).__init__(*args, **kwargs)
-        self.fields['form_name'].choices = form_choices()
+        super(BaseFormExportForm, self).__init__(*args, **kwargs)
+        self.fields['form_name'].choices = form_choices(modelClass=self.model)
 
     def clean(self):
+        if self.errors:
+            return self.cleaned_data
+
         queryset = self.get_queryset()
 
         if queryset.count() >= self.excel_limit:
@@ -108,14 +115,20 @@ class FormExportForm(forms.Form):
     def get_filename(self):
         data = self.cleaned_data
         form_name = data['form_name'].lower()
-        filename = self.export_filename.format(form_name=slugify(form_name))
+        filename = self.export_filename.format(
+            form_name=slugify(form_name),
+            language=data['language'],
+        )
         return timezone.now().strftime(filename)
 
     def get_queryset(self):
         data = self.cleaned_data
         from_date, to_date = data.get('from_date'), data.get('to_date')
 
-        queryset = FormData.objects.filter(name=data['form_name'])
+        queryset = self.model.objects.filter(
+            name=data['form_name'],
+            language=data['language'],
+        )
 
         if from_date:
             lower = datetime(*from_date.timetuple()[:6]) # inclusive
@@ -128,7 +141,15 @@ class FormExportForm(forms.Form):
         return queryset
 
 
-class FormDataBaseForm(forms.Form):
+class FormDataExportForm(BaseFormExportForm):
+    model = FormData
+
+
+class FormSubmissionExportForm(BaseFormExportForm):
+    model = FormSubmission
+
+
+class FormSubmissionBaseForm(forms.Form):
 
     # these fields are internal.
     # by default we ignore all hidden fields when saving form data to db.
@@ -141,10 +162,14 @@ class FormDataBaseForm(forms.Form):
     def __init__(self, *args, **kwargs):
         self.form_plugin = kwargs.pop('form_plugin')
         self.request = kwargs.pop('request')
-        super(FormDataBaseForm, self).__init__(*args, **kwargs)
+        super(FormSubmissionBaseForm, self).__init__(*args, **kwargs)
         language = self.form_plugin.language
 
-        self.instance = FormData(language=language, name=self.form_plugin.name)
+        self.instance = FormSubmission(
+            name=self.form_plugin.name,
+            language=language,
+            form_url=self.request.build_absolute_uri(self.request.path),
+        )
         self.fields['language'].initial = language
         self.fields['form_plugin_id'].initial = self.form_plugin.pk
 

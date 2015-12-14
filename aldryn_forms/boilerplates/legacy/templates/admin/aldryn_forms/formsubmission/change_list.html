@@ -8,7 +8,9 @@
                 {% url cl.opts|admin_urlname:'export' as export_url %}
                 <a href="{{ export_url }}" class="addlink">{% trans "Export Form Entries" %}</a>
             </li>
-            {{ block.super }}
+            {% if has_add_permission %}
+                {{ block.super }}
+            {% endif %}
         {% endblock %}
     </ul>
 {% endblock %}

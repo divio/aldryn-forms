@@ -24,7 +24,7 @@ from .forms import (
     RestrictedFileField,
     RestrictedImageField,
     EmailFieldForm,
-    FormDataBaseForm,
+    FormSubmissionBaseForm,
     FormPluginForm,
     TextFieldForm,
     TextAreaFieldForm,
@@ -93,7 +93,7 @@ class FormPlugin(FieldContainer):
     def form_valid(self, instance, request, form):
         recipients = self.send_notifications(instance, form)
 
-        form.instance.set_users_notified(recipients)
+        form.instance.set_recipients(recipients)
         form.save()
 
         self.send_success_message(instance, request)
@@ -152,7 +152,11 @@ class FormPlugin(FieldContainer):
         Constructs form class basing on children plugin instances.
         """
         fields = self.get_form_fields(instance)
-        return type(FormDataBaseForm)('AldrynDynamicForm', (FormDataBaseForm,), fields)
+        formClass = (
+            type(FormSubmissionBaseForm)
+            ('AldrynDynamicForm', (FormSubmissionBaseForm,), fields)
+        )
+        return formClass
 
     def get_form_fields(self, instance):
         form_fields = {}
@@ -213,7 +217,7 @@ class FormPlugin(FieldContainer):
         )
 
         users_notified = [
-            formataddr((user.get_full_name(), user.email)) for user in recipients]
+            (user.get_full_name(), user.email) for user in recipients]
         return users_notified
 
 

@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 from collections import defaultdict
+from email.utils import formataddr
 from functools import partial
 
 from django.contrib import admin
@@ -8,46 +9,57 @@ from django.core.urlresolvers import reverse
 from django.shortcuts import redirect, render_to_response
 from django.template.context import RequestContext
 # we use SortedDict to remain compatible across python versions
+from django.template.loader import render_to_string
 from django.utils.datastructures import SortedDict
-from django.utils.html import escape
 from django.utils.translation import ugettext, ugettext_lazy as _
 
 from django_tablib.views import export
 
-from .forms import FormExportForm
-from .models import FormData
+from .forms import FormDataExportForm, FormSubmissionExportForm
+from .models import FormData, FormSubmission
 
 
-class FormDataAdmin(admin.ModelAdmin):
-
+class BaseFormSubmissionAdmin(admin.ModelAdmin):
     date_hierarchy = 'sent_at'
     list_display = ['__unicode__', 'sent_at', 'language']
     list_filter = ['name', 'language']
-    model = FormData
     readonly_fields = [
         'name',
-        'data',
+        'get_data_for_display',
         'language',
         'sent_at',
-        'get_people_notified'
+        'get_recipients_for_display'
     ]
+    export_form = None
 
     def has_add_permission(self, request):
         return False
 
-    def get_people_notified(self, obj):
-        people_list = obj.people_notified.split(':::')
+    def get_data_for_display(self, obj):
+        data = obj.get_form_data()
+        html = render_to_string(
+            template_name='admin/aldryn_forms/display/submission_data.html',
+            dictionary={'data': data}
+        )
+        return html
+    get_data_for_display.allow_tags = True
+    get_data_for_display.short_description = _('data')
 
-        li_items = [u'<li>{0}</li>'.format(escape(person))
-                    for person in people_list if person]
+    def get_recipients(self, obj):
+        recipients = obj.get_recipients()
+        formatted = [formataddr((recipient.name, recipient.email))
+                     for recipient in recipients]
+        return formatted
 
-        if li_items:
-            markup = u'<ul>{0}</ul>'.format(u''.join(li_items))
-        else:
-            markup = ''
-        return markup
-    get_people_notified.allow_tags = True
-    get_people_notified.short_description = _('people notified')
+    def get_recipients_for_display(self, obj):
+        people_list = self.get_recipients(obj)
+        html = render_to_string(
+            template_name='admin/aldryn_forms/display/recipients.html',
+            dictionary={'people': people_list}
+        )
+        return html
+    get_recipients_for_display.allow_tags = True
+    get_recipients_for_display.short_description = _('people notified')
 
     def get_urls(self):
         from django.conf.urls import patterns, url
@@ -68,13 +80,13 @@ class FormDataAdmin(admin.ModelAdmin):
             pattern(r'export/$', self.form_export, 'export'),
         )
 
-        return url_patterns + super(FormDataAdmin, self).get_urls()
+        return url_patterns + super(BaseFormSubmissionAdmin, self).get_urls()
 
     def form_export(self, request):
         opts = self.model._meta
         app_label = opts.app_label
         context = RequestContext(request)
-        form = FormExportForm(request.POST or None)
+        form = self.export_form(request.POST or None)
 
         if form.is_valid():
             entries = form.get_queryset()
@@ -99,7 +111,7 @@ class FormDataAdmin(admin.ModelAdmin):
                         value = ''
 
                         try:
-                            field = obj.get_data()[position]
+                            field = obj.get_form_data()[position]
                         except IndexError:
                             pass
 
@@ -111,7 +123,7 @@ class FormDataAdmin(admin.ModelAdmin):
                         return value
                     return _clean_data
 
-                fields = first_entry.get_data()
+                fields = first_entry.get_form_data()
 
                 # used to keep track of occurrences
                 # in case a field with the same name appears multiple times in the form.
@@ -163,4 +175,25 @@ class FormDataAdmin(admin.ModelAdmin):
         return render_to_response('admin/aldryn_forms/export.html', context)
 
 
+class FormDataAdmin(BaseFormSubmissionAdmin):
+    change_list_template = 'admin/aldryn_forms/formsubmission/change_list.html'
+    export_form = FormDataExportForm
+    readonly_fields = [
+        'name',
+        'data',
+        'language',
+        'sent_at',
+        'get_recipients_for_display'
+    ]
+
+    def get_recipients(self, obj):
+        return obj.get_recipients()
+
+
+class FormSubmissionAdmin(BaseFormSubmissionAdmin):
+    readonly_fields = BaseFormSubmissionAdmin.readonly_fields + ['form_url']
+    export_form = FormSubmissionExportForm
+
+
 admin.site.register(FormData, FormDataAdmin)
+admin.site.register(FormSubmission, FormSubmissionAdmin)
