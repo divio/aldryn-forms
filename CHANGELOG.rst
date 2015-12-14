@@ -1,6 +1,10 @@
 Changelog
 =========
 
+2.0.1 (2015-12-14)
+------------------
+* Fixes minor bug in form data export redirect.
+
 2.0.0 (2015-12-14)
 ------------------
 * Refactor the FormData model into FormSubmission.
