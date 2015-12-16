@@ -25,7 +25,7 @@ class BaseFormSubmissionAdmin(admin.ModelAdmin):
         'get_data_for_display',
         'language',
         'sent_at',
-        'get_recipients_for_display'
+        'get_recipients_for_display',
     ]
     export_form = None
 
