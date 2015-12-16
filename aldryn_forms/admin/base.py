@@ -15,9 +15,6 @@ from django.utils.translation import ugettext, ugettext_lazy as _
 
 from django_tablib.views import export
 
-from .forms import FormDataExportForm, FormSubmissionExportForm
-from .models import FormData, FormSubmission
-
 
 class BaseFormSubmissionAdmin(admin.ModelAdmin):
     date_hierarchy = 'sent_at'
@@ -176,27 +173,3 @@ class BaseFormSubmissionAdmin(admin.ModelAdmin):
             'original': 'Export',
         })
         return render_to_response('admin/aldryn_forms/export.html', context)
-
-
-class FormDataAdmin(BaseFormSubmissionAdmin):
-    change_list_template = 'admin/aldryn_forms/formsubmission/change_list.html'
-    export_form = FormDataExportForm
-    readonly_fields = [
-        'name',
-        'data',
-        'language',
-        'sent_at',
-        'get_recipients_for_display'
-    ]
-
-    def get_recipients(self, obj):
-        return obj.get_recipients()
-
-
-class FormSubmissionAdmin(BaseFormSubmissionAdmin):
-    readonly_fields = BaseFormSubmissionAdmin.readonly_fields + ['form_url']
-    export_form = FormSubmissionExportForm
-
-
-admin.site.register(FormData, FormDataAdmin)
-admin.site.register(FormSubmission, FormSubmissionAdmin)
