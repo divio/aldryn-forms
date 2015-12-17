@@ -604,7 +604,7 @@ msgstr "Formular Übertragungen"
 
 #: models.py:448
 msgid "form name"
-msgstr ""
+msgstr "formular name"
 
 #: models.py:460
 msgid "form language"
