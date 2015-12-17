@@ -8,7 +8,6 @@ REQUIREMENTS = [
     'djangocms-text-ckeditor',
     'django-simple-captcha',
     'django-tablib',
-    'South>=0.8.1',
     'tablib',
     'pillow',
     'django-filer',
