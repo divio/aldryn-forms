@@ -259,7 +259,13 @@ class Field(FormElement):
             value=form.cleaned_data[field.name],
             is_confirmation=is_confirmation
         )
-        return SerializedFormField(name=field.name, label=field.label, value=value)
+        serialized_field = SerializedFormField(
+            name=field.name,
+            label=field.label,
+            field_occurrence=field.field_occurrence,
+            value=value,
+        )
+        return serialized_field
 
     def get_form_field(self, instance):
         form_field_class = self.get_form_field_class(instance)

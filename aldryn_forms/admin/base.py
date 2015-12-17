@@ -66,7 +66,7 @@ class BaseFormSubmissionAdmin(admin.ModelAdmin):
             return url(*args, name=self.get_admin_url(name))
 
         url_patterns = patterns('',
-            pattern(r'export/$', self.form_export, 'export'),
+            pattern(r'export/$', self.get_form_export_view(), 'export'),
         )
 
         return url_patterns + super(BaseFormSubmissionAdmin, self).get_urls()
@@ -80,6 +80,9 @@ class BaseFormSubmissionAdmin(admin.ModelAdmin):
 
         url_name = "%s_%s_%s" % (self.model._meta.app_label, model_name, name)
         return url_name
+
+    def get_form_export_view(self):
+        return self.form_export
 
     def form_export(self, request):
         opts = self.model._meta

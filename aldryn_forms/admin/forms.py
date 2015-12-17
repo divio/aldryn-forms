@@ -8,7 +8,11 @@ from django.utils import timezone
 from django.utils.text import slugify
 from django.utils.translation import ugettext_lazy as _
 
-from ..models import FormData, FormSubmission
+from .exporter import Exporter
+from ..models import (
+    FormData,
+    FormSubmission,
+)
 
 
 def form_choices(modelClass):
@@ -16,6 +20,11 @@ def form_choices(modelClass):
 
     for name in form_names.order_by('name'):
         yield (name, name)
+
+
+def form_field_choices(fields):
+    for field in fields:
+        yield (field.field_id, field.label)
 
 
 class BaseFormExportForm(forms.Form):
@@ -89,3 +98,26 @@ class FormDataExportForm(BaseFormExportForm):
 
 class FormSubmissionExportForm(BaseFormExportForm):
     model = FormSubmission
+
+
+class FormExportStep1Form(BaseFormExportForm):
+    model = FormSubmission
+
+
+class FormExportStep2Form(forms.Form):
+    current_fields = forms.MultipleChoiceField(required=False)
+    old_fields = forms.MultipleChoiceField(required=False)
+
+    def __init__(self, *args, **kwargs):
+        submissions = kwargs.pop('submissions')
+        super(FormExportStep2Form, self).__init__(*args, **kwargs)
+
+        exporter = Exporter(queryset=submissions)
+        current_fields, old_fields = exporter.get_fields_for_export()
+
+        self.fields['current_fields'].choices = form_field_choices(current_fields)
+        self.fields['old_fields'].choices = form_field_choices(old_fields)
+
+    def get_fields(self):
+        data = self.cleaned_data
+        return data['current_fields'] + data['old_fields']

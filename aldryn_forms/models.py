@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+from functools import partial
 import json
 from collections import defaultdict, namedtuple
 from distutils.version import LooseVersion
@@ -30,16 +31,49 @@ FieldData = namedtuple(
 )
 FormField = namedtuple(
     'FormField',
-    field_names=['name', 'label', 'plugin_instance', 'occurrence']
+    field_names=[
+        'name',
+        'label',
+        'plugin_instance',
+        'field_occurrence',
+        'field_type_occurrence',
+    ]
 )
 Recipient = namedtuple(
     'Recipient',
     field_names=['name', 'email']
 )
-SerializedFormField = namedtuple(
+BaseSerializedFormField = namedtuple(
     'SerializedFormField',
-    field_names=['name', 'label', 'value']
+    field_names=[
+        'name',
+        'label',
+        'field_occurrence',
+        'value',
+    ]
 )
+
+
+class SerializedFormField(BaseSerializedFormField):
+
+    @property
+    def field_id(self):
+        field_label = self.label.strip()
+
+        if field_label:
+            field_as_string = u'{}-{}'.format(field_label, self.field_type)
+        else:
+            field_as_string = self.name
+        field_id = u'{}:{}'.format(field_as_string, self.occurrence)
+        return field_id
+
+    @property
+    def field_type_occurrence(self):
+        return self.name.rpartition('_')[1]
+
+    @property
+    def field_type(self):
+        return self.name.rpartition('_')[0]
 
 
 class FormPlugin(CMSPlugin):
@@ -131,7 +165,16 @@ class FormPlugin(CMSPlugin):
         from .cms_plugins import Field
 
         fields = []
-        occurrences = defaultdict(int)
+
+        # A field occurrence is how many times does a field
+        # with the same label and type appear within the same form.
+        # This is used as an identifier for the field within multiple forms.
+        field_occurrences = defaultdict(lambda: 1)
+
+        # A field type occurrence is how many times does a field
+        # with the same type appear within the same form.
+        # This is used as an identifier for the field within this form.
+        field_type_occurrences = defaultdict(lambda: 1)
 
         form_elements = self.get_form_elements()
         is_form_field = lambda plugin: issubclass(
@@ -141,17 +184,29 @@ class FormPlugin(CMSPlugin):
 
         for field_plugin in field_plugins:
             field_type = field_plugin.field_type
-            occurrences[field_type] += 1
-            occurrence = occurrences[field_type]
 
-            field_name = u'{0}_{1}'.format(field_type, occurrence)
+            if field_type in field_type_occurrences:
+                field_type_occurrences[field_type] += 1
+
+            field_type_occurrence = field_type_occurrences[field_type]
+
+            field_name = u'{0}_{1}'.format(field_type, field_type_occurrence)
             field_label = field_plugin.get_label() or field_name
+
+            if field_label:
+                field_id = u'{0}_{1}'.format(field_type, field_label)
+            else:
+                field_id = field_name
+
+            if field_id in field_occurrences:
+                field_occurrences[field_id] += 1
 
             field = FormField(
                 name=field_name,
                 label=field_label,
                 plugin_instance=field_plugin,
-                occurrence=occurrence,
+                field_occurrence=field_occurrences[field_id],
+                field_type_occurrence=field_type_occurrence,
             )
             fields.append(field)
         return fields
@@ -477,17 +532,33 @@ class FormSubmission(models.Model):
     def __unicode__(self):
         return self.name
 
-    def _form_data_hook(self, data):
+    def _form_data_hook(self, data, occurrences):
+        field_label = data['label'].strip()
+
+        if field_label:
+            field_type = data['name'].rpartition('_')[0]
+            field_id = u'{}_{}'.format(field_type, field_label)
+        else:
+            field_id = data['name']
+
+        if field_id in occurrences:
+            occurrences[field_id] += 1
+
+        data['field_occurrence'] = occurrences[field_id]
         return SerializedFormField(**data)
 
     def _recipients_hook(self, data):
         return Recipient(**data)
 
     def get_form_data(self):
+        occurrences = defaultdict(lambda: 1)
+
+        data_hook = partial(self._form_data_hook, occurrences=occurrences)
+
         try:
             form_data = json.loads(
                 self.data,
-                object_hook=self._form_data_hook
+                object_hook=data_hook,
             )
         except ValueError:
             # TODO: Log this?
