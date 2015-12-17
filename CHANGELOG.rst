@@ -1,6 +1,10 @@
 Changelog
 =========
 
+2.0.2 (2015-12-17)
+------------------
+* Remove "South" dependency from setup.py
+
 2.0.1 (2015-12-14)
 ------------------
 * Fixes minor bug in form data export redirect.
