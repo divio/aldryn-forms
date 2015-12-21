@@ -6,7 +6,7 @@ from django.conf import settings
 from django.contrib.admin.widgets import AdminDateWidget
 from django.utils import timezone
 from django.utils.text import slugify
-from django.utils.translation import ugettext_lazy as _
+from django.utils.translation import ugettext, ugettext_lazy as _
 
 from .exporter import Exporter
 from ..models import (
@@ -63,14 +63,18 @@ class BaseFormExportForm(forms.Form):
 
         return self.cleaned_data
 
-    def get_filename(self):
+    def get_filename(self, extension=None):
         data = self.cleaned_data
         form_name = data['form_name'].lower()
-        filename = self.export_filename.format(
+        filename_format = self.export_filename.format(
             form_name=slugify(form_name),
             language=data['language'],
         )
-        return timezone.now().strftime(filename)
+        filename = timezone.now().strftime(filename_format)
+
+        if extension:
+            filename = '{}.{}'.format(filename, extension)
+        return filename
 
     def get_queryset(self):
         data = self.cleaned_data
@@ -115,9 +119,23 @@ class FormExportStep2Form(forms.Form):
         exporter = Exporter(queryset=submissions)
         current_fields, old_fields = exporter.get_fields_for_export()
 
+        pre_selected_fields = (field.field_id for field in current_fields)
+
         self.fields['current_fields'].choices = form_field_choices(current_fields)
+        self.fields['current_fields'].initial = pre_selected_fields
         self.fields['old_fields'].choices = form_field_choices(old_fields)
 
     def get_fields(self):
         data = self.cleaned_data
         return data['current_fields'] + data['old_fields']
+
+    def clean(self):
+        if self.errors:
+            return self.cleaned_data
+
+        fields = self.get_fields()
+
+        if not fields:
+            message = ugettext('Please select at least one field to export.')
+            raise forms.ValidationError(message)
+        return self.cleaned_data

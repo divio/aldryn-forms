@@ -90,7 +90,7 @@ class FormExportWizardView(SessionWizardView):
 
         dataset = Exporter(queryset=queryset).get_dataset(fields=fields)
 
-        filename = '%s.%s' % (step_1_form.get_filename(), self.file_type)
+        filename = step_1_form.get_filename(extension=self.file_type)
 
         content_type = self.get_content_type()
 
