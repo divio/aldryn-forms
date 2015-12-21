@@ -191,7 +191,7 @@ class FormPlugin(CMSPlugin):
             field_type_occurrence = field_type_occurrences[field_type]
 
             field_name = u'{0}_{1}'.format(field_type, field_type_occurrence)
-            field_label = field_plugin.get_label() or field_name
+            field_label = field_plugin.get_label()
 
             if field_label:
                 field_id = u'{0}_{1}'.format(field_type, field_label)
