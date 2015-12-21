@@ -64,7 +64,7 @@ class SerializedFormField(BaseSerializedFormField):
             field_as_string = u'{}-{}'.format(field_label, self.field_type)
         else:
             field_as_string = self.name
-        field_id = u'{}:{}'.format(field_as_string, self.occurrence)
+        field_id = u'{}:{}'.format(field_as_string, self.field_occurrence)
         return field_id
 
     @property
