@@ -1,17 +1,12 @@
 # -*- coding: utf-8 -*-
 from django import get_version
 from django.contrib import messages
-from django.core.urlresolvers import reverse
 from django.http import HttpResponse
 from django.shortcuts import redirect
 from django.utils.translation import get_language_from_request, ugettext
-from aldryn_forms.admin.exporter import Exporter
 
-try:
-    from formtools.wizard.views import SessionWizardView
-except ImportError:
-    from django.contrib.formtools.wizard.views import SessionWizardView
-
+from ..compat import SessionWizardView
+from .exporter import Exporter
 from .forms import FormExportStep1Form, FormExportStep2Form
 
 
@@ -35,19 +30,8 @@ class FormExportWizardView(SessionWizardView):
     template_name = 'admin/aldryn_forms/export_wizard.html'
 
     def get_context_data(self, form, **kwargs):
-        opts = self.admin.model._meta
-        app_label = opts.app_label
         context = super(FormExportWizardView, self).get_context_data(form, **kwargs)
-        context.update({
-            'adminform': form,
-            'media': self.admin.media + form.media,
-            'has_change_permission': True,
-            'opts': opts,
-            'root_path': reverse('admin:index'),
-            'current_app': self.admin.admin_site.name,
-            'app_label': app_label,
-            'original': 'Export',
-        })
+        context.update(self.admin.get_admin_context(form=form, title='Export'))
         return context
 
     def get_form_initial(self, step):
@@ -55,7 +39,7 @@ class FormExportWizardView(SessionWizardView):
 
         if step == self.steps.first:
             initial['language'] = get_language_from_request(
-                self.request,
+                request=self.request,
                 check_path=True
             )
         return initial
@@ -87,6 +71,13 @@ class FormExportWizardView(SessionWizardView):
             return redirect(export_url)
         return super(FormExportWizardView, self).render_next_step(form, **kwargs)
 
+    def get_content_type(self):
+        content_type = mimetype_map.get(
+            self.file_type,
+            'application/octet-stream'
+        )
+        return content_type
+
     def done(self, form_list, **kwargs):
         """
         this step only runs if all forms are valid.
@@ -94,17 +85,14 @@ class FormExportWizardView(SessionWizardView):
         step_1_form = form_list[0]
         step_2_form = form_list[1]
 
+        fields = step_2_form.get_fields()
         queryset = step_1_form.get_queryset()
 
-        exporter = Exporter(queryset=queryset)
-        dataset = exporter.get_dataset(fields=step_2_form.get_fields())
+        dataset = Exporter(queryset=queryset).get_dataset(fields=fields)
 
         filename = '%s.%s' % (step_1_form.get_filename(), self.file_type)
 
-        content_type = mimetype_map.get(
-            self.file_type,
-            'application/octet-stream'
-        )
+        content_type = self.get_content_type()
 
         response_kwargs = {}
 
