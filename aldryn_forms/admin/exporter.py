@@ -51,7 +51,8 @@ class Exporter(object):
 
                 field_id = field.field_id
 
-                if not field_id in old_field_ids and not field_id in latest_field_ids:
+                if (field_id not in old_field_ids
+                    and field_id not in latest_field_ids):
                     old_fields.append(field)
                     old_field_ids.append(field_id)
         return (latest_fields, old_fields)
