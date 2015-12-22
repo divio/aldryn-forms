@@ -1,19 +1,10 @@
 # -*- coding: utf-8 -*-
-from collections import defaultdict
 from email.utils import formataddr
-from functools import partial
 
 from django.contrib import admin
-from django.contrib import messages
 from django.core.urlresolvers import reverse
-from django.shortcuts import redirect, render_to_response
-from django.template.context import RequestContext
-# we use SortedDict to remain compatible across python versions
 from django.template.loader import render_to_string
-from django.utils.datastructures import SortedDict
-from django.utils.translation import ugettext, ugettext_lazy as _
-
-from django_tablib.views import export
+from django.utils.translation import ugettext_lazy as _
 
 
 class BaseFormSubmissionAdmin(admin.ModelAdmin):
@@ -27,7 +18,6 @@ class BaseFormSubmissionAdmin(admin.ModelAdmin):
         'sent_at',
         'get_recipients_for_display',
     ]
-    export_form = None
 
     def has_add_permission(self, request):
         return False
@@ -66,7 +56,7 @@ class BaseFormSubmissionAdmin(admin.ModelAdmin):
             return url(*args, name=self.get_admin_url(name))
 
         url_patterns = patterns('',
-            pattern(r'export/$', self.form_export, 'export'),
+            pattern(r'export/$', self.get_form_export_view(), 'export'),
         )
 
         return url_patterns + super(BaseFormSubmissionAdmin, self).get_urls()
@@ -81,95 +71,25 @@ class BaseFormSubmissionAdmin(admin.ModelAdmin):
         url_name = "%s_%s_%s" % (self.model._meta.app_label, model_name, name)
         return url_name
 
-    def form_export(self, request):
+    def get_admin_context(self, form=None, title=None):
         opts = self.model._meta
-        app_label = opts.app_label
-        context = RequestContext(request)
-        form = self.export_form(request.POST or None)
 
-        if form.is_valid():
-            entries = form.get_queryset()
-
-            if entries.exists():
-                filename = form.get_filename()
-
-                # A user can add fields to the form over time,
-                # knowing this we use the latest form submission as a way
-                # to get the latest form state, but this means that if a field
-                # was removed then it will be ignored :(
-                first_entry = entries.order_by('-sent_at')[0]
-
-                # what follows is a bit of dark magic...
-                # we call the export view in tablib with a headers dictionary, this dictionary
-                # maps a key to a callable that gets passed a form submission instance and returns the value
-                # for the field, we have to use a factory function in order to avoid a closure
-
-                def clean_data(label, position):
-                    def _clean_data(obj):
-                        field = None
-                        value = ''
-
-                        try:
-                            field = obj.get_form_data()[position]
-                        except IndexError:
-                            pass
-
-                        if field and field.label == label:
-                            # sanity check
-                            # we need this to make sure that the field label and position remain constant
-                            # otherwise we'll confuse users if a field was moved.
-                            value = field.value
-                        return value
-                    return _clean_data
-
-                fields = first_entry.get_form_data()
-
-                # used to keep track of occurrences
-                # in case a field with the same name appears multiple times in the form.
-                occurrences = defaultdict(lambda: 1)
-                headers = SortedDict()
-
-                for position, field in enumerate(fields):
-                    label = field.label
-
-                    if label in headers:
-                        occurrences[label] += 1
-                        label = u'%s %s' % (label, occurrences[label])
-                    headers[label] = clean_data(field.label, position)
-
-                headers[ugettext('Language')] = 'language'
-                headers[ugettext('Submitted on')] = 'sent_at'
-
-                do_export = partial(
-                    export,
-                    request=request,
-                    queryset=entries,
-                    model=entries.model,
-                    headers=headers,
-                    filename=filename
-                )
-
-                try:
-                    # Since django-tablib 3.1 the parameter is called file_type
-                    response = do_export(file_type='xls')
-                except TypeError:
-                    response = do_export(format='xls')
-                return response
-            else:
-                self.message_user(request, _("No records found"), level=messages.WARNING)
-                export_url = 'admin:{}'.format(self.get_admin_url('export'))
-                return redirect(export_url)
-        else:
-            context['errors'] = form.errors
-
-        context.update({
-            'adminform': form,
-            'media': self.media + form.media,
+        context = {
+            'media': self.media,
             'has_change_permission': True,
             'opts': opts,
             'root_path': reverse('admin:index'),
             'current_app': self.admin_site.name,
-            'app_label': app_label,
-            'original': 'Export',
-        })
-        return render_to_response('admin/aldryn_forms/export.html', context)
+            'app_label': opts.app_label,
+        }
+
+        if form:
+            context['adminform'] = form
+            context['media'] += form.media
+
+        if title:
+            context['original'] = title
+        return context
+
+    def get_form_export_view(self):
+        raise NotImplementedError
