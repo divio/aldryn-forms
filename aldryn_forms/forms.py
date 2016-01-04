@@ -116,8 +116,8 @@ class FormSubmissionBaseForm(forms.Form):
         fields = [(field.label, field.value) for field in fields]
         return fields
 
-    def get_cleaned_data(self, is_confirmation=False):
-        fields = self.get_serialized_fields(is_confirmation)
+    def get_cleaned_data(self):
+        fields = self.get_serialized_fields(is_confirmation=False)
         form_data = dict((field.name, field.value) for field in fields)
         return form_data
 
