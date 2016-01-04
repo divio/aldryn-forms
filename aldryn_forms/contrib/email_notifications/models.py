@@ -144,7 +144,7 @@ class EmailNotification(models.Model):
 
         context = {
             'form_plugin': self.form,
-            'form_data': form.get_serialized_field_choices(),
+            'form_data': form.get_serialized_field_choices(is_confirmation=True),
             'form_name': self.form.name,
             'email_notification': self,
             'email_html_theme': get_template(suffix='html'),

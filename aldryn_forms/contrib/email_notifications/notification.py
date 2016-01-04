@@ -37,7 +37,7 @@ class BaseNotificationConf(object):
             name=self.html_email_template_name, suffix='html')
 
     def get_context(self, form):
-        text_context = form.get_cleaned_data()
+        text_context = form.get_cleaned_data(is_confirmation=True)
         text_context['form_name'] = self.form_plugin.name
 
         if self.custom_context_choices:
