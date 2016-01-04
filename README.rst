@@ -21,6 +21,13 @@ Choose a site you want to install the add-on to from the dashboard. Then go to `
 
 Redeploy the site.
 
+Upgrading from < 2.0
+====================
+Version 2.0 introduced a new model for form data storage called ``FormSubmission``.
+The old ``FormData`` model has been deprecated.
+Although the ``FormData`` model's data is still accessible through the admin, all new form data will be stored in the new
+``FormSubmission`` model.
+
 Manuall Installation
 --------------------
 
