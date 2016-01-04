@@ -1,6 +1,12 @@
 Changelog
 =========
 
+2.0.3 (2016-01-04)
+------------------
+* Refactored form data and form submission export logic.
+* Fixes bug in email notifications not respecting confirmation flag.
+* Updates po files.
+
 2.0.2 (2015-12-17)
 ------------------
 * Remove "South" dependency from setup.py
