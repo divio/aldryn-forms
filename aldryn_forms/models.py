@@ -8,6 +8,7 @@ from django.conf import settings
 from django.core.validators import MaxValueValidator
 from django.db import models
 from django.utils.datastructures import SortedDict
+from django.utils.six import text_type
 from django.utils.translation import ugettext_lazy as _
 
 import cms
@@ -274,7 +275,7 @@ class FieldsetPlugin(CMSPlugin):
         verbose_name=_('custom css classes'), max_length=200, blank=True)
 
     def __unicode__(self):
-        return self.legend or unicode(self.pk)
+        return self.legend or text_type(self.pk)
 
 
 class FieldPluginBase(CMSPlugin):
