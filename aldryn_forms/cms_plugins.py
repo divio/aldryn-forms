@@ -7,6 +7,7 @@ from django import forms
 from django.db.models import query
 from django.contrib import messages
 from django.contrib.admin import TabularInline
+from django.contrib.auth import get_user_model
 from django.core.validators import MinLengthValidator
 from django.template.loader import select_template
 from django.utils.translation import ugettext, ugettext_lazy as _
@@ -198,7 +199,13 @@ class FormPlugin(FieldContainer):
         messages.success(request, message)
 
     def send_notifications(self, instance, form):
-        users = instance.recipients.only('first_name', 'last_name', 'email')
+        fields_to_load = []
+        user_model_fields = get_user_model()._meta.get_all_field_names()
+        fields_to_load = [
+            field for field in ('first_name', 'last_name', 'email')
+            if field in user_model_fields
+        ]
+        users = instance.recipients.only(*fields_to_load)
 
         recipients = [user for user in users.exclude(email='')
                       if is_valid_recipient(user.email)]
