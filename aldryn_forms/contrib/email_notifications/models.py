@@ -9,6 +9,7 @@ from django.utils.translation import ugettext, ugettext_lazy as _
 
 from djangocms_text_ckeditor.fields import HTMLField
 
+from aldryn_forms.helpers import get_user_name
 from aldryn_forms.models import FormPlugin
 
 from emailit.api import construct_mail
@@ -124,7 +125,7 @@ class EmailNotification(models.Model):
             # manual name takes precedence over user relationship.
             name = self.to_name
         elif self.to_user_id:
-            name = self.to_user.get_full_name()
+            name = get_user_name(self.to_user)
         else:
             name = ''
         return name

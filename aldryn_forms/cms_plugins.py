@@ -36,6 +36,7 @@ from .forms import (
     FileFieldForm,
     ImageFieldForm,
 )
+from .helpers import get_user_name
 from .models import SerializedFormField
 from .signals import form_pre_save, form_post_save
 from .validators import (
@@ -198,9 +199,9 @@ class FormPlugin(FieldContainer):
         messages.success(request, message)
 
     def send_notifications(self, instance, form):
-        users = instance.recipients.only('first_name', 'last_name', 'email')
+        users = instance.recipients.exclude(email='')
 
-        recipients = [user for user in users.exclude(email='')
+        recipients = [user for user in users.iterator()
                       if is_valid_recipient(user.email)]
 
         context = {
@@ -217,7 +218,7 @@ class FormPlugin(FieldContainer):
         )
 
         users_notified = [
-            (user.get_full_name(), user.email) for user in recipients]
+            (get_user_name(user), user.email) for user in recipients]
         return users_notified
 
 

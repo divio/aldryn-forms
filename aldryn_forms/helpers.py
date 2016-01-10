@@ -1,6 +1,15 @@
 # -*- coding: utf-8 -*-
 
 
+def get_user_name(user):
+    try:
+        name = user.get_full_name()
+    except AttributeError:
+        # custom user model
+        name = ''
+    return name
+
+
 def is_form_element(plugin):
     # import here due because of circular imports
     from .cms_plugins import FormElement
