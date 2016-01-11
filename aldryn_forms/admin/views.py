@@ -82,8 +82,9 @@ class FormExportWizardView(SessionWizardView):
         """
         this step only runs if all forms are valid.
         """
-        step_1_form = form_list[0]
-        step_2_form = form_list[1]
+        form_iter = iter(form_list)
+        step_1_form = next(form_iter)
+        step_2_form = next(form_iter)
 
         fields = step_2_form.get_fields()
         queryset = step_1_form.get_queryset()
@@ -96,7 +97,7 @@ class FormExportWizardView(SessionWizardView):
 
         response_kwargs = {}
 
-        if get_version().split('.')[1] > 6:
+        if int(get_version().split('.')[1]) > 6:
             response_kwargs['content_type'] = content_type
         else:
             # Django <= 1.6 compatibility
