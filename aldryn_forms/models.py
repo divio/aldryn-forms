@@ -57,6 +57,9 @@ BaseSerializedFormField = namedtuple(
 
 class SerializedFormField(BaseSerializedFormField):
 
+    # For _asdict() with Py3K
+    __slots__ = ()
+
     @property
     def field_id(self):
         field_label = self.label.strip()
