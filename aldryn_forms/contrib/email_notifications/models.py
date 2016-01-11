@@ -5,6 +5,7 @@ from functools import partial
 from django.conf import settings
 from django.core.exceptions import ValidationError
 from django.db import models
+from django.utils.encoding import python_2_unicode_compatible
 from django.utils.translation import ugettext, ugettext_lazy as _
 
 from djangocms_text_ckeditor.fields import HTMLField
@@ -54,6 +55,7 @@ class EmailNotificationFormPlugin(FormPlugin):
         return choices
 
 
+@python_2_unicode_compatible
 class EmailNotification(models.Model):
     theme = models.CharField(
         verbose_name=_('theme'),
@@ -108,7 +110,7 @@ class EmailNotification(models.Model):
         related_name='email_notifications'
     )
 
-    def __unicode__(self):
+    def __str__(self):
         to_name = self.get_recipient_name()
         to_email = self.get_recipient_email()
         return u'{0} ({1})'.format(to_name, to_email)

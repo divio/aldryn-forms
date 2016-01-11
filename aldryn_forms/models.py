@@ -8,6 +8,7 @@ from django.conf import settings
 from django.core.validators import MaxValueValidator
 from django.db import models
 from django.utils.datastructures import SortedDict
+from django.utils.encoding import python_2_unicode_compatible
 from django.utils.six import text_type
 from django.utils.translation import ugettext_lazy as _
 
@@ -80,6 +81,7 @@ class SerializedFormField(BaseSerializedFormField):
         return self.name.rpartition('_')[0]
 
 
+@python_2_unicode_compatible
 class FormPlugin(CMSPlugin):
 
     FALLBACK_FORM_TEMPLATE = 'aldryn_forms/form.html'
@@ -146,7 +148,7 @@ class FormPlugin(CMSPlugin):
         help_text=_('People who will get the form content via e-mail.')
     )
 
-    def __unicode__(self):
+    def __str__(self):
         return self.name
 
     def copy_relations(self, oldinstance):
@@ -271,16 +273,18 @@ class FormPlugin(CMSPlugin):
         return self._form_elements
 
 
+@python_2_unicode_compatible
 class FieldsetPlugin(CMSPlugin):
 
     legend = models.CharField(_('Legend'), max_length=50, blank=True)
     custom_classes = models.CharField(
         verbose_name=_('custom css classes'), max_length=200, blank=True)
 
-    def __unicode__(self):
+    def __str__(self):
         return self.legend or text_type(self.pk)
 
 
+@python_2_unicode_compatible
 class FieldPluginBase(CMSPlugin):
 
     label = models.CharField(_('Label'), max_length=50, blank=True)
@@ -331,7 +335,7 @@ class FieldPluginBase(CMSPlugin):
             attribute = 'is_%s' % self.field_type
             setattr(self, attribute, True)
 
-    def __unicode__(self):
+    def __str__(self):
         return self.label or str(self.pk)
 
     @property
@@ -417,26 +421,29 @@ class ImageUploadFieldPlugin(FileFieldPluginBase):
     )
 
 
+@python_2_unicode_compatible
 class Option(models.Model):
 
     field = models.ForeignKey(FieldPlugin, editable=False)
     value = models.CharField(_('Value'), max_length=50)
     default_value = models.BooleanField(_('Default'), default=False)
 
-    def __unicode__(self):
+    def __str__(self):
         return self.value
 
 
+@python_2_unicode_compatible
 class FormButtonPlugin(CMSPlugin):
 
     label = models.CharField(_('Label'), max_length=50)
     custom_classes = models.CharField(
         verbose_name=_('custom css classes'), max_length=200, blank=True)
 
-    def __unicode__(self):
+    def __str__(self):
         return self.label
 
 
+@python_2_unicode_compatible
 class FormData(models.Model):
     """
     DEPRECATED: This model will be removed.
@@ -462,7 +469,7 @@ class FormData(models.Model):
         verbose_name = _('Form submission (Old)')
         verbose_name_plural = _('Form submissions (Old)')
 
-    def __unicode__(self):
+    def __str__(self):
         return self.name
 
     def get_data(self):
@@ -501,6 +508,7 @@ class FormData(models.Model):
         self.set_recipients(recipients)
 
 
+@python_2_unicode_compatible
 class FormSubmission(models.Model):
     name = models.CharField(
         max_length=50,
@@ -533,7 +541,7 @@ class FormSubmission(models.Model):
         verbose_name = _('Form submission')
         verbose_name_plural = _('Form submissions')
 
-    def __unicode__(self):
+    def __str__(self):
         return self.name
 
     def _form_data_hook(self, data, occurrences):
