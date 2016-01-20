@@ -5,6 +5,7 @@ Changelog
 ------------------
 * Show label when using radio fields
 * Show help text when using radio fields
+* Python 3 compatibility fixes
 
 2.0.3 (2016-01-04)
 ------------------
