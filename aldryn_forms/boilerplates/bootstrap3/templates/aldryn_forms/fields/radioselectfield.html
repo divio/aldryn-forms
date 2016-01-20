@@ -27,4 +27,10 @@
             {% endblock form_field_errors %}
         </div>
     {% endfor %}
+
+    {% block form_field_help_text %}
+        {% if field.help_text %}
+            <p class="help-block">{{ field.help_text }}</p>
+        {% endif %}
+    {% endblock form_field_help_text %}
 {% endif %}
