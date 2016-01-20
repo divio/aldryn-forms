@@ -1,7 +1,7 @@
 Changelog
 =========
 
-2.0.4 (UNRELEASED)
+2.0.4 (2016-01-20)
 ------------------
 * Show label when using radio fields
 * Show help text when using radio fields
