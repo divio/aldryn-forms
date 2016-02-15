@@ -32,11 +32,11 @@
 
 {# INFO: this solution is currently required because we can't redirect from a plugin. #}
 {% if form_success_url %}
-{% addtoblock "js" %}
-<script>
-setTimeout(function () {
-    window.location.href = '{{ form_success_url }}';
-}, 2000);
-</script>
-{% endaddtoblock %}
+    {% addtoblock "js" %}
+        <script>
+            setTimeout(function () {
+                window.location.href = '{{ form_success_url }}';
+            }, 2000);
+        </script>
+    {% endaddtoblock %}
 {% endif %}
