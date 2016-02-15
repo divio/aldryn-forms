@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 import warnings
 
-__version__ = '2.0.4'
+__version__ = '2.1.0'
 
 warnings.warn(
     'The "aldryn_forms.FormData" model has been deprecated in '
