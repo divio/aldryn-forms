@@ -108,7 +108,7 @@ class ExistingEmailNotificationInline(admin.StackedInline):
 
 
 class EmailNotificationForm(FormPlugin):
-    name = _('Email Notification Form')
+    name = _('Form (Advanced)')
     model = EmailNotificationFormPlugin
     inlines = [
         ExistingEmailNotificationInline,

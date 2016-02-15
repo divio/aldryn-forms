@@ -1,6 +1,11 @@
 Changelog
 =========
 
+2.1.0 (UNRELEASED)
+------------------
+* Removed deprecated ``formdata``
+* Renamed ``Email Notification Form`` to ``Form (Advanced)``
+
 2.0.4 (2016-01-20)
 ------------------
 * Show label when using radio fields
