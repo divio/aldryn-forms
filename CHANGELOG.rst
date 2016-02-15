@@ -6,6 +6,7 @@ Changelog
 * Removed deprecated ``formdata``
 * Renamed ``Email Notification Form`` to ``Form (Advanced)``
 * Optimized admin export templates
+* Add stripped default django templates to ``/aldryn_forms/templates``
 
 2.0.4 (2016-01-20)
 ------------------
