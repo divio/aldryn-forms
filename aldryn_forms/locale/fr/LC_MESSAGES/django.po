@@ -56,7 +56,7 @@ msgstr ""
 
 #: boilerplates/bootstrap3/templates/admin/aldryn_forms/export.html:4
 #: boilerplates/legacy/templates/admin/aldryn_forms/export.html:4
-msgid "export form submissions"
+msgid "Export form submissions"
 msgstr ""
 
 #: boilerplates/bootstrap3/templates/admin/aldryn_forms/export.html:7
