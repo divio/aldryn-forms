@@ -3,10 +3,6 @@
 <form method="post"
     {% if form.is_multipart %}enctype="multipart/form-data"{% endif %}
     {% if instance.custom_classes %} class="{{ instance.custom_classes }}"{% endif %}>
-    {% csrf_token %}
-    {% for field in form.hidden_fields %}
-        {{ field }}
-    {% endfor %}
 
     {% if form.non_field_errors %}
         {% for error in form.non_field_errors %}
@@ -28,6 +24,11 @@
             {% render_plugin plugin %}
         {% endfor %}
     {% endif %}
+
+    {% csrf_token %}
+    {% for field in form.hidden_fields %}
+        {{ field }}
+    {% endfor %}
 </form>
 
 {# INFO: this solution is currently required because we can't redirect from a plugin. #}
