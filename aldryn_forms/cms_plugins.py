@@ -270,8 +270,7 @@ class Field(FormElement):
     ]
     fieldset_extra_fields = [
         'help_text',
-        'text_area_columns', 'text_area_rows',
-        'min_value', 'max_value',
+        ('min_value', 'max_value',),
         'required_message',
         'custom_classes',
     ]
@@ -371,25 +370,16 @@ class Field(FormElement):
         if self.declared_fieldsets:
             return self.declared_fieldsets
 
-        if self.form:
-            fields = set(self.form._meta.fields)
-        else:
-            fields = ['label']
-
-        in_fields = lambda x: x in fields
-
-        general_fields = filter(in_fields, self.fieldset_general_fields)
         fieldsets = [
-            (None, {'fields': general_fields}),
+            (None, {'fields': list(self.fieldset_general_fields)}),
         ]
 
-        extra_fields = filter(in_fields, self.fieldset_extra_fields)
-        if extra_fields:
+        if self.fieldset_extra_fields:
             fieldsets.append(
                 (
                     _('Advanced Settings'), {
                         'classes': ('collapse',),
-                        'fields': extra_fields,
+                        'fields': list(self.fieldset_extra_fields),
                     }
                 ))
         return fieldsets
@@ -451,6 +441,13 @@ class TextAreaField(TextField):
     model = models.TextAreaFieldPlugin
     form = TextAreaFieldForm
     form_field_widget = forms.Textarea
+    fieldset_extra_fields = [
+        'help_text',
+        'text_area_columns', 'text_area_rows',
+        'min_value', 'max_value',
+        'required_message',
+        'custom_classes',
+    ]
 
     def get_form_field_widget(self, instance):
         widget = super(TextAreaField, self).get_form_field_widget(instance)
