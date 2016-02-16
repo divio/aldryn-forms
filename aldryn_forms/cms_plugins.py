@@ -64,16 +64,25 @@ class FormPlugin(FieldContainer):
     form = FormPluginForm
     filter_horizontal = ['recipients']
 
-    fieldsets = [
-        (
-            _('General options'),
-            {'fields': ['name', 'form_template', 'error_message', 'success_message', 'recipients', 'custom_classes']}
-        ),
-        (
-            _('Redirect'),
-            {'fields': ['redirect_type', 'page', 'url']}
-        )
-    ]
+    fieldsets = (
+        (None, {
+            'fields': (
+                'name',
+                'redirect_type',
+                ('page', 'url'),
+            )
+        }),
+        ('Advanced Settings', {
+            'classes': ('collapse',),
+            'fields': (
+                'form_template',
+                'error_message',
+                'success_message',
+                'recipients',
+                'custom_classes',
+            )
+        }),
+    )
 
     def render(self, context, instance, placeholder):
         # remove once cms 3.0.6 is released
@@ -228,6 +237,20 @@ class Fieldset(FieldContainer):
     name = _('Fieldset')
     model = models.FieldsetPlugin
 
+    fieldsets = (
+        (None, {
+            'fields': (
+                'legend',
+            )
+        }),
+        ('Advanced Settings', {
+            'classes': ('collapse',),
+            'fields': (
+                'custom_classes',
+            )
+        }),
+    )
+
 
 class Field(FormElement):
     module = _('Form fields')
@@ -242,10 +265,16 @@ class Field(FormElement):
     form_field_disabled_options = []
 
     # Used to configure default fieldset in admin form
-    fieldset_general_fields = ['label', 'placeholder_text', 'help_text']
-    fieldset_boundaries_fields = ['min_value', 'max_value']
-    fieldset_required_conf_fields = ['required', 'required_message']
-    fieldset_extra_fields = ['custom_classes', 'text_area_columns', 'text_area_rows']
+    fieldset_general_fields = [
+        'label', 'placeholder_text', 'required',
+    ]
+    fieldset_extra_fields = [
+        'help_text',
+        'text_area_columns', 'text_area_rows',
+        'min_value', 'max_value',
+        'required_message',
+        'custom_classes',
+    ]
 
     def serialize_value(self, instance, value, is_confirmation=False):
         if isinstance(value, query.QuerySet):
@@ -351,24 +380,18 @@ class Field(FormElement):
 
         general_fields = filter(in_fields, self.fieldset_general_fields)
         fieldsets = [
-            (_('General options'), {'fields': general_fields}),
+            (None, {'fields': general_fields}),
         ]
-
-        boundries_fields = filter(in_fields, self.fieldset_boundaries_fields)
-        if boundries_fields:
-            fieldsets.append(
-                (_('Min and max values'), {'fields': boundries_fields}))
-
-        required_fields = filter(in_fields, self.fieldset_required_conf_fields)
-        if required_fields:
-            fieldsets.append(
-                (_('Required'), {'fields': required_fields}))
 
         extra_fields = filter(in_fields, self.fieldset_extra_fields)
         if extra_fields:
             fieldsets.append(
-                (_('Extra'), {'fields': extra_fields}))
-
+                (
+                    _('Advanced Settings'), {
+                        'classes': ('collapse',),
+                        'fields': extra_fields,
+                    }
+                ))
         return fieldsets
 
     def get_error_messages(self, instance):
@@ -456,11 +479,11 @@ class EmailField(TextField):
     model = models.EmailFieldPlugin
     form = EmailFieldForm
     form_field = forms.EmailField
-    fieldset_general_fields = Field.fieldset_general_fields + [
+    fieldset_extra_fields = [
         'email_send_notification',
         'email_subject',
         'email_body',
-    ]
+    ] + Field.fieldset_extra_fields
     email_template_base = 'aldryn_forms/emails/user/notification'
 
     def send_notification_email(self, email, form, form_field_instance):
@@ -502,6 +525,8 @@ class FileField(Field):
     ]
     fieldset_general_fields = Field.fieldset_general_fields + [
         'upload_to',
+    ]
+    fieldset_extra_fields = Field.fieldset_extra_fields + [
         'max_size',
     ]
 
@@ -571,6 +596,8 @@ class ImageField(FileField):
     form_field_widget = RestrictedImageField.widget
     fieldset_general_fields = Field.fieldset_general_fields + [
         'upload_to',
+    ]
+    fieldset_extra_fields = Field.fieldset_extra_fields + [
         'max_size',
         'max_width',
         'max_height',
@@ -682,6 +709,7 @@ class RadioSelectField(Field):
         'error_messages',
         'default_value',
     ]
+
     inlines = [SelectOptionInline]
 
     def get_form_field_kwargs(self, instance):

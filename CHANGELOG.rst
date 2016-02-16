@@ -7,6 +7,7 @@ Changelog
 * Renamed ``Email Notification Form`` to ``Form (Advanced)``
 * Optimized admin export templates
 * Add stripped default django templates to ``/aldryn_forms/templates``
+* Implement "Advanced Settings" when configuring plugins
 
 2.0.4 (2016-01-20)
 ------------------
