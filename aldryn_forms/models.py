@@ -7,10 +7,14 @@ from distutils.version import LooseVersion
 from django.conf import settings
 from django.core.validators import MaxValueValidator
 from django.db import models
-from django.utils.datastructures import SortedDict
 from django.utils.encoding import python_2_unicode_compatible
 from django.utils.six import text_type
 from django.utils.translation import ugettext_lazy as _
+
+try:
+    from django.utils.datastructures import SortedDict
+except ImportError:
+    from collections import OrderedDict as SortedDict
 
 import cms
 from cms.models.fields import PageField

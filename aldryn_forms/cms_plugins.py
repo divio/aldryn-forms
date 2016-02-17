@@ -367,22 +367,22 @@ class Field(FormElement):
         return context
 
     def get_fieldsets(self, request, obj=None):
-        if self.declared_fieldsets:
+        try:
             return self.declared_fieldsets
+        except AttributeError:
+            fieldsets = [
+                (None, {'fields': list(self.fieldset_general_fields)}),
+            ]
 
-        fieldsets = [
-            (None, {'fields': list(self.fieldset_general_fields)}),
-        ]
-
-        if self.fieldset_extra_fields:
-            fieldsets.append(
-                (
-                    _('Advanced Settings'), {
-                        'classes': ('collapse',),
-                        'fields': list(self.fieldset_extra_fields),
-                    }
-                ))
-        return fieldsets
+            if self.fieldset_extra_fields:
+                fieldsets.append(
+                    (
+                        _('Advanced Settings'), {
+                            'classes': ('collapse',),
+                            'fields': list(self.fieldset_extra_fields),
+                        }
+                    ))
+            return fieldsets
 
     def get_error_messages(self, instance):
         if instance.required_message:
