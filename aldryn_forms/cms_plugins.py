@@ -446,7 +446,7 @@ class TextAreaField(TextField):
     fieldset_general_fields = [
         'label',
         'placeholder_text',
-        ('text_area_columns', 'text_area_rows',),
+        ('text_area_rows', 'text_area_columns',),
         'required',
     ]
     fieldset_extra_fields = [
