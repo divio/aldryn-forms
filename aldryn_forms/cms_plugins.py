@@ -415,6 +415,7 @@ class Field(FormElement):
 
 class TextField(Field):
     name = _('Text Field')
+
     form = TextFieldForm
     form_field = forms.CharField
     form_field_widget = forms.CharField.widget
@@ -439,12 +440,13 @@ class TextField(Field):
 class TextAreaField(TextField):
     name = _('Text Area Field')
     model = models.TextAreaFieldPlugin
+
     form = TextAreaFieldForm
     form_field_widget = forms.Textarea
     fieldset_extra_fields = [
         'help_text',
-        'text_area_columns', 'text_area_rows',
-        'min_value', 'max_value',
+        ('text_area_columns', 'text_area_rows',),
+        ('min_value', 'max_value',),
         'required_message',
         'custom_classes',
     ]
@@ -474,6 +476,7 @@ class TextAreaField(TextField):
 class EmailField(TextField):
     name = _('Email Field')
     model = models.EmailFieldPlugin
+
     form = EmailFieldForm
     form_field = forms.EmailField
     fieldset_extra_fields = [
@@ -507,7 +510,6 @@ class EmailField(TextField):
 
 class FileField(Field):
     name = _('File upload field')
-
     model = models.FileUploadFieldPlugin
 
     form = FileFieldForm
@@ -520,11 +522,14 @@ class FileField(Field):
         'error_messages',
         'validators',
     ]
-    fieldset_general_fields = Field.fieldset_general_fields + [
+    fieldset_general_fields = [
         'upload_to',
-    ]
-    fieldset_extra_fields = Field.fieldset_extra_fields + [
+    ] + Field.fieldset_general_fields
+    fieldset_extra_fields = [
+        'help_text',
         'max_size',
+        'required_message',
+        'custom_classes',
     ]
 
     def get_form_field_kwargs(self, instance):
@@ -585,19 +590,20 @@ class FileField(Field):
 
 class ImageField(FileField):
     name = _('Image upload field')
-
     model = models.ImageUploadFieldPlugin
 
     form = ImageFieldForm
     form_field = RestrictedImageField
     form_field_widget = RestrictedImageField.widget
-    fieldset_general_fields = Field.fieldset_general_fields + [
+    fieldset_general_fields = [
         'upload_to',
-    ]
-    fieldset_extra_fields = Field.fieldset_extra_fields + [
+    ] + Field.fieldset_general_fields
+    fieldset_extra_fields = [
+        'help_text',
         'max_size',
-        'max_width',
-        'max_height',
+        ('max_width', 'max_height',),
+        'required_message',
+        'custom_classes',
     ]
 
     def get_form_field_kwargs(self, instance):
@@ -622,6 +628,7 @@ class BooleanField(Field):
     # checkbox field
     # I add the above because searching for "checkbox" should give me this plugin :)
     name = _('Yes/No Field')
+
     form = BooleanFieldForm
     form_field = forms.BooleanField
     form_field_widget = form_field.widget
@@ -630,6 +637,14 @@ class BooleanField(Field):
         'help_text',
         'required',
         'error_messages',
+    ]
+    fieldset_general_fields = [
+        'label', 'required',
+    ]
+    fieldset_extra_fields = [
+        'help_text',
+        'required_message',
+        'custom_classes',
     ]
 
     def serialize_value(self, instance, value, is_confirmation=False):
@@ -642,6 +657,7 @@ class SelectOptionInline(TabularInline):
 
 class SelectField(Field):
     name = _('Select Field')
+
     form = SelectFieldForm
     form_field = forms.ModelChoiceField
     form_field_widget = form_field.widget
@@ -652,6 +668,10 @@ class SelectField(Field):
         'error_messages',
         'default_value',
     ]
+    fieldset_general_fields = [
+        'label', 'required',
+    ]
+
     inlines = [SelectOptionInline]
 
     def get_form_field_kwargs(self, instance):
@@ -666,6 +686,7 @@ class SelectField(Field):
 
 class MultipleSelectField(SelectField):
     name = _('Multiple Select Field')
+
     form = MultipleSelectFieldForm
     form_field = forms.ModelMultipleChoiceField
     form_field_widget = forms.CheckboxSelectMultiple
@@ -674,6 +695,9 @@ class MultipleSelectField(SelectField):
         'help_text',
         'required',
         'validators',
+    ]
+    fieldset_general_fields = [
+        'label', 'required',
     ]
 
     def get_form_field_validators(self, instance):
@@ -695,16 +719,19 @@ class MultipleSelectField(SelectField):
 
 class RadioSelectField(Field):
     name = _('Radio Select Field')
+
     form = RadioFieldForm
     form_field = forms.ModelChoiceField
     form_field_widget = forms.RadioSelect
-
     form_field_enabled_options = [
         'label',
         'help_text',
         'required',
         'error_messages',
         'default_value',
+    ]
+    fieldset_general_fields = [
+        'label', 'required',
     ]
 
     inlines = [SelectOptionInline]
