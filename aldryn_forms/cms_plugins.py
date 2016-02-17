@@ -443,9 +443,14 @@ class TextAreaField(TextField):
 
     form = TextAreaFieldForm
     form_field_widget = forms.Textarea
+    fieldset_general_fields = [
+        'label',
+        'placeholder_text',
+        ('text_area_columns', 'text_area_rows',),
+        'required',
+    ]
     fieldset_extra_fields = [
         'help_text',
-        ('text_area_columns', 'text_area_rows',),
         ('min_value', 'max_value',),
         'required_message',
         'custom_classes',
@@ -671,6 +676,11 @@ class SelectField(Field):
     fieldset_general_fields = [
         'label', 'required',
     ]
+    fieldset_extra_fields = [
+        'help_text',
+        'required_message',
+        'custom_classes',
+    ]
 
     inlines = [SelectOptionInline]
 
@@ -732,6 +742,11 @@ class RadioSelectField(Field):
     ]
     fieldset_general_fields = [
         'label', 'required',
+    ]
+    fieldset_extra_fields = [
+        'help_text',
+        'required_message',
+        'custom_classes',
     ]
 
     inlines = [SelectOptionInline]
