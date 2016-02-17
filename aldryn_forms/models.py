@@ -288,7 +288,7 @@ class FieldsetPlugin(CMSPlugin):
 class FieldPluginBase(CMSPlugin):
 
     label = models.CharField(_('Label'), max_length=50, blank=True)
-    required = models.BooleanField(_('Field is required'), default=True)
+    required = models.BooleanField(_('Field is required'), default=False)
     required_message = models.TextField(
         verbose_name=_('Error message'),
         blank=True,
