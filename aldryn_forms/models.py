@@ -7,10 +7,14 @@ from distutils.version import LooseVersion
 from django.conf import settings
 from django.core.validators import MaxValueValidator
 from django.db import models
-from django.utils.datastructures import SortedDict
 from django.utils.encoding import python_2_unicode_compatible
 from django.utils.six import text_type
 from django.utils.translation import ugettext_lazy as _
+
+try:
+    from django.utils.datastructures import SortedDict
+except ImportError:
+    from collections import OrderedDict as SortedDict
 
 import cms
 from cms.models.fields import PageField
@@ -288,7 +292,7 @@ class FieldsetPlugin(CMSPlugin):
 class FieldPluginBase(CMSPlugin):
 
     label = models.CharField(_('Label'), max_length=50, blank=True)
-    required = models.BooleanField(_('Field is required'), default=True)
+    required = models.BooleanField(_('Field is required'), default=False)
     required_message = models.TextField(
         verbose_name=_('Error message'),
         blank=True,
@@ -441,71 +445,6 @@ class FormButtonPlugin(CMSPlugin):
 
     def __str__(self):
         return self.label
-
-
-@python_2_unicode_compatible
-class FormData(models.Model):
-    """
-    DEPRECATED: This model will be removed.
-    Replaced by FormSubmission model.
-    """
-    name = models.CharField(max_length=50, db_index=True, editable=False)
-    data = models.TextField(blank=True, null=True, editable=False)
-    language = models.CharField(
-        verbose_name=_('language'),
-        max_length=10,
-        choices=settings.LANGUAGES,
-        default=settings.LANGUAGE_CODE
-    )
-    people_notified = models.TextField(
-        verbose_name=_('users notified'),
-        blank=True,
-        help_text=_('People who got a notification when form was submitted.'),
-        editable=False,
-    )
-    sent_at = models.DateTimeField(auto_now_add=True)
-
-    class Meta:
-        verbose_name = _('Form submission (Old)')
-        verbose_name_plural = _('Form submissions (Old)')
-
-    def __str__(self):
-        return self.name
-
-    def get_data(self):
-        return self.get_form_data()
-
-    def get_form_data(self):
-        fields = self.data.splitlines()
-        # this will be a list of dictionaries mapping field name to value. we
-        # use this approach because using field name as key might result in
-        # overriding values since fields can have the same name
-        form_data = []
-
-        for field in fields:
-            bits = field.split(':')
-            # this is an unfortunate design flaw on this model. ":" was chosen
-            # as delimiter to separate field_name from field value and so if a
-            # user ever enters ":" in any one of the two then we can't really
-            # reliable get the name or value, so for now ignore that field :(
-            if len(bits) == 2:
-                data = FieldData(label=bits[0], value=bits[1])
-                form_data.append(data)
-        return form_data
-
-    def set_form_data(self, form):
-        grouped_data = form.get_serialized_field_choices()
-        formatted_data = [u'{0}: {1}'.format(*group) for group in grouped_data]
-        self.data = u'\n'.join(formatted_data)
-
-    def get_recipients(self):
-        return self.people_notified.split(':::')
-
-    def set_recipients(self, recipients):
-        self.people_notified = ':::'.join(recipients)
-
-    def set_users_notified(self, recipients):
-        self.set_recipients(recipients)
 
 
 @python_2_unicode_compatible

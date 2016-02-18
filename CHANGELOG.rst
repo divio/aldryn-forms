@@ -1,6 +1,18 @@
 Changelog
 =========
 
+2.1.0 (UNRELEASED)
+------------------
+* Removed deprecated ``formdata``
+* Renamed ``Email Notification Form`` to ``Form (Advanced)``
+* Optimized admin export templates
+* Add stripped default django templates to ``/aldryn_forms/templates``
+* Implement "Advanced Settings" when configuring plugins
+* Adapt default setting ``show_all_recipients`` for aldryn users
+* Removed not required options from form fields
+* Set default for "Field is required" to ``False``
+* Fix Django 1.9 issues
+
 2.0.4 (2016-01-20)
 ------------------
 * Show label when using radio fields

@@ -9,10 +9,7 @@ from django.utils.text import slugify
 from django.utils.translation import ugettext, ugettext_lazy as _
 
 from .exporter import Exporter
-from ..models import (
-    FormData,
-    FormSubmission,
-)
+from ..models import FormSubmission
 
 
 def form_choices(modelClass):
@@ -94,10 +91,6 @@ class BaseFormExportForm(forms.Form):
             queryset = queryset.filter(sent_at__lt=upper)
 
         return queryset
-
-
-class FormDataExportForm(BaseFormExportForm):
-    model = FormData
 
 
 class FormSubmissionExportForm(BaseFormExportForm):

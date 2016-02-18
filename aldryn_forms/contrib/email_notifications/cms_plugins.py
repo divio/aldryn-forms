@@ -26,6 +26,14 @@ class NewEmailNotificationInline(admin.StackedInline):
     verbose_name = _('new email notification')
     verbose_name_plural = _('new email notifications')
 
+    fieldsets = (
+        (None, {
+            'fields': (
+                'theme',
+            )
+        }),
+    )
+
     def get_queryset(self, request):
         queryset = super(NewEmailNotificationInline, self).get_queryset(request)
         return queryset.none()
@@ -33,24 +41,23 @@ class NewEmailNotificationInline(admin.StackedInline):
 
 class ExistingEmailNotificationInline(admin.StackedInline):
     model = EmailNotification
-    fieldsets = [
-        (
-            None,
-            {'fields': ['theme']}
-        ),
-        (
-            None,
-            {'fields': ['text_variables']}
-        ),
-        (
-            'Recipient',
-            {'fields': ['to_user', ('to_name', 'to_email')]}
-        ),
-        (
-            'Sender',
-            {'fields': [('from_name', 'from_email')]}
-        ),
-    ]
+
+    fieldsets = (
+        (None, {
+            'fields': (
+                'theme',
+            )
+        }),
+        ('Recipients', {
+            'classes': ('collapse',),
+            'fields': (
+                'text_variables',
+                'to_user',
+                ('to_name', 'to_email'),
+                ('from_name', 'from_email'),
+            )
+        }),
+    )
 
     readonly_fields = ['text_variables']
     text_variables_help_text = _('variables can be used with by '
@@ -82,7 +89,10 @@ class ExistingEmailNotificationInline(admin.StackedInline):
             # add the body_html field only if email is allowed
             # to be sent in html version.
             fields.append('body_html')
-        return [('Email', {'fields': fields})]
+        return [('Email', {
+            'classes': ('collapse',),
+            'fields': fields
+        })]
 
     def text_variables(self, obj):
         if obj.pk is None:
@@ -108,7 +118,7 @@ class ExistingEmailNotificationInline(admin.StackedInline):
 
 
 class EmailNotificationForm(FormPlugin):
-    name = _('Email Notification Form')
+    name = _('Form (Advanced)')
     model = EmailNotificationFormPlugin
     inlines = [
         ExistingEmailNotificationInline,
@@ -116,16 +126,24 @@ class EmailNotificationForm(FormPlugin):
     ]
     notification_conf_class = DefaultNotificationConf
 
-    fieldsets = [
-        (
-            'General options',
-            {'fields': ['name', 'form_template', 'error_message', 'success_message', 'custom_classes']}
-        ),
-        (
-            'Redirect',
-            {'fields': ['redirect_type', 'page', 'url']}
-        )
-    ]
+    fieldsets = (
+        (None, {
+            'fields': (
+                'name',
+                'redirect_type',
+                ('page', 'url'),
+            )
+        }),
+        ('Advanced Settings', {
+            'classes': ('collapse',),
+            'fields': (
+                'form_template',
+                'error_message',
+                'success_message',
+                'custom_classes',
+            )
+        }),
+    )
 
     def get_inline_instances(self, request, obj=None):
         inlines = super(EmailNotificationForm, self).get_inline_instances(request, obj)

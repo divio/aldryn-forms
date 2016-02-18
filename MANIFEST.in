@@ -2,4 +2,5 @@ include LICENSE.txt
 recursive-include aldryn_forms/boilerplates *
 recursive-include aldryn_forms/locale *
 recursive-include aldryn_forms/migrations *
+recursive-include aldryn_forms/templates *
 recursive-exclude * *.pyc

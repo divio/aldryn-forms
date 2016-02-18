@@ -1,0 +1,43 @@
+{% load i18n cms_tags sekizai_tags %}
+
+<form method="post"
+    {% if form.is_multipart %}enctype="multipart/form-data"{% endif %}
+    {% if instance.custom_classes %} class="{{ instance.custom_classes }}"{% endif %}>
+
+    {% if form.non_field_errors %}
+        {% for error in form.non_field_errors %}
+            <p>{{ error }}</p>
+        {% endfor %}
+    {% endif %}
+
+    {% if form_success_url %}
+        <p>
+            {% blocktrans %}
+                Thank you for submitting your information, you will be
+                <a href="{{ form_success_url }}">redirected shortly</a>.
+            {% endblocktrans %}
+        </p>
+    {% endif %}
+
+    {% if not form_success_url %}
+        {% for plugin in instance.child_plugin_instances %}
+            {% render_plugin plugin %}
+        {% endfor %}
+    {% endif %}
+
+    {% csrf_token %}
+    {% for field in form.hidden_fields %}
+        {{ field }}
+    {% endfor %}
+</form>
+
+{# INFO: this solution is currently required because we can't redirect from a plugin. #}
+{% if form_success_url %}
+    {% addtoblock "js" %}
+        <script>
+            setTimeout(function () {
+                window.location.href = '{{ form_success_url }}';
+            }, 2000);
+        </script>
+    {% endaddtoblock %}
+{% endif %}
