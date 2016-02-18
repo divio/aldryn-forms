@@ -782,6 +782,12 @@ else:
         form_field = CaptchaField
         form_field_widget = CaptchaTextInput
         form_field_enabled_options = ['label', 'error_messages']
+        fieldset_general_fields = [
+            'label',
+        ]
+        fieldset_advanced_fields = [
+            'required_message',
+        ]
 
         def serialize_field(self, *args, **kwargs):
             # None means don't serialize me
