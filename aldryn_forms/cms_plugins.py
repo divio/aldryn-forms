@@ -268,7 +268,7 @@ class Field(FormElement):
     fieldset_general_fields = [
         'label', 'placeholder_text', 'required',
     ]
-    fieldset_extra_fields = [
+    fieldset_advanced_fields = [
         'help_text',
         ('min_value', 'max_value',),
         'required_message',
@@ -379,12 +379,12 @@ class Field(FormElement):
             (None, {'fields': list(self.fieldset_general_fields)}),
         ]
 
-        if self.fieldset_extra_fields:
+        if self.fieldset_advanced_fields:
             fieldsets.append(
                 (
                     _('Advanced Settings'), {
                         'classes': ('collapse',),
-                        'fields': list(self.fieldset_extra_fields),
+                        'fields': list(self.fieldset_advanced_fields),
                     }
                 ))
         return fieldsets
@@ -454,7 +454,7 @@ class TextAreaField(TextField):
         ('text_area_rows', 'text_area_columns',),
         'required',
     ]
-    fieldset_extra_fields = [
+    fieldset_advanced_fields = [
         'help_text',
         ('min_value', 'max_value',),
         'required_message',
@@ -489,11 +489,11 @@ class EmailField(TextField):
 
     form = EmailFieldForm
     form_field = forms.EmailField
-    fieldset_extra_fields = [
+    fieldset_advanced_fields = [
         'email_send_notification',
         'email_subject',
         'email_body',
-    ] + Field.fieldset_extra_fields
+    ] + Field.fieldset_advanced_fields
     email_template_base = 'aldryn_forms/emails/user/notification'
 
     def send_notification_email(self, email, form, form_field_instance):
@@ -535,7 +535,7 @@ class FileField(Field):
     fieldset_general_fields = [
         'upload_to',
     ] + Field.fieldset_general_fields
-    fieldset_extra_fields = [
+    fieldset_advanced_fields = [
         'help_text',
         'max_size',
         'required_message',
@@ -608,7 +608,7 @@ class ImageField(FileField):
     fieldset_general_fields = [
         'upload_to',
     ] + Field.fieldset_general_fields
-    fieldset_extra_fields = [
+    fieldset_advanced_fields = [
         'help_text',
         'max_size',
         ('max_width', 'max_height',),
@@ -651,7 +651,7 @@ class BooleanField(Field):
     fieldset_general_fields = [
         'label', 'required',
     ]
-    fieldset_extra_fields = [
+    fieldset_advanced_fields = [
         'help_text',
         'required_message',
         'custom_classes',
@@ -681,7 +681,7 @@ class SelectField(Field):
     fieldset_general_fields = [
         'label', 'required',
     ]
-    fieldset_extra_fields = [
+    fieldset_advanced_fields = [
         'help_text',
         'required_message',
         'custom_classes',
@@ -748,7 +748,7 @@ class RadioSelectField(Field):
     fieldset_general_fields = [
         'label', 'required',
     ]
-    fieldset_extra_fields = [
+    fieldset_advanced_fields = [
         'help_text',
         'required_message',
         'custom_classes',
