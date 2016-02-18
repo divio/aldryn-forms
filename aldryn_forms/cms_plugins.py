@@ -714,6 +714,9 @@ class MultipleSelectField(SelectField):
     fieldset_general_fields = [
         'label', 'required',
     ]
+    fieldset_advanced_fields = [
+        ('min_value', 'max_value'),
+    ]
 
     def get_form_field_validators(self, instance):
         validators = []
