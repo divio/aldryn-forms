@@ -367,22 +367,27 @@ class Field(FormElement):
         return context
 
     def get_fieldsets(self, request, obj=None):
-        try:
-            return self.declared_fieldsets
-        except AttributeError:
-            fieldsets = [
-                (None, {'fields': list(self.fieldset_general_fields)}),
-            ]
+        if self.fieldsets or self.fields:
+            # Allows overriding using fieldsets or fields. If you do that none
+            # of the automatic stuff kicks in and you have to take care of
+            # declaring all fields you want on the form!
+            # This ends up having the same behaviour as declared_fieldsets in
+            # Django <1.9 had.
+            return super(self, Field).get_fieldsets(request, obj=obj)
 
-            if self.fieldset_extra_fields:
-                fieldsets.append(
-                    (
-                        _('Advanced Settings'), {
-                            'classes': ('collapse',),
-                            'fields': list(self.fieldset_extra_fields),
-                        }
-                    ))
-            return fieldsets
+        fieldsets = [
+            (None, {'fields': list(self.fieldset_general_fields)}),
+        ]
+
+        if self.fieldset_extra_fields:
+            fieldsets.append(
+                (
+                    _('Advanced Settings'), {
+                        'classes': ('collapse',),
+                        'fields': list(self.fieldset_extra_fields),
+                    }
+                ))
+        return fieldsets
 
     def get_error_messages(self, instance):
         if instance.required_message:
