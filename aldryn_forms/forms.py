@@ -37,6 +37,7 @@ class RestrictedFileField(FileSizeCheckMixin, forms.FileField):
 
 
 class RestrictedImageField(FileSizeCheckMixin, forms.ImageField):
+
     def __init__(self, *args, **kwargs):
         self.max_width = kwargs.pop('max_width', None)
         self.max_height = kwargs.pop('max_height', None)
@@ -45,11 +46,16 @@ class RestrictedImageField(FileSizeCheckMixin, forms.ImageField):
     def clean(self, *args, **kwargs):
         data = super(RestrictedImageField, self).clean(*args, **kwargs)
 
-        if data is None:
-            return
+        if data is None or not any([self.max_width, self.max_height]):
+            return data
 
-        with Image.open(data) as img:
-            width, height = img.size
+        if hasattr(data, 'image'):
+            # Django >= 1.8
+            width, height = data.image.size
+        else:
+            width, height = Image.open(data).size
+            # cleanup after ourselves
+            data.seek(0)
 
         if self.max_width and width > self.max_width:
             raise forms.ValidationError(
