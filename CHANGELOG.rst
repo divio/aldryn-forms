@@ -1,7 +1,11 @@
 Changelog
 =========
 
-2.1.0 (2016-02-09)
+2.1.1 (2016-03-09)
+------------------
+* Fixed image upload field on Django >= 1.8
+
+2.1.0 (2016-02-18)
 ------------------
 * Removed deprecated ``formdata``
 * Renamed ``Email Notification Form`` to ``Form (Advanced)``
@@ -12,7 +16,6 @@ Changelog
 * Removed not required options from form fields
 * Set default for "Field is required" to ``False``
 * Fix Django 1.9 issues
-* Fixed image upload field on Django >= 1.8
 
 2.0.4 (2016-01-20)
 ------------------
