@@ -3,7 +3,7 @@ Aldryn Forms App
 ================
 
 Aldryn Forms allows you to build flexible HTML forms for your `Aldryn <http://aldryn.com>`_ and `django CMS 
-<http://django-cms>`_ projects, and to integrate them directly in your pages.
+<http://www.django-cms.org>`_ projects, and to integrate them directly in your pages.
 
 Forms can be assembled using the form builder, with the familiar simple drag-and-drop interface of the django CMS
 plugin system.
