@@ -419,7 +419,7 @@ msgstr "Name"
 
 #: models.py:69
 msgid "Used to filter out form submissions."
-msgstr "Benutzt um die Formular-Ãœbertragung zu filtern."
+msgstr "Benutzt um die Formular-Übertragung zu filtern."
 
 #: models.py:72 models.py:230
 msgid "Error message"
