@@ -69,7 +69,8 @@ class FormPlugin(FieldContainer):
             'fields': (
                 'name',
                 'redirect_type',
-                ('page', 'url'),
+                'page',
+                'url',
             )
         }),
         ('Advanced Settings', {
