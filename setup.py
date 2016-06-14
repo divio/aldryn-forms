@@ -6,7 +6,6 @@ REQUIREMENTS = [
     'django-cms>=3.0',
     'django-emailit',
     'djangocms-text-ckeditor',
-    'django-simple-captcha',
     'django-tablib',
     'tablib',
     'pillow',
@@ -14,6 +13,10 @@ REQUIREMENTS = [
     'django-sizefield',
     'aldryn-boilerplates>=0.6',
 ]
+
+EXTRA_REQUIREMENTS = {
+    'captcha': ['django-simple-captcha']
+}
 
 CLASSIFIERS = [
     'Development Status :: 5 - Production/Stable',
@@ -39,6 +42,7 @@ setup(
     license='LICENSE.txt',
     platforms=['OS Independent'],
     install_requires=REQUIREMENTS,
+    extras_required=EXTRA_REQUIREMENTS,
     classifiers=CLASSIFIERS,
     include_package_data=True,
     zip_safe=False
