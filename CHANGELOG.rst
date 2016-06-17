@@ -1,7 +1,7 @@
 Changelog
 =========
 
-2.1.2 (UNRELEASED)
+2.1.2 (2016-06-17)
 ------------------
 * Added Transifex support
 * Pulled translations from Transifex (German)
