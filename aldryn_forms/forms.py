@@ -59,16 +59,20 @@ class RestrictedImageField(FileSizeCheckMixin, forms.ImageField):
 
         if self.max_width and width > self.max_width:
             raise forms.ValidationError(
-                ugettext('Image width must be under %(max_size)s pixels. '
-                         'Current width is %(actual_size)s pixels.') % {
+                ugettext(
+                    'Image width must be under %(max_size)s pixels. '
+                    'Current width is %(actual_size)s pixels.'
+                ) % {
                     'max_size': self.max_width,
                     'actual_size': width,
                 }
 
         if self.max_height and height > self.max_height:
             raise forms.ValidationError(
-                ugettext('Image height must be under %(max_size)s pixels. '
-                         'Current height is %(actual_size)s pixels.') % {
+                ugettext(
+                    'Image height must be under %(max_size)s pixels. '
+                    'Current height is %(actual_size)s pixels.'
+                ) % {
                     'max_size': self.max_height,
                     'actual_size': height,
                 })
