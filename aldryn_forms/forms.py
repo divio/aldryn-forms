@@ -65,7 +65,7 @@ class RestrictedImageField(FileSizeCheckMixin, forms.ImageField):
                 ) % {
                     'max_size': self.max_width,
                     'actual_size': width,
-                }
+                })
 
         if self.max_height and height > self.max_height:
             raise forms.ValidationError(
