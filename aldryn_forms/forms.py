@@ -25,10 +25,10 @@ class FileSizeCheckMixin(object):
 
         if self.max_size is not None and data.size > self.max_size:
             raise forms.ValidationError(
-                ugettext('File size must be under %s. Current file size is %s.') % (
-                    filesizeformat(self.max_size),
-                    filesizeformat(data.size),
-                ))
+                ugettext('File size must be under %(max_size)s. Current file size is %(actual_size)s.') % {
+                    'max_size': filesizeformat(self.max_size),
+                    'actual_size': filesizeformat(data.size),
+                })
         return data
 
 
@@ -59,13 +59,19 @@ class RestrictedImageField(FileSizeCheckMixin, forms.ImageField):
 
         if self.max_width and width > self.max_width:
             raise forms.ValidationError(
-                ugettext('Image width must be under %s pixels. '
-                         'Current width is %s pixels.') % (self.max_width, width))
+                ugettext('Image width must be under %(max_size)s pixels. '
+                         'Current width is %(actual_size)s pixels.') % {
+                    'max_size': self.max_width,
+                    'actual_size': width,
+                }
 
         if self.max_height and height > self.max_height:
             raise forms.ValidationError(
-                ugettext('Image height must be under %s pixels. '
-                         'Current height is %s pixels.') % (self.max_height, height))
+                ugettext('Image height must be under %(max_size)s pixels. '
+                         'Current height is %(actual_size)s pixels.') % {
+                    'max_size': self.max_height,
+                    'actual_size': height,
+                })
 
         return data
 
