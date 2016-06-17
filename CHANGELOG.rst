@@ -1,6 +1,12 @@
 Changelog
 =========
 
+2.1.2 (UNRELEASED)
+------------------
+* Added Transifex support
+* Pulled translations from Transifex (German)
+* Adapted translation strings in templates
+
 2.1.1 (2016-03-09)
 ------------------
 * Fixed image upload field on Django >= 1.8
