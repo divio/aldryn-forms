@@ -1,6 +1,10 @@
 Changelog
 =========
 
+2.1.3 (Unreleased)
+------------------
+* Added missing `control-label`` classes in bootstrap templates
+
 2.1.2 (2016-06-17)
 ------------------
 * Added Transifex support
