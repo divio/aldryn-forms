@@ -1,6 +1,4 @@
 # -*- coding: utf-8 -*-
-from email.utils import formataddr
-
 from PIL import Image
 
 from django import forms

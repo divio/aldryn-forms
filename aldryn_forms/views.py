@@ -4,7 +4,6 @@ from django.http import HttpResponseRedirect, HttpResponseBadRequest
 from django.shortcuts import render_to_response
 from django.template import RequestContext
 
-from cms.api import get_page_draft
 from cms.utils.page_resolver import get_page_from_request
 
 from .models import FormPlugin
