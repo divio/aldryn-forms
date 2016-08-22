@@ -25,11 +25,31 @@ from filer.fields.folder import FilerFolderField
 
 from sizefield.models import FileSizeField
 
+from . import compat
 from .helpers import is_form_element
 
 
 CMS_31 = LooseVersion(cms.__version__) >= LooseVersion('3.1')
 AUTH_USER_MODEL = getattr(settings, 'AUTH_USER_MODEL', 'auth.User')
+
+
+if compat.LTE_DJANGO_1_6:
+    # related_name='%(app_label)s_%(class)s' does not work on  Django 1.6
+    CMSPluginField = partial(
+        models.OneToOneField,
+        to=CMSPlugin,
+        related_name='+',
+        parent_link=True,
+    )
+else:
+    # Once djangoCMS < 3.3.1 support is dropped
+    # Remove the explicit cmsplugin_ptr field declarations
+    CMSPluginField = partial(
+        models.OneToOneField,
+        to=CMSPlugin,
+        related_name='%(app_label)s_%(class)s',
+        parent_link=True,
+    )
 
 FieldData = namedtuple(
     'FieldData',
@@ -151,6 +171,8 @@ class FormPlugin(CMSPlugin):
         limit_choices_to={'is_staff': True},
         help_text=_('People who will get the form content via e-mail.')
     )
+
+    cmsplugin_ptr = CMSPluginField()
 
     def __str__(self):
         return self.name
@@ -283,6 +305,7 @@ class FieldsetPlugin(CMSPlugin):
     legend = models.CharField(_('Legend'), max_length=50, blank=True)
     custom_classes = models.CharField(
         verbose_name=_('custom css classes'), max_length=200, blank=True)
+    cmsplugin_ptr = CMSPluginField()
 
     def __str__(self):
         return self.legend or text_type(self.pk)
@@ -329,6 +352,7 @@ class FieldPluginBase(CMSPlugin):
 
     custom_classes = models.CharField(
         verbose_name=_('custom css classes'), max_length=200, blank=True)
+    cmsplugin_ptr = CMSPluginField()
 
     class Meta:
         abstract = True
@@ -442,6 +466,7 @@ class FormButtonPlugin(CMSPlugin):
     label = models.CharField(_('Label'), max_length=50)
     custom_classes = models.CharField(
         verbose_name=_('custom css classes'), max_length=200, blank=True)
+    cmsplugin_ptr = CMSPluginField()
 
     def __str__(self):
         return self.label

@@ -56,7 +56,7 @@ def get_plugin_tree(model, **kwargs):
     plugin_list = [plugin]
     while get_next_level(current_level).exists():
         current_level = get_next_level(current_level)
-        current_level = downcast_plugins(queryset=current_level)
+        current_level = downcast_plugins(current_level)
         plugin_list += current_level
     return build_plugin_tree(plugin_list)[0]
 

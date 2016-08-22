@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
 
+from django.conf import settings
 from django.db import migrations, models
 
 
@@ -18,7 +19,7 @@ class Migration(migrations.Migration):
                 ('name', models.CharField(verbose_name='form name', max_length=50, editable=False, db_index=True)),
                 ('data', models.TextField(editable=False, blank=True)),
                 ('recipients', models.TextField(help_text='People who got a notification when form was submitted.', verbose_name='users notified', editable=False, blank=True)),
-                ('language', models.CharField(default=b'en', max_length=10, verbose_name='form language', choices=[(b'de', b'German'), (b'en', b'English')])),
+                ('language', models.CharField(default=settings.LANGUAGE_CODE, max_length=10, verbose_name='form language', choices=settings.LANGUAGES)),
                 ('form_url', models.CharField(max_length=255, verbose_name='form url', blank=True)),
                 ('sent_at', models.DateTimeField(auto_now_add=True)),
             ],
