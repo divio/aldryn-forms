@@ -2,7 +2,6 @@
 from functools import partial
 import json
 from collections import defaultdict, namedtuple
-from distutils.version import LooseVersion
 
 from django.conf import settings
 from django.core.validators import MaxValueValidator
@@ -16,7 +15,6 @@ try:
 except ImportError:
     from collections import OrderedDict as SortedDict
 
-import cms
 from cms.models.fields import PageField
 from cms.models.pluginmodel import CMSPlugin
 from cms.utils.plugins import build_plugin_tree, downcast_plugins
@@ -29,7 +27,6 @@ from . import compat
 from .helpers import is_form_element
 
 
-CMS_31 = LooseVersion(cms.__version__) >= LooseVersion('3.1')
 AUTH_USER_MODEL = getattr(settings, 'AUTH_USER_MODEL', 'auth.User')
 
 
@@ -269,13 +266,7 @@ class FormPlugin(CMSPlugin):
         from .utils import get_nested_plugins
 
         if self.child_plugin_instances is None:
-            # 3.1 and 3.0 compatibility
-            if CMS_31:
-                # default ordering is by path
-                ordering = ('path',)
-            else:
-                ordering = ('tree_id', 'level', 'position')
-
+            ordering = ('tree_id', 'level', 'position')
             descendants = self.get_descendants().order_by(*ordering)
             # Set parent_id to None in order to
             # fool the build_plugin_tree function.
