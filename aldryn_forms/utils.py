@@ -2,10 +2,7 @@
 from django.forms.forms import NON_FIELD_ERRORS
 
 from cms.utils.moderator import get_cmsplugin_queryset
-try:
-    from cms.utils.plugins import downcast_plugins, build_plugin_tree
-except ImportError:
-    from cms.plugins.utils import downcast_plugins, build_plugin_tree
+from cms.utils.plugins import downcast_plugins, build_plugin_tree
 
 
 def get_user_model():

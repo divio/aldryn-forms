@@ -84,9 +84,6 @@ class FormPlugin(FieldContainer):
     )
 
     def render(self, context, instance, placeholder):
-        # remove once cms 3.0.6 is released
-        self.render_template = self.get_render_template(context, instance, placeholder)
-
         context = super(FormPlugin, self).render(context, instance, placeholder)
         request = context['request']
 
@@ -353,8 +350,6 @@ class Field(FormElement):
         return {}
 
     def render(self, context, instance, placeholder):
-        templates = self.get_template_names(instance)
-        self.render_template = select_template(templates)
         context = super(Field, self).render(context, instance, placeholder)
 
         form = context.get('form')
@@ -364,6 +359,10 @@ class Field(FormElement):
             field_name = form_plugin.get_form_field_name(field=instance)
             context['field'] = form[field_name]
         return context
+
+    def get_render_template(self, context, instance, placeholder):
+        templates = self.get_template_names(instance)
+        return select_template(templates)
 
     def get_fieldsets(self, request, obj=None):
         if self.fieldsets or self.fields:
