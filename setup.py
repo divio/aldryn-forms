@@ -3,7 +3,7 @@ from setuptools import setup, find_packages
 from aldryn_forms import __version__
 
 REQUIREMENTS = [
-    'django-cms>=3.0',
+    'django-cms>=3.2',
     'django-emailit',
     'djangocms-text-ckeditor',
     'django-simple-captcha',
