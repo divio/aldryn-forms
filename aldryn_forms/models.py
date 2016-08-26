@@ -266,8 +266,7 @@ class FormPlugin(CMSPlugin):
         from .utils import get_nested_plugins
 
         if self.child_plugin_instances is None:
-            ordering = ('tree_id', 'level', 'position')
-            descendants = self.get_descendants().order_by(*ordering)
+            descendants = self.get_descendants().order_by('path')
             # Set parent_id to None in order to
             # fool the build_plugin_tree function.
             # This is sadly necessary to avoid getting all nodes
