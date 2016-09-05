@@ -1,7 +1,7 @@
 Changelog
 =========
 
-2.1.3 (Unreleased)
+2.1.3 (2016-09-05)
 ------------------
 * Added missing `control-label`` classes in bootstrap templates
 * Fixed related_name inconsistency with django CMS 3.3.1
