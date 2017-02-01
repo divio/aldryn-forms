@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
-from django.conf.urls import patterns, url
+from django.conf.urls import url
 
 
-urlpatterns = patterns('aldryn_forms.views',
-    url(r'^$', 'submit_form_view', name='aldryn_forms_submit_form'),
-)
+urlpatterns = [
+    url(r'^$', 'aldryn_forms.views.submit_form_view', name='aldryn_forms_submit_form'),
+]
