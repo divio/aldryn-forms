@@ -30,10 +30,16 @@ class BaseFormSubmissionAdmin(admin.ModelAdmin):
 
     def get_data_for_display(self, obj):
         data = obj.get_form_data()
-        html = render_to_string(
-            template_name='admin/aldryn_forms/display/submission_data.html',
-            dictionary={'data': data}
-        )
+        try:
+            html = render_to_string(
+                template_name='admin/aldryn_forms/display/submission_data.html',
+                dictionary={'data': data}
+            )
+        except TypeError:
+            html = render_to_string(
+                template_name='admin/aldryn_forms/display/submission_data.html',
+                context={'data': data}
+            )
         return html
     get_data_for_display.allow_tags = True
     get_data_for_display.short_description = _('data')
@@ -46,24 +52,30 @@ class BaseFormSubmissionAdmin(admin.ModelAdmin):
 
     def get_recipients_for_display(self, obj):
         people_list = self.get_recipients(obj)
-        html = render_to_string(
-            template_name='admin/aldryn_forms/display/recipients.html',
-            dictionary={'people': people_list}
-        )
+        try:
+            html = render_to_string(
+                template_name='admin/aldryn_forms/display/recipients.html',
+                dictionary={'people': people_list}
+            )
+        except TypeError:
+            html = render_to_string(
+                template_name='admin/aldryn_forms/display/recipients.html',
+                context={'people': people_list}
+            )
         return html
     get_recipients_for_display.allow_tags = True
     get_recipients_for_display.short_description = _('people notified')
 
     def get_urls(self):
-        from django.conf.urls import patterns, url
+        from django.conf.urls import url
 
         def pattern(regex, fn, name):
             args = [regex, self.admin_site.admin_view(fn)]
             return url(*args, name=self.get_admin_url(name))
 
-        url_patterns = patterns('',
+        url_patterns = [
             pattern(r'export/$', self.get_form_export_view(), 'export'),
-        )
+        ]
 
         return url_patterns + super(BaseFormSubmissionAdmin, self).get_urls()
 
