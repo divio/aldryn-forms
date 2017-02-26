@@ -30,16 +30,10 @@ class BaseFormSubmissionAdmin(admin.ModelAdmin):
 
     def get_data_for_display(self, obj):
         data = obj.get_form_data()
-        try:
-            html = render_to_string(
-                template_name='admin/aldryn_forms/display/submission_data.html',
-                dictionary={'data': data}
-            )
-        except TypeError:
-            html = render_to_string(
-                template_name='admin/aldryn_forms/display/submission_data.html',
-                context={'data': data}
-            )
+        html = render_to_string(
+            'admin/aldryn_forms/display/submission_data.html',
+            {'data': data}
+        )
         return html
     get_data_for_display.allow_tags = True
     get_data_for_display.short_description = _('data')
@@ -52,16 +46,10 @@ class BaseFormSubmissionAdmin(admin.ModelAdmin):
 
     def get_recipients_for_display(self, obj):
         people_list = self.get_recipients(obj)
-        try:
-            html = render_to_string(
-                template_name='admin/aldryn_forms/display/recipients.html',
-                dictionary={'people': people_list}
-            )
-        except TypeError:
-            html = render_to_string(
-                template_name='admin/aldryn_forms/display/recipients.html',
-                context={'people': people_list}
-            )
+        html = render_to_string(
+            'admin/aldryn_forms/display/recipients.html',
+            {'people': people_list},
+        )
         return html
     get_recipients_for_display.allow_tags = True
     get_recipients_for_display.short_description = _('people notified')
