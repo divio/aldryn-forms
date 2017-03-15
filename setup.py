@@ -13,6 +13,7 @@ REQUIREMENTS = [
     'django-filer',
     'django-sizefield',
     'aldryn-boilerplates>=0.6',
+    'Django>=1.7',
 ]
 
 CLASSIFIERS = [
