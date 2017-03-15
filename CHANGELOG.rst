@@ -1,8 +1,8 @@
 Changelog
 =========
 
-next
-----
+2.2.0 (2017-03-15)
+------------------
 * Django 1.10 support
 * Dropped Django < 1.7 support (south migrations removed)
 
