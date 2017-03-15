@@ -1,6 +1,11 @@
 Changelog
 =========
 
+next
+----
+* Django 1.10 support
+* Dropped Django < 1.7 support (south migrations removed)
+
 2.1.3 (2016-09-05)
 ------------------
 * Added missing `control-label`` classes in bootstrap templates
