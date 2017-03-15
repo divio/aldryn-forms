@@ -126,7 +126,7 @@ class FormPlugin(CMSPlugin):
 
     name = models.CharField(
         verbose_name=_('Name'),
-        max_length=50,
+        max_length=255,
         help_text=_('Used to filter out form submissions.')
     )
     error_message = models.TextField(
@@ -152,10 +152,10 @@ class FormPlugin(CMSPlugin):
     page = PageField(verbose_name=_('CMS Page'), blank=True, null=True)
     url = models.URLField(_('Absolute URL'), blank=True, null=True)
     custom_classes = models.CharField(
-        verbose_name=_('custom css classes'), max_length=200, blank=True)
+        verbose_name=_('custom css classes'), max_length=255, blank=True)
     form_template = models.CharField(
         verbose_name=_('form template'),
-        max_length=200,
+        max_length=255,
         choices=FORM_TEMPLATES,
         default=DEFAULT_FORM_TEMPLATE,
     )
@@ -292,9 +292,9 @@ class FormPlugin(CMSPlugin):
 @python_2_unicode_compatible
 class FieldsetPlugin(CMSPlugin):
 
-    legend = models.CharField(_('Legend'), max_length=50, blank=True)
+    legend = models.CharField(_('Legend'), max_length=255, blank=True)
     custom_classes = models.CharField(
-        verbose_name=_('custom css classes'), max_length=200, blank=True)
+        verbose_name=_('custom css classes'), max_length=255, blank=True)
     cmsplugin_ptr = CMSPluginField()
 
     def __str__(self):
@@ -304,7 +304,7 @@ class FieldsetPlugin(CMSPlugin):
 @python_2_unicode_compatible
 class FieldPluginBase(CMSPlugin):
 
-    label = models.CharField(_('Label'), max_length=50, blank=True)
+    label = models.CharField(_('Label'), max_length=255, blank=True)
     required = models.BooleanField(_('Field is required'), default=False)
     required_message = models.TextField(
         verbose_name=_('Error message'),
@@ -315,7 +315,7 @@ class FieldPluginBase(CMSPlugin):
     )
     placeholder_text = models.CharField(
         verbose_name=_('Placeholder text'),
-        max_length=50,
+        max_length=255,
         blank=True,
         help_text=_('Default text in a form. Disappears when user starts '
                     'typing. Example: "email@exmaple.com"')
@@ -341,7 +341,7 @@ class FieldPluginBase(CMSPlugin):
     )
 
     custom_classes = models.CharField(
-        verbose_name=_('custom css classes'), max_length=200, blank=True)
+        verbose_name=_('custom css classes'), max_length=255, blank=True)
     cmsplugin_ptr = CMSPluginField()
 
     class Meta:
@@ -390,7 +390,7 @@ class EmailFieldPlugin(FieldPluginBase):
     )
     email_subject = models.CharField(
         verbose_name=_('email subject'),
-        max_length=200,
+        max_length=255,
         blank=True,
         default='',
         help_text=_('Used as the email subject when email_send_notification '
@@ -443,7 +443,7 @@ class ImageUploadFieldPlugin(FileFieldPluginBase):
 class Option(models.Model):
 
     field = models.ForeignKey(FieldPlugin, editable=False)
-    value = models.CharField(_('Value'), max_length=50)
+    value = models.CharField(_('Value'), max_length=255)
     default_value = models.BooleanField(_('Default'), default=False)
 
     def __str__(self):
@@ -453,9 +453,9 @@ class Option(models.Model):
 @python_2_unicode_compatible
 class FormButtonPlugin(CMSPlugin):
 
-    label = models.CharField(_('Label'), max_length=50)
+    label = models.CharField(_('Label'), max_length=255)
     custom_classes = models.CharField(
-        verbose_name=_('custom css classes'), max_length=200, blank=True)
+        verbose_name=_('custom css classes'), max_length=255, blank=True)
     cmsplugin_ptr = CMSPluginField()
 
     def __str__(self):
@@ -465,7 +465,7 @@ class FormButtonPlugin(CMSPlugin):
 @python_2_unicode_compatible
 class FormSubmission(models.Model):
     name = models.CharField(
-        max_length=50,
+        max_length=255,
         verbose_name=_('form name'),
         db_index=True,
         editable=False
