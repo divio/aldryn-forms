@@ -4,7 +4,6 @@ import json
 from collections import defaultdict, namedtuple
 
 from django.conf import settings
-from django.core.validators import MaxValueValidator
 from django.db import models
 from django.utils.encoding import python_2_unicode_compatible
 from django.utils.six import text_type
@@ -337,7 +336,6 @@ class FieldPluginBase(CMSPlugin):
         _('Max value'),
         blank=True,
         null=True,
-        validators=[MaxValueValidator(255)]
     )
 
     custom_classes = models.CharField(
