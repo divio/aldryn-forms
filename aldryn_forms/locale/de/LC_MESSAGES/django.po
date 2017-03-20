@@ -229,6 +229,9 @@ msgid "Multiple Select Field"
 msgstr "Mehrfach-Auswahlfeld"
 
 #: cms_plugins.py:737
+msgid "Multiple Checkbox Field"
+msgstr "Mehrfach-Auswahlfeld (Checkbox)"
+
 msgid "Radio Select Field"
 msgstr "Radio-Button-Auswahlfeld"
 

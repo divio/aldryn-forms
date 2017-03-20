@@ -733,6 +733,10 @@ class MultipleSelectField(SelectField):
         return kwargs
 
 
+class MultipleCheckboxSelectField(MultipleSelectField):
+    name = _('Multiple Checkbox Field')
+
+
 class RadioSelectField(Field):
     name = _('Radio Select Field')
 
@@ -807,6 +811,7 @@ plugin_pool.register_plugin(ImageField)
 plugin_pool.register_plugin(Fieldset)
 plugin_pool.register_plugin(FormPlugin)
 plugin_pool.register_plugin(MultipleSelectField)
+plugin_pool.register_plugin(MultipleCheckboxSelectField)
 plugin_pool.register_plugin(RadioSelectField)
 plugin_pool.register_plugin(SelectField)
 plugin_pool.register_plugin(SubmitButton)
