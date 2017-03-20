@@ -1,6 +1,11 @@
 Changelog
 =========
 
+2.2.1 (2017-03-20)
+------------------
+* Allow FieldPlugins to set a max_length of more than 255 chars
+* Allow various fields (name, label, ..,) to be longer (255 chars)
+
 2.2.0 (2017-03-15)
 ------------------
 * Django 1.10 support
