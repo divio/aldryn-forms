@@ -330,7 +330,10 @@ class FieldPluginBase(CMSPlugin):
     # for text field those are min and max length
     # for multiple select those are min and max number of choices
     min_value = models.PositiveIntegerField(
-        _('Min value'), blank=True, null=True)
+        _('Min value'),
+        blank=True,
+        null=True,
+    )
 
     max_value = models.PositiveIntegerField(
         _('Max value'),
