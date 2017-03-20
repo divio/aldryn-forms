@@ -734,7 +734,7 @@ class MultipleSelectField(SelectField):
 
 
 class MultipleCheckboxSelectField(MultipleSelectField):
-    name = _('Multiple Checkbox Select Field')
+    name = _('Multiple Checkbox Field')
 
 
 class RadioSelectField(Field):
