@@ -13,7 +13,7 @@
         {% block form_field %}
             {% for choice in field.field.choices %}
                 <label>
-                    <input type="checkbox" value="{{ choice.0 }}" id="field-{{ choice.0 }}"
+                    <input type="checkbox" value="{{ choice.0 }}" name="{{ field.name }}" id="field-{{ choice.0 }}"
                         {% if choice.0|force_text in field.value|force_text_list %} checked="checked"{% endif %}>
                     {{ choice.1 }}
                 </label>
