@@ -1,6 +1,10 @@
 Changelog
 =========
 
+2.2.2 (2017-05-16)
+------------------
+* Fix multiple checkbox option widget template
+
 2.2.1 (2017-03-20)
 ------------------
 * Allow FieldPlugins to set a max_length of more than 255 chars
