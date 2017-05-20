@@ -165,7 +165,16 @@ class EmailNotificationForm(FormPlugin):
             logger.exception("Could not send notification emails.")
             return []
 
-        notifications = instance.email_notifications.select_related('form')
+        # Get proxy model instance from base instance
+        try:
+            email_notification_form_plugin = EmailNotificationFormPlugin.objects.get(pk=instance.pk)
+        except EmailNotificationFormPlugin.DoesNotExist:
+            email_notification_form_plugin = None
+
+        if email_notification_form_plugin:
+            notifications = email_notification_form_plugin.email_notifications.select_related('form')
+        else:
+            notifications = EmailNotification.objects.none()
 
         emails = []
         recipients = []
