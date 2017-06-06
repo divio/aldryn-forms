@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 from django.core.urlresolvers import resolve
 from django.http import HttpResponseRedirect, HttpResponseBadRequest
-from django.shortcuts import render_to_response
+from django.shortcuts import render
 from django.template import RequestContext
 
 from cms.utils.page_resolver import get_page_from_request
@@ -45,4 +45,4 @@ def submit_form_view(request):
         if form.is_valid():
             success_url = form_plugin_instance.get_success_url(instance=form_plugin)
             return HttpResponseRedirect(success_url)
-    return render_to_response(template, context, context_instance=RequestContext(request))
+    return render(request, template, context)
