@@ -1,6 +1,10 @@
 Changelog
 =========
 
+2.2.3 (unreleased)
+------------------
+* Fixed django 1.10 incompatibility in form submit view
+
 2.2.2 (2017-05-16)
 ------------------
 * Fix multiple checkbox option widget template
