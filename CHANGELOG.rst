@@ -1,7 +1,7 @@
 Changelog
 =========
 
-2.2.3 (unreleased)
+2.2.3 (2017-07-04)
 ------------------
 * Fixed django 1.10 incompatibility in form submit view
 * Add missing permissions for contrib.EmailNotificationFormPlugin
