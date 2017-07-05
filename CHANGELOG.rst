@@ -1,6 +1,11 @@
 Changelog
 =========
 
+2.2.4 (2017-07-05)
+------------------
+* Fixed AttributeError introduced by new migration
+* Fixed a python 3 compatibility issue
+
 2.2.3 (2017-07-04)
 ------------------
 * Fixed django 1.10 incompatibility in form submit view
