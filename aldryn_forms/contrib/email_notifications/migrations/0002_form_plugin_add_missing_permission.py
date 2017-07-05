@@ -15,7 +15,7 @@ ACTIONS = ('add', 'change', 'delete')
 def get_content_type():
     try:
         return ContentType.objects.get(app_label=APP_LABEL, model=MODEL_NAME)
-    except ContentType.objects.DoesNotExist:
+    except ContentType.DoesNotExist:
         return None
 
 
