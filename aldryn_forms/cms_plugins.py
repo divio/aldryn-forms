@@ -371,7 +371,7 @@ class Field(FormElement):
             # declaring all fields you want on the form!
             # This ends up having the same behaviour as declared_fieldsets in
             # Django <1.9 had.
-            return super(self, Field).get_fieldsets(request, obj=obj)
+            return super(Field, self).get_fieldsets(request, obj=obj)
 
         fieldsets = [
             (None, {'fields': list(self.fieldset_general_fields)}),
