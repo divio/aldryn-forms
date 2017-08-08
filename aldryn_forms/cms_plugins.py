@@ -71,7 +71,7 @@ class FormPlugin(FieldContainer):
                 'url',
             )
         }),
-        ('Advanced Settings', {
+        (_('Advanced Settings'), {
             'classes': ('collapse',),
             'fields': (
                 'form_template',
@@ -239,7 +239,7 @@ class Fieldset(FieldContainer):
                 'legend',
             )
         }),
-        ('Advanced Settings', {
+        (_('Advanced Settings'), {
             'classes': ('collapse',),
             'fields': (
                 'custom_classes',
