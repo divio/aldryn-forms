@@ -48,7 +48,7 @@ class ExistingEmailNotificationInline(admin.StackedInline):
                 'theme',
             )
         }),
-        ('Recipients', {
+        (_('Recipients'), {
             'classes': ('collapse',),
             'fields': (
                 'text_variables',
@@ -89,7 +89,7 @@ class ExistingEmailNotificationInline(admin.StackedInline):
             # add the body_html field only if email is allowed
             # to be sent in html version.
             fields.append('body_html')
-        return [('Email', {
+        return [(_('Email'), {
             'classes': ('collapse',),
             'fields': fields
         })]
@@ -134,7 +134,7 @@ class EmailNotificationForm(FormPlugin):
                 ('page', 'url'),
             )
         }),
-        ('Advanced Settings', {
+        (_('Advanced Settings'), {
             'classes': ('collapse',),
             'fields': (
                 'form_template',
