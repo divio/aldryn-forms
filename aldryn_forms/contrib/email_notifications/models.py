@@ -57,6 +57,11 @@ class EmailNotificationFormPlugin(FormPlugin):
 
 @python_2_unicode_compatible
 class EmailNotification(models.Model):
+
+    class Meta:
+        verbose_name = _('Email notification')
+        verbose_name_plural = _('Email notifications')
+
     theme = models.CharField(
         verbose_name=_('theme'),
         max_length=200,
