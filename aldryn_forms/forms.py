@@ -213,7 +213,7 @@ class MinMaxValueForm(ExtandableErrorForm):
         min_value = self.cleaned_data.get('min_value')
         max_value = self.cleaned_data.get('max_value')
         if min_value and max_value and min_value > max_value:
-            self.append_to_errors('min_value', _(u'Min value can not be greater then max value.'))
+            self.append_to_errors('min_value', _(u'Min value can not be greater than max value.'))
         return self.cleaned_data
 
 
