@@ -55,7 +55,7 @@ class BaseFormExportForm(forms.Form):
         queryset = self.get_queryset()
 
         if queryset.count() >= self.excel_limit:
-            error_message = _("Export failed! More then 65,536 entries found, exceeded Excel limitation!")
+            error_message = _("Export failed! More than 65,536 entries found, exceeded Excel limitation!")
             raise forms.ValidationError(error_message)
 
         return self.cleaned_data

@@ -317,7 +317,7 @@ class FieldPluginBase(CMSPlugin):
         max_length=255,
         blank=True,
         help_text=_('Default text in a form. Disappears when user starts '
-                    'typing. Example: "email@exmaple.com"')
+                    'typing. Example: "email@example.com"')
     )
     help_text = models.TextField(
         verbose_name=_('Help text'),
