@@ -450,6 +450,9 @@ class Option(models.Model):
     def __str__(self):
         return self.value
 
+    class Meta:
+        ordering = ('value', )
+
 
 @python_2_unicode_compatible
 class FormButtonPlugin(CMSPlugin):
