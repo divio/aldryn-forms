@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-08-21 09:39+0000\n"
+"POT-Creation-Date: 2017-08-21 09:54+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: Frigory33 <chironsylvain@orange.fr>, 2016\n"
 "Language-Team: French (https://www.transifex.com/divio/teams/58664/fr/)\n"
@@ -38,6 +38,11 @@ msgstr "jusqu'au"
 #: admin/forms.py:43
 msgid "language"
 msgstr "langue"
+
+#: admin/forms.py:58
+msgid ""
+"Export failed! More than 65,536 entries found, exceeded Excel limitation!"
+msgstr ""
 
 #: admin/forms.py:132
 msgid "Please select at least one field to export."
@@ -224,6 +229,10 @@ msgstr "Liste déroulante"
 msgid "Multiple Select Field"
 msgstr "Champ de sélection multiple"
 
+#: cms_plugins.py:737
+msgid "Multiple Checkbox Field"
+msgstr ""
+
 #: cms_plugins.py:741
 msgid "Radio Select Field"
 msgstr "Champ de sélection radio"
@@ -256,6 +265,10 @@ msgstr ""
 "les variables peuvent être utilisées en les encadrant avec \"${variable}\" "
 "comme ${variable}"
 
+#: contrib/email_notifications/cms_plugins.py:92
+msgid "Email"
+msgstr ""
+
 #: contrib/email_notifications/cms_plugins.py:117
 msgid "available text variables"
 msgstr "variables de texte disponibles"
@@ -267,6 +280,14 @@ msgstr "Formulaire (avancé)"
 #: contrib/email_notifications/models.py:28
 msgid "default"
 msgstr "par défaut"
+
+#: contrib/email_notifications/models.py:62
+msgid "Email notification"
+msgstr ""
+
+#: contrib/email_notifications/models.py:63
+msgid "Email notifications"
+msgstr ""
 
 #: contrib/email_notifications/models.py:66
 msgid "theme"
@@ -324,6 +345,26 @@ msgstr "Veuillez indiquer un destinataire."
 msgid "Fields"
 msgstr "Champs"
 
+#: forms.py:28
+#, python-format
+msgid ""
+"File size must be under %(max_size)s. Current file size is %(actual_size)s."
+msgstr ""
+
+#: forms.py:63
+#, python-format
+msgid ""
+"Image width must be under %(max_size)s pixels. Current width is "
+"%(actual_size)s pixels."
+msgstr ""
+
+#: forms.py:73
+#, python-format
+msgid ""
+"Image height must be under %(max_size)s pixels. Current height is "
+"%(actual_size)s pixels."
+msgstr ""
+
 #: forms.py:168
 msgid "Please provide CMS page for redirect."
 msgstr "Veuillez indiquer une page du CMS pour la redirection."
@@ -331,6 +372,10 @@ msgstr "Veuillez indiquer une page du CMS pour la redirection."
 #: forms.py:172
 msgid "Please provide an absolute URL for redirect."
 msgstr "Veuillez indiquer une URL absolue pour la redirection."
+
+#: forms.py:216
+msgid "Min value can not be greater than max value."
+msgstr ""
 
 #: forms.py:225
 msgid "Min length"
@@ -459,6 +504,12 @@ msgstr ""
 msgid "Placeholder text"
 msgstr "Texte titulaire"
 
+#: models.py:319
+msgid ""
+"Default text in a form. Disappears when user starts typing. Example: "
+"\"email@example.com\""
+msgstr ""
+
 #: models.py:323
 msgid "Help text"
 msgstr "Texte d'aide"
@@ -482,6 +533,10 @@ msgstr "colonnes"
 #: models.py:382
 msgid "rows"
 msgstr "lignes"
+
+#: models.py:387
+msgid "send notification when form is submitted"
+msgstr ""
 
 #: models.py:389
 msgid ""

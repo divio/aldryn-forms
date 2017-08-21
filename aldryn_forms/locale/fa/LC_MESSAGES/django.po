@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-08-21 09:39+0000\n"
+"POT-Creation-Date: 2017-08-21 09:54+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Language-Team: Persian (https://www.transifex.com/divio/teams/58664/fa/)\n"
 "MIME-Version: 1.0\n"
@@ -34,6 +34,11 @@ msgstr ""
 
 #: admin/forms.py:43
 msgid "language"
+msgstr ""
+
+#: admin/forms.py:58
+msgid ""
+"Export failed! More than 65,536 entries found, exceeded Excel limitation!"
 msgstr ""
 
 #: admin/forms.py:132
@@ -218,6 +223,10 @@ msgstr ""
 msgid "Multiple Select Field"
 msgstr ""
 
+#: cms_plugins.py:737
+msgid "Multiple Checkbox Field"
+msgstr ""
+
 #: cms_plugins.py:741
 msgid "Radio Select Field"
 msgstr ""
@@ -248,6 +257,10 @@ msgid ""
 "variables can be used with by wrapping with \"${variable}\" like ${variable}"
 msgstr ""
 
+#: contrib/email_notifications/cms_plugins.py:92
+msgid "Email"
+msgstr ""
+
 #: contrib/email_notifications/cms_plugins.py:117
 msgid "available text variables"
 msgstr ""
@@ -258,6 +271,14 @@ msgstr ""
 
 #: contrib/email_notifications/models.py:28
 msgid "default"
+msgstr ""
+
+#: contrib/email_notifications/models.py:62
+msgid "Email notification"
+msgstr ""
+
+#: contrib/email_notifications/models.py:63
+msgid "Email notifications"
 msgstr ""
 
 #: contrib/email_notifications/models.py:66
@@ -316,12 +337,36 @@ msgstr ""
 msgid "Fields"
 msgstr ""
 
+#: forms.py:28
+#, python-format
+msgid ""
+"File size must be under %(max_size)s. Current file size is %(actual_size)s."
+msgstr ""
+
+#: forms.py:63
+#, python-format
+msgid ""
+"Image width must be under %(max_size)s pixels. Current width is "
+"%(actual_size)s pixels."
+msgstr ""
+
+#: forms.py:73
+#, python-format
+msgid ""
+"Image height must be under %(max_size)s pixels. Current height is "
+"%(actual_size)s pixels."
+msgstr ""
+
 #: forms.py:168
 msgid "Please provide CMS page for redirect."
 msgstr ""
 
 #: forms.py:172
 msgid "Please provide an absolute URL for redirect."
+msgstr ""
+
+#: forms.py:216
+msgid "Min value can not be greater than max value."
 msgstr ""
 
 #: forms.py:225
@@ -443,6 +488,12 @@ msgstr ""
 msgid "Placeholder text"
 msgstr ""
 
+#: models.py:319
+msgid ""
+"Default text in a form. Disappears when user starts typing. Example: "
+"\"email@example.com\""
+msgstr ""
+
 #: models.py:323
 msgid "Help text"
 msgstr ""
@@ -465,6 +516,10 @@ msgstr ""
 
 #: models.py:382
 msgid "rows"
+msgstr ""
+
+#: models.py:387
+msgid "send notification when form is submitted"
 msgstr ""
 
 #: models.py:389

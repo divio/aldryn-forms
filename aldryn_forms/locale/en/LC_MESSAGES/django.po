@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-08-21 09:39+0000\n"
+"POT-Creation-Date: 2017-08-21 09:54+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -37,13 +37,10 @@ msgid "language"
 msgstr "language"
 
 #: admin/forms.py:58
-#, fuzzy
-#| msgid ""
-#| "Export failed! More then 65,536 entries found, exceeded Excel limitation!"
 msgid ""
 "Export failed! More than 65,536 entries found, exceeded Excel limitation!"
 msgstr ""
-"Export failed! More then 65,536 entries found, exceeded Excel limitation!"
+"Export failed! More than 65,536 entries found, exceeded Excel limitation!"
 
 #: admin/forms.py:132
 msgid "Please select at least one field to export."
@@ -231,10 +228,8 @@ msgid "Multiple Select Field"
 msgstr "Multiple Select Field"
 
 #: cms_plugins.py:737
-#, fuzzy
-#| msgid "Multiple Select Field"
 msgid "Multiple Checkbox Field"
-msgstr "Multiple Select Field"
+msgstr "Multiple Checkbox Field"
 
 #: cms_plugins.py:741
 msgid "Radio Select Field"
@@ -268,10 +263,8 @@ msgstr ""
 "variables can be used with by wrapping with \"${variable}\" like ${variable}"
 
 #: contrib/email_notifications/cms_plugins.py:92
-#, fuzzy
-#| msgid "Email Field"
 msgid "Email"
-msgstr "Email Field"
+msgstr "Email"
 
 #: contrib/email_notifications/cms_plugins.py:117
 msgid "available text variables"
@@ -286,16 +279,12 @@ msgid "default"
 msgstr "default"
 
 #: contrib/email_notifications/models.py:62
-#, fuzzy
-#| msgid "new email notification"
 msgid "Email notification"
-msgstr "new email notification"
+msgstr "Email notification"
 
 #: contrib/email_notifications/models.py:63
-#, fuzzy
-#| msgid "new email notifications"
 msgid "Email notifications"
-msgstr "new email notifications"
+msgstr "Email notifications"
 
 #: contrib/email_notifications/models.py:66
 msgid "theme"
@@ -354,27 +343,29 @@ msgid "Fields"
 msgstr "Fields"
 
 #: forms.py:28
-#, fuzzy, python-format
-#| msgid "File size must be under %s. Current file size is %s."
+#, python-format
 msgid ""
 "File size must be under %(max_size)s. Current file size is %(actual_size)s."
-msgstr "File size must be under %s. Current file size is %s."
+msgstr ""
+"File size must be under %(max_size)s. Current file size is %(actual_size)s."
 
 #: forms.py:63
-#, fuzzy, python-format
-#| msgid "Image width must be under %s pixels. Current width is %s pixels."
+#, python-format
 msgid ""
 "Image width must be under %(max_size)s pixels. Current width is "
 "%(actual_size)s pixels."
-msgstr "Image width must be under %s pixels. Current width is %s pixels."
+msgstr ""
+"Image width must be under %(max_size)s pixels. Current width is "
+"%(actual_size)s pixels."
 
 #: forms.py:73
-#, fuzzy, python-format
-#| msgid "Image height must be under %s pixels. Current height is %s pixels."
+#, python-format
 msgid ""
 "Image height must be under %(max_size)s pixels. Current height is "
 "%(actual_size)s pixels."
-msgstr "Image height must be under %s pixels. Current height is %s pixels."
+msgstr ""
+"Image height must be under %(max_size)s pixels. Current height is "
+"%(actual_size)s pixels."
 
 #: forms.py:168
 msgid "Please provide CMS page for redirect."
@@ -385,10 +376,8 @@ msgid "Please provide an absolute URL for redirect."
 msgstr "Please provide an absolute URL for redirect."
 
 #: forms.py:216
-#, fuzzy
-#| msgid "Min value can not be greater then max value."
 msgid "Min value can not be greater than max value."
-msgstr "Min value can not be greater then max value."
+msgstr "Min value can not be greater than max value."
 
 #: forms.py:225
 msgid "Min length"
@@ -517,16 +506,12 @@ msgid "Placeholder text"
 msgstr "Placeholder text"
 
 #: models.py:319
-#, fuzzy
-#| msgid ""
-#| "Default text in a form. Disappears when user starts typing. Example: "
-#| "\"email@exmaple.com\""
 msgid ""
 "Default text in a form. Disappears when user starts typing. Example: "
 "\"email@example.com\""
 msgstr ""
 "Default text in a form. Disappears when user starts typing. Example: "
-"\"email@exmaple.com\""
+"\"email@example.com\""
 
 #: models.py:323
 msgid "Help text"
@@ -553,10 +538,8 @@ msgid "rows"
 msgstr "rows"
 
 #: models.py:387
-#, fuzzy
-#| msgid "People who got a notification when form was submitted."
 msgid "send notification when form is submitted"
-msgstr "People who got a notification when form was submitted."
+msgstr "send notification when form is submitted"
 
 #: models.py:389
 msgid ""
