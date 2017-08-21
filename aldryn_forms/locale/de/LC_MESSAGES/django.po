@@ -44,6 +44,8 @@ msgstr "Sprache"
 msgid ""
 "Export failed! More than 65,536 entries found, exceeded Excel limitation!"
 msgstr ""
+"Export fehlgeschlagen! Mehr als 65,536 Einträge gefunden, Excel-Limit "
+"erreicht!"
 
 #: admin/forms.py:132
 msgid "Please select at least one field to export."
@@ -196,7 +198,7 @@ msgstr "Textfeld"
 
 #: cms_plugins.py:444
 msgid "Text Area Field"
-msgstr "Textbereichsfeld"
+msgstr "Mehrzeiliges Textfeld"
 
 #: cms_plugins.py:485
 msgid "Email Field"
@@ -232,7 +234,7 @@ msgstr "Mehrfach-Auswahlfeld"
 
 #: cms_plugins.py:737
 msgid "Multiple Checkbox Field"
-msgstr ""
+msgstr "Mehrfaches Checkbox-Feld"
 
 #: cms_plugins.py:741
 msgid "Radio Select Field"
@@ -268,7 +270,7 @@ msgstr ""
 
 #: contrib/email_notifications/cms_plugins.py:92
 msgid "Email"
-msgstr ""
+msgstr "E-Mail"
 
 #: contrib/email_notifications/cms_plugins.py:117
 msgid "available text variables"
@@ -284,11 +286,11 @@ msgstr "Standard"
 
 #: contrib/email_notifications/models.py:62
 msgid "Email notification"
-msgstr ""
+msgstr "E-Mail-Benachrichtigung"
 
 #: contrib/email_notifications/models.py:63
 msgid "Email notifications"
-msgstr ""
+msgstr "E-Mail-Benachrichtigungen"
 
 #: contrib/email_notifications/models.py:66
 msgid "theme"
@@ -351,6 +353,7 @@ msgstr "Felder"
 msgid ""
 "File size must be under %(max_size)s. Current file size is %(actual_size)s."
 msgstr ""
+"Dateigröße muss unter %(max_size)s sein. Aktuelle Größe ist %(actual_size)s."
 
 #: forms.py:63
 #, python-format
@@ -358,6 +361,8 @@ msgid ""
 "Image width must be under %(max_size)s pixels. Current width is "
 "%(actual_size)s pixels."
 msgstr ""
+"Bildbreite muss unter %(max_size)s Pixel groß sein. Aktuelle Breite ist "
+"%(actual_size)s Pixel."
 
 #: forms.py:73
 #, python-format
@@ -365,6 +370,8 @@ msgid ""
 "Image height must be under %(max_size)s pixels. Current height is "
 "%(actual_size)s pixels."
 msgstr ""
+"Bildhöhe muss unter %(max_size)s Pixel groß sein. Aktuelle Höhe ist "
+"%(actual_size)s Pixel."
 
 #: forms.py:168
 msgid "Please provide CMS page for redirect."
@@ -376,7 +383,7 @@ msgstr "Bitte eine absolute URL angeben für die Weiterleitung."
 
 #: forms.py:216
 msgid "Min value can not be greater than max value."
-msgstr ""
+msgstr "Der Mindestwert kann nicht größer sein als der Maximalwert."
 
 #: forms.py:225
 msgid "Min length"
@@ -513,6 +520,8 @@ msgid ""
 "Default text in a form. Disappears when user starts typing. Example: "
 "\"email@example.com\""
 msgstr ""
+"Standardtext im Formular. Verschwindet, sobald der Benutzer zu tippen "
+"anfängt. Beispiel: \"email@example.com\""
 
 #: models.py:323
 msgid "Help text"
@@ -542,7 +551,7 @@ msgstr "Zeilen"
 
 #: models.py:387
 msgid "send notification when form is submitted"
-msgstr ""
+msgstr "Benachrichtigung senden, wenn das Formular abgeschickt wird"
 
 #: models.py:389
 msgid ""
