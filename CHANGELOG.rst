@@ -1,6 +1,11 @@
 Changelog
 =========
 
+2.2.5 (2017-08-21)
+------------------
+* Marked several strings as translatable
+* Updated translations
+
 2.2.4 (2017-07-05)
 ------------------
 * Fixed AttributeError introduced by new migration
