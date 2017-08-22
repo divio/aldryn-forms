@@ -1,6 +1,10 @@
 Changelog
 =========
 
+2.2.6 (2017-08-22)
+------------------
+* Updated translations
+
 2.2.5 (2017-08-21)
 ------------------
 * Marked several strings as translatable
