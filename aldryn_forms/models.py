@@ -443,6 +443,10 @@ class ImageUploadFieldPlugin(FileFieldPluginBase):
 @python_2_unicode_compatible
 class Option(models.Model):
 
+    class Meta:
+        verbose_name = _('Option')
+        verbose_name_plural = _('Options')
+
     field = models.ForeignKey(FieldPlugin, editable=False)
     value = models.CharField(_('Value'), max_length=255)
     default_value = models.BooleanField(_('Default'), default=False)
