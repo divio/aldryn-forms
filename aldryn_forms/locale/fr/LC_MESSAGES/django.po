@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-08-21 09:54+0000\n"
+"POT-Creation-Date: 2017-08-25 21:09+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: Frigory33 <chironsylvain@orange.fr>, 2016\n"
 "Language-Team: French (https://www.transifex.com/divio/teams/58664/fr/)\n"
@@ -60,14 +60,14 @@ msgstr "Champ"
 
 #: boilerplates/bootstrap3/templates/admin/aldryn_forms/display/submission_data.html:4
 #: boilerplates/legacy/templates/admin/aldryn_forms/display/submission_data.html:4
-#: models.py:306 models.py:457
+#: models.py:306 models.py:461
 #: templates/admin/aldryn_forms/display/submission_data.html:4
 msgid "Label"
 msgstr "Libellé"
 
 #: boilerplates/bootstrap3/templates/admin/aldryn_forms/display/submission_data.html:5
 #: boilerplates/legacy/templates/admin/aldryn_forms/display/submission_data.html:5
-#: models.py:447 templates/admin/aldryn_forms/display/submission_data.html:5
+#: models.py:451 templates/admin/aldryn_forms/display/submission_data.html:5
 msgid "Value"
 msgstr "Valeur"
 
@@ -427,7 +427,7 @@ msgstr "Choix au maximum"
 msgid "Maximum amount of elements to chose."
 msgstr "Nombre d'éléments à choisir au maximum."
 
-#: models.py:111 models.py:448
+#: models.py:111 models.py:452
 msgid "Default"
 msgstr "Par défaut"
 
@@ -472,7 +472,7 @@ msgstr "Rediriger vers"
 msgid "Where to redirect the user when the form has been successfully sent?"
 msgstr "Où rediriger l'utilisateur lorsque le formulaire a bien été envoyé ?"
 
-#: models.py:154 models.py:296 models.py:345 models.py:459
+#: models.py:154 models.py:296 models.py:345 models.py:463
 msgid "custom css classes"
 msgstr "classes CSS personnalisées"
 
@@ -606,32 +606,40 @@ msgstr "Hauteur maximale de l'image"
 msgid "The maximum height of the uploaded image, in pixels."
 msgstr "La hauteur maximale de l'image téléversée, en pixels."
 
-#: models.py:470
+#: models.py:447
+msgid "Option"
+msgstr ""
+
+#: models.py:448
+msgid "Options"
+msgstr ""
+
+#: models.py:474
 msgid "form name"
 msgstr "nom du formulaire"
 
-#: models.py:476
+#: models.py:480
 msgid "users notified"
 msgstr "utilisateurs notifiés"
 
-#: models.py:478
+#: models.py:482
 msgid "People who got a notification when form was submitted."
 msgstr ""
 "Personnes qui ont reçu une notification lorsque le formulaire a été soumis."
 
-#: models.py:482
+#: models.py:486
 msgid "form language"
 msgstr "langue du formulaire"
 
-#: models.py:488
+#: models.py:492
 msgid "form url"
 msgstr "URL du formulaire"
 
-#: models.py:496
+#: models.py:500
 msgid "Form submission"
 msgstr "Soumission de formulaire"
 
-#: models.py:497
+#: models.py:501
 msgid "Form submissions"
 msgstr "Soumissions de formulaire"
 

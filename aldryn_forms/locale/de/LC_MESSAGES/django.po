@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-08-21 09:54+0000\n"
+"POT-Creation-Date: 2017-08-25 21:09+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: Peter W <peter.wischer@lwl.org>, 2016\n"
 "Language-Team: German (https://www.transifex.com/divio/teams/58664/de/)\n"
@@ -63,14 +63,14 @@ msgstr "Feld"
 
 #: boilerplates/bootstrap3/templates/admin/aldryn_forms/display/submission_data.html:4
 #: boilerplates/legacy/templates/admin/aldryn_forms/display/submission_data.html:4
-#: models.py:306 models.py:457
+#: models.py:306 models.py:461
 #: templates/admin/aldryn_forms/display/submission_data.html:4
 msgid "Label"
 msgstr "Beschreibung"
 
 #: boilerplates/bootstrap3/templates/admin/aldryn_forms/display/submission_data.html:5
 #: boilerplates/legacy/templates/admin/aldryn_forms/display/submission_data.html:5
-#: models.py:447 templates/admin/aldryn_forms/display/submission_data.html:5
+#: models.py:451 templates/admin/aldryn_forms/display/submission_data.html:5
 msgid "Value"
 msgstr "Wert"
 
@@ -436,7 +436,7 @@ msgstr "Maximale Auswahlmöglichkeiten"
 msgid "Maximum amount of elements to chose."
 msgstr "Maximale Anzahl auszuwählender Elemente."
 
-#: models.py:111 models.py:448
+#: models.py:111 models.py:452
 msgid "Default"
 msgstr "Standard"
 
@@ -483,7 +483,7 @@ msgstr ""
 "Wohin soll der Benutzer weitergeleitet werden, wenn das Formular erfolgreich"
 " versandt wurde?"
 
-#: models.py:154 models.py:296 models.py:345 models.py:459
+#: models.py:154 models.py:296 models.py:345 models.py:463
 msgid "custom css classes"
 msgstr "Benutzerdefinierte CSS-Klassen"
 
@@ -603,7 +603,7 @@ msgid ""
 "suffixes (kB, MB, GB, ...)."
 msgstr ""
 "Die maximale Dateigröße des Upload in bytes. Es können gebräuchliche Suffixe"
-" für die Grösse  verwendet werden (kB, MB, GB, ...)."
+" für die Größe  verwendet werden (kB, MB, GB, ...)."
 
 #: models.py:432
 msgid "Maximum image width"
@@ -621,33 +621,41 @@ msgstr "Maximale Bildhöhe"
 msgid "The maximum height of the uploaded image, in pixels."
 msgstr "Die maximale Höhe des hochgeladenen Bildes in Pixel."
 
-#: models.py:470
+#: models.py:447
+msgid "Option"
+msgstr "Option"
+
+#: models.py:448
+msgid "Options"
+msgstr "Optionen"
+
+#: models.py:474
 msgid "form name"
 msgstr "Formularname"
 
-#: models.py:476
+#: models.py:480
 msgid "users notified"
 msgstr "Benachrichtigte Benutzer"
 
-#: models.py:478
+#: models.py:482
 msgid "People who got a notification when form was submitted."
 msgstr ""
 "Personen, die eine Benachrichtigung erhalten, sobald ein Formular gesendet "
 "wurde."
 
-#: models.py:482
+#: models.py:486
 msgid "form language"
 msgstr "Formularsprache"
 
-#: models.py:488
+#: models.py:492
 msgid "form url"
 msgstr "URL des Formulars"
 
-#: models.py:496
+#: models.py:500
 msgid "Form submission"
 msgstr "Formulareintrag"
 
-#: models.py:497
+#: models.py:501
 msgid "Form submissions"
 msgstr "Formulareinträge"
 
