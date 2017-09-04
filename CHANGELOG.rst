@@ -1,6 +1,11 @@
 Changelog
 =========
 
+2.2.8 (2017-09-04)
+------------------
+* Fixed a bug in the bootstrap3 template which prevented the multiselectfield
+  from submitting values to the server.
+
 2.2.7 (2017-08-29)
 ------------------
 * Updated translations
