@@ -73,7 +73,7 @@ class EmailNotification(models.Model):
         max_length=200,
         blank=True
     )
-    to_email = models.CharField(
+    to_email = models.EmailField(
         verbose_name=_('to email'),
         max_length=200,
         blank=True
@@ -90,7 +90,7 @@ class EmailNotification(models.Model):
         max_length=200,
         blank=True
     )
-    from_email = models.CharField(
+    from_email = models.EmailField(
         verbose_name=_('from email'),
         max_length=200,
         blank=True
