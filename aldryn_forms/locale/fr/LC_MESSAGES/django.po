@@ -352,7 +352,7 @@ msgstr "Champs"
 msgid ""
 "File size must be under %(max_size)s. Current file size is %(actual_size)s."
 msgstr ""
-"La taille du fichier doit être inférieure à % (max_size)s. La taille "
+"La taille du fichier doit être inférieure à %(max_size)s. La taille "
 "actuelle du fichier est %(actual_size)s."
 
 #: forms.py:63
