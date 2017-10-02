@@ -43,6 +43,8 @@ msgstr "langue"
 msgid ""
 "Export failed! More than 65,536 entries found, exceeded Excel limitation!"
 msgstr ""
+"L'exportation a échoué ! Plus de 65 536 entrées trouvées, "
+"la limitation Excel a été dépassé!"
 
 #: admin/forms.py:132
 msgid "Please select at least one field to export."
@@ -161,7 +163,7 @@ msgid ""
 "Thank you for submitting your information, you will be <a "
 "href=\"%(form_success_url)s\">redirected shortly</a>."
 msgstr ""
-"Merci d'avoir envoyé vos informations ; vous allé être <a "
+"Merci d'avoir envoyé vos informations ; vous allez être <a "
 "href=\"%(form_success_url)s\">redirigé·e dans un instant</a>."
 
 #: cms_apps.py:9 cms_plugins.py:51
@@ -231,7 +233,7 @@ msgstr "Champ de sélection multiple"
 
 #: cms_plugins.py:737
 msgid "Multiple Checkbox Field"
-msgstr ""
+msgstr "Champ de case à cocher multiple"
 
 #: cms_plugins.py:741
 msgid "Radio Select Field"
@@ -350,6 +352,8 @@ msgstr "Champs"
 msgid ""
 "File size must be under %(max_size)s. Current file size is %(actual_size)s."
 msgstr ""
+"La taille du fichier doit être inférieure à %(max_size)s. La taille "
+"actuelle du fichier est %(actual_size)s."
 
 #: forms.py:63
 #, python-format
@@ -357,6 +361,8 @@ msgid ""
 "Image width must be under %(max_size)s pixels. Current width is "
 "%(actual_size)s pixels."
 msgstr ""
+"La largeur de l'image doit être inférieure à %(max_size)s pixels. La largeur "
+"actuelle est %(actual_size)s pixels."
 
 #: forms.py:73
 #, python-format
@@ -364,6 +370,8 @@ msgid ""
 "Image height must be under %(max_size)s pixels. Current height is "
 "%(actual_size)s pixels."
 msgstr ""
+"La hauteur de l'image doit être inférieure à %(max_size)s pixels. La hauteur "
+"actuelle est %(actual_size)s pixels."
 
 #: forms.py:168
 msgid "Please provide CMS page for redirect."
@@ -375,7 +383,7 @@ msgstr "Veuillez indiquer une URL absolue pour la redirection."
 
 #: forms.py:216
 msgid "Min value can not be greater than max value."
-msgstr ""
+msgstr "La valeur minimale ne peut pas être supérieure à la valeur max."
 
 #: forms.py:225
 msgid "Min length"
@@ -509,6 +517,8 @@ msgid ""
 "Default text in a form. Disappears when user starts typing. Example: "
 "\"email@example.com\""
 msgstr ""
+"Texte par défaut dans un formulaire. Désapparaît lorsque l'utilisateur "
+"commence à taper. Exemple:\"email@example.com\""
 
 #: models.py:323
 msgid "Help text"
@@ -536,7 +546,7 @@ msgstr "lignes"
 
 #: models.py:387
 msgid "send notification when form is submitted"
-msgstr ""
+msgstr "envoyer une notification lorsque le formulaire est soumis"
 
 #: models.py:389
 msgid ""
