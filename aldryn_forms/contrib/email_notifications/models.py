@@ -208,6 +208,7 @@ class EmailNotification(models.Model):
                 from_email = formataddr((from_name, from_email))
 
             kwargs['from_email'] = from_email
+            kwargs['reply_to'] = [from_email]
         return kwargs
 
     def prepare_email(self, form):
