@@ -1,6 +1,11 @@
 Changelog
 =========
 
+2.2.9 (2017-10-09)
+------------------
+* Added reply-to email header support to advanced form.
+* Updated translations
+
 2.2.8 (2017-09-04)
 ------------------
 * Fixed a bug in the bootstrap3 template which prevented the multiselectfield
