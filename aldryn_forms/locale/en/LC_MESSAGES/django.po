@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-08-21 09:54+0000\n"
+"POT-Creation-Date: 2017-10-09 17:35+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -58,14 +58,14 @@ msgstr "Field"
 
 #: boilerplates/bootstrap3/templates/admin/aldryn_forms/display/submission_data.html:4
 #: boilerplates/legacy/templates/admin/aldryn_forms/display/submission_data.html:4
-#: models.py:306 models.py:457
+#: models.py:306 models.py:461
 #: templates/admin/aldryn_forms/display/submission_data.html:4
 msgid "Label"
 msgstr "Label"
 
 #: boilerplates/bootstrap3/templates/admin/aldryn_forms/display/submission_data.html:5
 #: boilerplates/legacy/templates/admin/aldryn_forms/display/submission_data.html:5
-#: models.py:447 templates/admin/aldryn_forms/display/submission_data.html:5
+#: models.py:451 templates/admin/aldryn_forms/display/submission_data.html:5
 msgid "Value"
 msgstr "Value"
 
@@ -429,7 +429,7 @@ msgstr "Max choices"
 msgid "Maximum amount of elements to chose."
 msgstr "Maximum amount of elements to chose."
 
-#: models.py:111 models.py:448
+#: models.py:111 models.py:452
 msgid "Default"
 msgstr "Default"
 
@@ -473,7 +473,7 @@ msgstr "Redirect to"
 msgid "Where to redirect the user when the form has been successfully sent?"
 msgstr "Where to redirect the user when the form has been successfully sent?"
 
-#: models.py:154 models.py:296 models.py:345 models.py:459
+#: models.py:154 models.py:296 models.py:345 models.py:463
 msgid "custom css classes"
 msgstr "custom css classes"
 
@@ -605,31 +605,39 @@ msgstr "Maximum image height"
 msgid "The maximum height of the uploaded image, in pixels."
 msgstr "The maximum height of the uploaded image, in pixels."
 
-#: models.py:470
+#: models.py:447
+msgid "Option"
+msgstr ""
+
+#: models.py:448
+msgid "Options"
+msgstr ""
+
+#: models.py:474
 msgid "form name"
 msgstr "form name"
 
-#: models.py:476
+#: models.py:480
 msgid "users notified"
 msgstr "users notified"
 
-#: models.py:478
+#: models.py:482
 msgid "People who got a notification when form was submitted."
 msgstr "People who got a notification when form was submitted."
 
-#: models.py:482
+#: models.py:486
 msgid "form language"
 msgstr "form language"
 
-#: models.py:488
+#: models.py:492
 msgid "form url"
 msgstr "form url"
 
-#: models.py:496
+#: models.py:500
 msgid "Form submission"
 msgstr "Form submission"
 
-#: models.py:497
+#: models.py:501
 msgid "Form submissions"
 msgstr "Form submissions"
 

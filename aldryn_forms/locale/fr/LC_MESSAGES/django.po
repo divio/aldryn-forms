@@ -5,13 +5,15 @@
 # 
 # Translators:
 # Frigory33 <chironsylvain@orange.fr>, 2016
+# Nicolas PASCAL <np.pascal@gmail.com>, 2016
+# Adrien Delhorme <adrien.delhorme@gmail.com>, 2017
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2017-08-25 21:09+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"Last-Translator: Frigory33 <chironsylvain@orange.fr>, 2016\n"
+"Last-Translator: Adrien Delhorme <adrien.delhorme@gmail.com>, 2017\n"
 "Language-Team: French (https://www.transifex.com/divio/teams/58664/fr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -43,6 +45,8 @@ msgstr "langue"
 msgid ""
 "Export failed! More than 65,536 entries found, exceeded Excel limitation!"
 msgstr ""
+"L'export a échoué ! Le nombre de lignes (supérieur à 65 536) dépasse la "
+"limite d'Excel !"
 
 #: admin/forms.py:132
 msgid "Please select at least one field to export."
@@ -161,7 +165,7 @@ msgid ""
 "Thank you for submitting your information, you will be <a "
 "href=\"%(form_success_url)s\">redirected shortly</a>."
 msgstr ""
-"Merci d'avoir envoyé vos informations ; vous allé être <a "
+"Merci d'avoir envoyé vos informations ; vous allez être <a "
 "href=\"%(form_success_url)s\">redirigé·e dans un instant</a>."
 
 #: cms_apps.py:9 cms_plugins.py:51
@@ -231,7 +235,7 @@ msgstr "Champ de sélection multiple"
 
 #: cms_plugins.py:737
 msgid "Multiple Checkbox Field"
-msgstr ""
+msgstr "Champ de sélection multiple"
 
 #: cms_plugins.py:741
 msgid "Radio Select Field"
@@ -267,7 +271,7 @@ msgstr ""
 
 #: contrib/email_notifications/cms_plugins.py:92
 msgid "Email"
-msgstr ""
+msgstr "E-mail"
 
 #: contrib/email_notifications/cms_plugins.py:117
 msgid "available text variables"
@@ -283,11 +287,11 @@ msgstr "par défaut"
 
 #: contrib/email_notifications/models.py:62
 msgid "Email notification"
-msgstr ""
+msgstr "Notification e-mail"
 
 #: contrib/email_notifications/models.py:63
 msgid "Email notifications"
-msgstr ""
+msgstr "Notifications e-mail"
 
 #: contrib/email_notifications/models.py:66
 msgid "theme"
@@ -350,6 +354,8 @@ msgstr "Champs"
 msgid ""
 "File size must be under %(max_size)s. Current file size is %(actual_size)s."
 msgstr ""
+"La taille du fichier doit être inférieure à %(max_size)s. La taille actuelle"
+" est %(actual_size)s."
 
 #: forms.py:63
 #, python-format
@@ -357,6 +363,8 @@ msgid ""
 "Image width must be under %(max_size)s pixels. Current width is "
 "%(actual_size)s pixels."
 msgstr ""
+"La largeur de l'image doit être inférieure à %(max_size)s pixels. La largeur"
+" actuelle est %(actual_size)s pixels."
 
 #: forms.py:73
 #, python-format
@@ -364,6 +372,8 @@ msgid ""
 "Image height must be under %(max_size)s pixels. Current height is "
 "%(actual_size)s pixels."
 msgstr ""
+"La hauteur de l'image doit être inférieure à %(max_size)s pixels. La hauteur"
+" actuelle est %(actual_size)s pixels."
 
 #: forms.py:168
 msgid "Please provide CMS page for redirect."
@@ -375,7 +385,7 @@ msgstr "Veuillez indiquer une URL absolue pour la redirection."
 
 #: forms.py:216
 msgid "Min value can not be greater than max value."
-msgstr ""
+msgstr "La valeur minimale doit être inférieure à la valeur maximale."
 
 #: forms.py:225
 msgid "Min length"
@@ -509,6 +519,8 @@ msgid ""
 "Default text in a form. Disappears when user starts typing. Example: "
 "\"email@example.com\""
 msgstr ""
+"Texte par défaut. Disparaît lorsque l'utilisateur commence à saisir du "
+"texte. Par exemple : \"email@exemple.fr\""
 
 #: models.py:323
 msgid "Help text"
@@ -536,7 +548,7 @@ msgstr "lignes"
 
 #: models.py:387
 msgid "send notification when form is submitted"
-msgstr ""
+msgstr "envoyer une notification lorsque le formulaire est validé"
 
 #: models.py:389
 msgid ""
@@ -608,11 +620,11 @@ msgstr "La hauteur maximale de l'image téléversée, en pixels."
 
 #: models.py:447
 msgid "Option"
-msgstr ""
+msgstr "Option"
 
 #: models.py:448
 msgid "Options"
-msgstr ""
+msgstr "Options"
 
 #: models.py:474
 msgid "form name"
