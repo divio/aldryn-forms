@@ -21,7 +21,7 @@ def render_notification_text(context, email_notification, email_type):
 
 @register.simple_tag()
 def render_form_widget(field, **kwargs):
-    markup =  field.as_widget(attrs=kwargs)
+    markup = field.as_widget(attrs=kwargs)
     return mark_safe(markup)
 
 

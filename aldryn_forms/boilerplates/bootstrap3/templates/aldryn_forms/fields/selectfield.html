@@ -11,7 +11,7 @@
             </label>
         {% endblock form_field_label %}
         {% block form_field %}
-            <select  class="form-control" name="{{ field.name }}" id="{{ field.auto_id }}">
+            <select  class="form-control {{ instance.custom_classes }}" name="{{ field.name }}" id="{{ field.auto_id }}">
                 {% for choice in field.field.choices %}
                     <option value="{{ choice.0 }}"{% if choice.0|force_text == field.value|force_text %} selected="selected"{% endif %}>{{ choice.1 }}</option>
                 {% endfor %}

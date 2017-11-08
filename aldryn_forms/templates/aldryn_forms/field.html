@@ -3,7 +3,7 @@
 {% if field %}
     {% comment %}
     {# available conditions #}
-    {# if field.field.required %} required{% endif %}
+    {% if field.field.required %} required{% endif %}
     {% if field.errors %} error{% endif %}
     {% endcomment %}
 
