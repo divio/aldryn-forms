@@ -10,7 +10,7 @@
 
         {% block form_field %}
             <div class="control-field">
-                {% render_form_widget field class="form-control" %}
+                {% render_form_widget field class="form-control "|add:instance.custom_classes %}
 
                 {% block form_field_errors %}
                     {% if field.errors %}

@@ -5,7 +5,7 @@
         {% block form_field_label %}
             <label for="{{ field.auto_id }}">
                 {% block form_field %}
-                    {% render_form_widget field %}
+                    {% render_form_widget field class=instance.custom_classes %}
                 {% endblock form_field %}
                 {{ field.label }}
             </label>

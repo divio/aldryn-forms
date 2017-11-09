@@ -1,6 +1,10 @@
 Changelog
 =========
 
+2.2.10 (unreleased)
+-------------------
+* Fixed bootstrap3 templates missing custom classes
+
 2.2.9 (2017-10-09)
 ------------------
 * Added reply-to email header support to advanced form.
