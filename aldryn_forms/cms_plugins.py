@@ -79,6 +79,7 @@ class FormPlugin(FieldContainer):
                 'success_message',
                 'recipients',
                 'custom_classes',
+                'email_only',
             )
         }),
     )

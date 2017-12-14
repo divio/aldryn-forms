@@ -139,7 +139,9 @@ class FormSubmissionBaseForm(forms.Form):
 
     def save(self, commit=False):
         self.instance.set_form_data(self)
-        self.instance.save()
+
+        if not(self.form_plugin.email_only):
+            self.instance.save()
 
 
 class ExtandableErrorForm(forms.ModelForm):

@@ -168,6 +168,12 @@ class FormPlugin(CMSPlugin):
         help_text=_('People who will get the form content via e-mail.')
     )
 
+    email_only = models.BooleanField(
+        _('"Email only" mode'),
+        help_text=_('If checked the submitted forms will NOT persist on database - only the emails will be sent.'),
+        default=False,
+    )
+
     cmsplugin_ptr = CMSPluginField()
 
     def __str__(self):
