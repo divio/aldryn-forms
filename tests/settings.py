@@ -5,6 +5,7 @@ from __future__ import unicode_literals, print_function, division
 HELPER_SETTINGS = {
     'INSTALLED_APPS': [
         'aldryn_forms.contrib.email_notifications',
+        'djangocms_text_ckeditor',
         'absolute',
         'captcha',
         'easy_thumbnails',

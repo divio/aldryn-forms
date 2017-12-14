@@ -36,7 +36,7 @@ from .forms import (
     ImageFieldForm,
 )
 from .helpers import get_user_name
-from .models import SerializedFormField
+from .models import _get_storage_backends, SerializedFormField
 from .signals import form_pre_save, form_post_save
 from .validators import (
     is_valid_recipient,
@@ -79,7 +79,7 @@ class FormPlugin(FieldContainer):
                 'success_message',
                 'recipients',
                 'custom_classes',
-                'email_only',
+                'storage_backend',
             )
         }),
     )
@@ -102,7 +102,8 @@ class FormPlugin(FieldContainer):
         recipients = self.send_notifications(instance, form)
 
         form.instance.set_recipients(recipients)
-        form.save()
+
+        _get_storage_backends()[form.form_plugin.storage_backend]['on_form_submission_save_action'](form)
 
         self.send_success_message(instance, request)
 

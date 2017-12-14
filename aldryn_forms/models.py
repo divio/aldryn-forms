@@ -4,11 +4,11 @@ import json
 from collections import defaultdict, namedtuple
 
 from django.conf import settings
+from django.core.exceptions import ImproperlyConfigured
 from django.db import models
 from django.utils.encoding import python_2_unicode_compatible
 from django.utils.six import text_type
 from django.utils.translation import ugettext_lazy as _
-
 try:
     from django.utils.datastructures import SortedDict
 except ImportError:
@@ -74,6 +74,61 @@ BaseSerializedFormField = namedtuple(
         'value',
     ]
 )
+
+
+def regular_form_submission_save(form):
+    # Saves the form normally. Persists row on FormSubmission table.
+    form.save()
+
+
+def no_storage_form_submission_save(form):
+    # Do not persist the <FormSubmission> instance
+    pass
+
+
+def _get_storage_backends():
+    backends = DEFAULT_ALDRYN_FORMS_STORAGE_BACKENDS
+    backends.update(getattr(settings, 'ALDRYN_FORMS_STORAGE_BACKENDS', {}))
+
+    for backend_key in backends:
+        if len(backend_key) > ALDRYN_FORMS_STORAGE_BACKEND_KEY_MAX_SIZE:
+            raise ImproperlyConfigured(
+                _('Invalid ALDRYN_FORMS_STORAGE_BACKENDS settings. Ensure all keys are no longer than {} characters.')
+                .format(ALDRYN_FORMS_STORAGE_BACKEND_KEY_MAX_SIZE)
+            )
+
+    return backends
+
+
+def storage_backend_choices(*args, **kwargs):
+    choices = tuple([(key, value['verbose_name']) for key, value in _get_storage_backends().items()])
+    return sorted(choices, key=lambda x: x[1])
+
+
+def storage_backend_default(*args, **kwargs):
+    default_backend = getattr(settings, 'ALDRYN_FORMS_STORAGE_BACKENDS', DEFAULT_ALDRYN_FORMS_DEFAULT_STORAGE_BACKEND)
+
+    if default_backend not in _get_storage_backends():
+        raise ImproperlyConfigured(
+            _('Invalid ALDRYN_FORMS_DEFAULT_STORAGE_BACKEND settings. Key "{}" is not a valid option for this config.')
+            .format(default_backend)
+        )
+
+    return default_backend
+
+
+DEFAULT_ALDRYN_FORMS_STORAGE_BACKENDS = {
+    'default': {
+        'verbose_name': 'Regular Database Storage',
+        'on_form_submission_save_action': regular_form_submission_save,
+    },
+    'no_storage': {
+        'verbose_name': 'No Storage',
+        'on_form_submission_save_action': no_storage_form_submission_save,
+    },
+}
+DEFAULT_ALDRYN_FORMS_DEFAULT_STORAGE_BACKEND = 'default'
+ALDRYN_FORMS_STORAGE_BACKEND_KEY_MAX_SIZE = 15
 
 
 class SerializedFormField(BaseSerializedFormField):
@@ -168,10 +223,11 @@ class FormPlugin(CMSPlugin):
         help_text=_('People who will get the form content via e-mail.')
     )
 
-    email_only = models.BooleanField(
-        _('"Email only" mode'),
-        help_text=_('If checked the submitted forms will NOT persist on database - only the emails will be sent.'),
-        default=False,
+    storage_backend = models.CharField(
+        verbose_name=_('Storage backend'),
+        max_length=ALDRYN_FORMS_STORAGE_BACKEND_KEY_MAX_SIZE,
+        default=storage_backend_default,
+        choices=storage_backend_choices(),
     )
 
     cmsplugin_ptr = CMSPluginField()
