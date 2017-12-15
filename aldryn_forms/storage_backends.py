@@ -22,7 +22,10 @@ def get_storage_backends():
     else:
         backends = DEFAULT_ALDRYN_FORMS_STORAGE_BACKENDS
 
-    backends = {k: import_string(v) for k, v in backends.items()}
+    try:
+        backends = {k: import_string(v) for k, v in backends.items()}
+    except ImportError as e:
+        raise ImproperlyConfigured(_('Invalid settings.ALDRYN_FORMS_STORAGE_BACKENDS. {exc}').format(exc=e))
 
     if any(filter(lambda x: len(x) > ALDRYN_FORMS_STORAGE_BACKEND_KEY_MAX_SIZE, backends.keys())):
         raise ImproperlyConfigured(_(
@@ -34,6 +37,11 @@ def get_storage_backends():
             'Invalid settings.ALDRYN_FORMS_STORAGE_BACKENDS. '
             'All classes must derive from aldryn_forms.storage_backends.BaseStorageBackend'
         ))
+
+    try:
+        [x() for x in backends.values()]  # check abstract base classes sanity
+    except TypeError as e:
+        raise ImproperlyConfigured('{}'.format(e))
 
     return backends
 
@@ -61,11 +69,11 @@ def storage_backend_default(*args, **kwargs):
 class BaseStorageBackend(six.with_metaclass(abc.ABCMeta)):
     @abc.abstractproperty
     def verbose_name(self):
-        pass
+        pass  # pragma: no cover
 
     @abc.abstractmethod
     def form_valid(self, cmsplugin, instance, request, form):
-        raise NotImplementedError()
+        pass  # pragma: no cover
 
 
 class DefaultStorageBackend(BaseStorageBackend):
