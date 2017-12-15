@@ -1,6 +1,4 @@
 # -*- coding: utf-8 -*-
-from functools import partial
-
 from PIL import Image
 
 from django import forms
