@@ -5,8 +5,8 @@ from django.utils.translation import ugettext_lazy as _
 
 
 class FormsApp(CMSApp):
-
     name = _('Forms')
     urls = ['aldryn_forms.urls']
+
 
 apphook_pool.register(FormsApp)

@@ -252,7 +252,7 @@ class FormPlugin(CMSPlugin):
         if self._form_field_key_cache is None:
             self._form_field_key_cache = {}
 
-        if not field.pk in self._form_field_key_cache:
+        if field.pk not in self._form_field_key_cache:
             fields_by_key = self.get_form_fields_by_name()
 
             for name, _field in fields_by_key.items():
