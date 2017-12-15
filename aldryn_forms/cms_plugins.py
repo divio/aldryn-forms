@@ -101,6 +101,9 @@ class FormPlugin(FieldContainer):
     def get_render_template(self, context, instance, placeholder):
         return instance.form_template
 
+    def form_valid(self, instance, request, form):
+        return get_storage_backends()[form.form_plugin.storage_backend]().form_valid(self, instance, request, form)
+
     def form_invalid(self, instance, request, form):
         if instance.error_message:
             form._add_error(message=instance.error_message)
@@ -109,8 +112,6 @@ class FormPlugin(FieldContainer):
         form_class = self.get_form_class(instance)
         form_kwargs = self.get_form_kwargs(instance, request)
         form = form_class(**form_kwargs)
-
-        self._form_plugin = form.form_plugin
 
         if form.is_valid():
             fields = [field for field in form.base_fields.values()
@@ -224,22 +225,6 @@ class FormPlugin(FieldContainer):
         users_notified = [
             (get_user_name(user), user.email) for user in recipients]
         return users_notified
-
-    def __getattribute__(self, name):
-        if name in ('__dict__', '__class__', '_form_plugin'):
-            return super(FormPlugin, self).__getattribute__(name)
-
-        if name in FormPlugin.__dict__:
-            return super(FormPlugin, self).__getattribute__(name)
-
-        if not hasattr(self, '_form_plugin'):
-            return super(FormPlugin, self).__getattribute__(name)
-
-        backend_class = get_storage_backends()[self._form_plugin.storage_backend]
-        if not hasattr(backend_class, name):
-            return super(FormPlugin, self).__getattribute__(name)
-
-        return partial(getattr(backend_class, name), self)
 
 
 class Fieldset(FieldContainer):
