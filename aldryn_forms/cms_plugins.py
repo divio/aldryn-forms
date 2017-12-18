@@ -38,7 +38,7 @@ from .forms import (
 from .helpers import get_user_name
 from .models import SerializedFormField
 from .signals import form_pre_save, form_post_save
-from .storage_backends import get_storage_backends
+from .utils import get_storage_backends
 from .validators import (
     is_valid_recipient,
     MinChoicesValidator,
