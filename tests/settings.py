@@ -4,6 +4,7 @@ from __future__ import unicode_literals, print_function, division
 
 HELPER_SETTINGS = {
     'INSTALLED_APPS': [
+        'tests',
         'aldryn_forms.contrib.email_notifications',
         'djangocms_text_ckeditor',
         'absolute',
@@ -21,6 +22,10 @@ HELPER_SETTINGS = {
             'name': 'English',
         }]
     },
+    'CMS_TEMPLATES': (
+        ('test_fullwidth.html', 'Fullwidth'),
+        ('test_page.html', 'Normal page'),
+    ),
     'LANGUAGE_CODE': 'en',
     'EMAIL_BACKEND': 'django.core.mail.backends.dummy.EmailBackend',
 }

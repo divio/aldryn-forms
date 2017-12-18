@@ -8,8 +8,8 @@ class FormPluginTestCase(CMSTestCase):
     def setUp(self):
         super(FormPluginTestCase, self).setUp()
 
-        self.page = create_page('test page', 'INHERIT', 'en', published=True)
-        self.placeholder = self.page.placeholders.get()
+        self.page = create_page('test page', 'test_page.html', 'en', published=True)
+        self.placeholder = self.page.placeholders.get(slot='content')
 
         self.form_plugin = add_plugin(self.placeholder, 'FormPlugin', 'en')
         self.form_plugin.redirect_type = 'redirect_to_url'
@@ -43,8 +43,8 @@ class EmailNotificationFormPluginTestCase(CMSTestCase):
     def setUp(self):
         super(EmailNotificationFormPluginTestCase, self).setUp()
 
-        self.page = create_page('test page', 'INHERIT', 'en', published=True)
-        self.placeholder = self.page.placeholders.get()
+        self.page = create_page('test page', 'test_page.html', 'en', published=True)
+        self.placeholder = self.page.placeholders.get(slot='content')
 
         self.form_plugin = add_plugin(self.placeholder, 'EmailNotificationForm', 'en')
         self.form_plugin.redirect_type = 'redirect_to_url'
