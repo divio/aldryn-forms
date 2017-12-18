@@ -23,9 +23,7 @@ from sizefield.models import FileSizeField
 
 from . import compat
 from .helpers import is_form_element
-from .storage_backends import (
-    ALDRYN_FORMS_STORAGE_BACKEND_KEY_MAX_SIZE, storage_backend_default, storage_backend_choices
-)
+from .storage_backends import ALDRYN_FORMS_STORAGE_BACKEND_KEY_MAX_SIZE, storage_backend_choices
 
 
 AUTH_USER_MODEL = getattr(settings, 'AUTH_USER_MODEL', 'auth.User')
@@ -173,7 +171,7 @@ class FormPlugin(CMSPlugin):
     storage_backend = models.CharField(
         verbose_name=_('Storage backend'),
         max_length=ALDRYN_FORMS_STORAGE_BACKEND_KEY_MAX_SIZE,
-        default=storage_backend_default,
+        default='default',
         choices=storage_backend_choices(),
     )
 

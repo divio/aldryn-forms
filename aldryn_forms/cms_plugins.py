@@ -100,7 +100,8 @@ class FormPlugin(FieldContainer):
         return instance.form_template
 
     def form_valid(self, instance, request, form):
-        return get_storage_backends()[form.form_plugin.storage_backend]().form_valid(self, instance, request, form)
+        storage = get_storage_backends()[form.form_plugin.storage_backend]()
+        return storage.form_valid(self, instance, request, form)
 
     def form_invalid(self, instance, request, form):
         if instance.error_message:

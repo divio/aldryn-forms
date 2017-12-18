@@ -11,8 +11,7 @@ class FormPluginTestCase(CMSTestCase):
         self.page = create_page('test page', 'INHERIT', 'en', published=True)
         self.placeholder = self.page.placeholders.get()
 
-        add_plugin(self.placeholder, 'FormPlugin', 'en')
-        self.form_plugin = self.placeholder.cmsplugin_set.get().aldryn_forms_formplugin
+        self.form_plugin = add_plugin(self.placeholder, 'FormPlugin', 'en')
         self.form_plugin.redirect_type = 'redirect_to_url'
         self.form_plugin.url = 'http://www.google.com'
         self.form_plugin.save()
@@ -47,8 +46,7 @@ class EmailNotificationFormPluginTestCase(CMSTestCase):
         self.page = create_page('test page', 'INHERIT', 'en', published=True)
         self.placeholder = self.page.placeholders.get()
 
-        add_plugin(self.placeholder, 'EmailNotificationForm', 'en')
-        self.form_plugin = self.placeholder.cmsplugin_set.get().aldryn_forms_formplugin
+        self.form_plugin = add_plugin(self.placeholder, 'EmailNotificationForm', 'en')
         self.form_plugin.redirect_type = 'redirect_to_url'
         self.form_plugin.url = 'http://www.google.com'
         self.form_plugin.save()

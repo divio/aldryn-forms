@@ -4,7 +4,7 @@ from django.utils.translation import ugettext_lazy as _
 from cms.test_utils.testcases import CMSTestCase
 
 from aldryn_forms.storage_backends import (
-    get_storage_backends, storage_backend_choices, storage_backend_default,
+    get_storage_backends, storage_backend_choices,
     BaseStorageBackend, DefaultStorageBackend, NoStorageBackend,
 )
 
@@ -66,7 +66,7 @@ class GetStorageBackendsTestCase(CMSTestCase):
 
     @override_settings(ALDRYN_FORMS_STORAGE_BACKENDS={
         'default': 'tests.test_storage_backends.FakeValidBackend',
-        'x' * 100: 'tests.test_storage_backends.FakeValidBackend',
+        'x' * 100: 'tests.test_storage_backends.FakeValidBackend2',
     })
     def test_override_invalid_keys_too_big(self):
         self.assertRaises(ImproperlyConfigured, get_storage_backends)
@@ -81,6 +81,12 @@ class GetStorageBackendsTestCase(CMSTestCase):
         'default': 'tests.test_storage_backends.FakeInvalidBackendNoInheritance',
     })
     def test_override_invalid_class_does_not_inherit_from_base_storage_backend(self):
+        self.assertRaises(ImproperlyConfigured, get_storage_backends)
+
+    @override_settings(ALDRYN_FORMS_STORAGE_BACKENDS={
+        'custom': 'tests.test_storage_backends.FakeValidBackend',
+    })
+    def test_override_invalid_key_default_missing(self):
         self.assertRaises(ImproperlyConfigured, get_storage_backends)
 
     @override_settings(ALDRYN_FORMS_STORAGE_BACKENDS={
@@ -120,16 +126,3 @@ class StorageBackendChoicesTestCase(CMSTestCase):
         choices = storage_backend_choices()
 
         self.assertEquals(choices, expected)
-
-
-class StorageBackendDefaultTestCase(CMSTestCase):
-    def test_default(self):
-        self.assertEquals(storage_backend_default(), 'default')
-
-    @override_settings(ALDRYN_FORMS_DEFAULT_STORAGE_BACKEND='no_storage')
-    def test_override(self):
-        self.assertEquals(storage_backend_default(), 'no_storage')
-
-    @override_settings(ALDRYN_FORMS_DEFAULT_STORAGE_BACKEND='not_found')
-    def test_invalid(self):
-        self.assertRaises(ImproperlyConfigured, storage_backend_default)

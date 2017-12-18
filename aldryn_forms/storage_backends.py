@@ -1,4 +1,6 @@
+# -*- coding: utf-8 -*-
 import abc
+import logging
 
 import six
 
@@ -12,58 +14,48 @@ DEFAULT_ALDRYN_FORMS_STORAGE_BACKENDS = {
     'default': 'aldryn_forms.storage_backends.DefaultStorageBackend',
     'no_storage': 'aldryn_forms.storage_backends.NoStorageBackend',
 }
-DEFAULT_ALDRYN_FORMS_DEFAULT_STORAGE_BACKEND = 'default'
 ALDRYN_FORMS_STORAGE_BACKEND_KEY_MAX_SIZE = 15
+
+logger = logging.getLogger(__name__)
 
 
 def get_storage_backends():
-    if hasattr(settings, 'ALDRYN_FORMS_STORAGE_BACKENDS'):
+    base_error_msg = 'Invalid settings.ALDRYN_FORMS_STORAGE_BACKENDS.'
+    max_key_size = ALDRYN_FORMS_STORAGE_BACKEND_KEY_MAX_SIZE
+
+    try:
         backends = settings.ALDRYN_FORMS_STORAGE_BACKENDS
-    else:
+    except AttributeError:
         backends = DEFAULT_ALDRYN_FORMS_STORAGE_BACKENDS
 
     try:
         backends = {k: import_string(v) for k, v in backends.items()}
     except ImportError as e:
-        raise ImproperlyConfigured(_('Invalid settings.ALDRYN_FORMS_STORAGE_BACKENDS. {exc}').format(exc=e))
+        raise ImproperlyConfigured('{} {}'.format(base_error_msg, e))
 
-    if any(filter(lambda x: len(x) > ALDRYN_FORMS_STORAGE_BACKEND_KEY_MAX_SIZE, backends.keys())):
-        raise ImproperlyConfigured(_(
-            'Invalid settings.ALDRYN_FORMS_STORAGE_BACKENDS. Ensure all keys are no longer than {qty} characters.'
-        ).format(qty=ALDRYN_FORMS_STORAGE_BACKEND_KEY_MAX_SIZE))
+    if any(len(key) > max_key_size for key in backends):
+        raise ImproperlyConfigured(
+            '{} Ensure all keys are no longer than {} characters.'.format(base_error_msg, max_key_size)
+        )
 
-    if any(filter(lambda x: not(issubclass(x, BaseStorageBackend)), backends.values())):
-        raise ImproperlyConfigured(_(
-            'Invalid settings.ALDRYN_FORMS_STORAGE_BACKENDS. '
-            'All classes must derive from aldryn_forms.storage_backends.BaseStorageBackend'
-        ))
+    if not all(issubclass(klass, BaseStorageBackend) for klass in backends.values()):
+        raise ImproperlyConfigured(
+            '{} All classes must derive from aldryn_forms.storage_backends.BaseStorageBackend'.format(base_error_msg)
+        )
+
+    if 'default' not in backends.keys():
+        raise ImproperlyConfigured('{} Key "default" is missing.'.format(base_error_msg))
 
     try:
         [x() for x in backends.values()]  # check abstract base classes sanity
     except TypeError as e:
-        raise ImproperlyConfigured('{}'.format(e))
-
+        raise ImproperlyConfigured('{} {}'.format(base_error_msg, e))
     return backends
 
 
 def storage_backend_choices(*args, **kwargs):
-    choices = tuple([(key, klass.verbose_name) for key, klass in get_storage_backends().items()])
+    choices = tuple((key, klass.verbose_name) for key, klass in get_storage_backends().items())
     return sorted(choices, key=lambda x: x[1])
-
-
-def storage_backend_default(*args, **kwargs):
-    default_backend = getattr(
-        settings, 'ALDRYN_FORMS_DEFAULT_STORAGE_BACKEND', DEFAULT_ALDRYN_FORMS_DEFAULT_STORAGE_BACKEND
-    )
-
-    if default_backend not in get_storage_backends():
-        raise ImproperlyConfigured(_(
-            'Invalid settings.ALDRYN_FORMS_STORAGE_BACKENDS. Key "{key}" is not present in this config. '
-            'Change your settings.ALDRYN_FORMS_STORAGE_BACKENDS to include key "{key}" '
-            'or configure settings.ALDRYN_FORMS_DEFAULT_STORAGE_BACKEND accordingly.'
-        ).format(key=default_backend))
-
-    return default_backend
 
 
 class BaseStorageBackend(six.with_metaclass(abc.ABCMeta)):
@@ -90,4 +82,5 @@ class NoStorageBackend(BaseStorageBackend):
     verbose_name = _('No Database Storage')
 
     def form_valid(self, cmsplugin, instance, request, form):
-        pass
+        form_id = form.form_plugin.id
+        logger.info('Not persisting data for form {} since the storage_backend is set to "no_storage'.format(form_id))
