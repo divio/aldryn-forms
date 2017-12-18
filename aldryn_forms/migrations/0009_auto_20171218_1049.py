@@ -16,6 +16,6 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='formplugin',
             name='storage_backend',
-            field=models.CharField(choices=aldryn_forms.storage_backends.storage_backend_choices(), default='default', max_length=15, verbose_name='Storage backend'),
+            field=models.CharField(choices=aldryn_forms.utils.storage_backend_choices(), default='default', max_length=15, verbose_name='Storage backend'),
         ),
     ]

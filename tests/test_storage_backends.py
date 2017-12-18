@@ -1,12 +1,9 @@
 from django.core.exceptions import ImproperlyConfigured
 from django.test import override_settings
-from django.utils.translation import ugettext_lazy as _
 from cms.test_utils.testcases import CMSTestCase
 
-from aldryn_forms.storage_backends import (
-    get_storage_backends, storage_backend_choices,
-    BaseStorageBackend, DefaultStorageBackend, NoStorageBackend,
-)
+from aldryn_forms.storage_backends import get_storage_backends, DefaultStorageBackend, NoStorageBackend
+from aldryn_forms.storage_backends_base import BaseStorageBackend
 
 
 class FakeValidBackend(BaseStorageBackend):
@@ -100,29 +97,3 @@ class GetStorageBackendsTestCase(CMSTestCase):
     })
     def test_override_invalid_class_does_not_define_form_valid(self):
         self.assertRaises(ImproperlyConfigured, get_storage_backends)
-
-
-class StorageBackendChoicesTestCase(CMSTestCase):
-    def test_default_backends(self):
-        expected = [
-            ('no_storage', _('No Database Storage')),
-            ('default', _('Regular Database Storage')),
-        ]
-
-        choices = storage_backend_choices()
-
-        self.assertEquals(choices, expected)
-
-    @override_settings(ALDRYN_FORMS_STORAGE_BACKENDS={
-        'default': 'tests.test_storage_backends.FakeValidBackend',
-        'x': 'tests.test_storage_backends.FakeValidBackend2',
-    })
-    def test_override_valid(self):
-        expected = [
-            ('x', 'Another Fake Valid Backend'),
-            ('default', 'Fake Valid Backend'),
-        ]
-
-        choices = storage_backend_choices()
-
-        self.assertEquals(choices, expected)

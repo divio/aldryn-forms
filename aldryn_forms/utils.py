@@ -4,6 +4,13 @@ from django.forms.forms import NON_FIELD_ERRORS
 from cms.utils.moderator import get_cmsplugin_queryset
 from cms.utils.plugins import downcast_plugins, build_plugin_tree
 
+from .storage_backends import get_storage_backends
+
+
+def storage_backend_choices(*args, **kwargs):
+    choices = tuple((key, klass.verbose_name) for key, klass in get_storage_backends().items())
+    return sorted(choices, key=lambda x: x[1])
+
 
 def get_user_model():
     """

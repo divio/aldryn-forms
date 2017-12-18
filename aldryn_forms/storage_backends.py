@@ -1,13 +1,12 @@
 # -*- coding: utf-8 -*-
-import abc
 import logging
-
-import six
 
 from django.conf import settings
 from django.core.exceptions import ImproperlyConfigured
 from django.utils.module_loading import import_string
 from django.utils.translation import ugettext_lazy as _
+
+from .storage_backends_base import BaseStorageBackend
 
 
 DEFAULT_ALDRYN_FORMS_STORAGE_BACKENDS = {
@@ -40,7 +39,8 @@ def get_storage_backends():
 
     if not all(issubclass(klass, BaseStorageBackend) for klass in backends.values()):
         raise ImproperlyConfigured(
-            '{} All classes must derive from aldryn_forms.storage_backends.BaseStorageBackend'.format(base_error_msg)
+            '{} All classes must derive from aldryn_forms.storage_backends_base.BaseStorageBackend'
+            .format(base_error_msg)
         )
 
     if 'default' not in backends.keys():
@@ -51,21 +51,6 @@ def get_storage_backends():
     except TypeError as e:
         raise ImproperlyConfigured('{} {}'.format(base_error_msg, e))
     return backends
-
-
-def storage_backend_choices(*args, **kwargs):
-    choices = tuple((key, klass.verbose_name) for key, klass in get_storage_backends().items())
-    return sorted(choices, key=lambda x: x[1])
-
-
-class BaseStorageBackend(six.with_metaclass(abc.ABCMeta)):
-    @abc.abstractproperty
-    def verbose_name(self):
-        pass  # pragma: no cover
-
-    @abc.abstractmethod
-    def form_valid(self, cmsplugin, instance, request, form):
-        pass  # pragma: no cover
 
 
 class DefaultStorageBackend(BaseStorageBackend):

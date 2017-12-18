@@ -11,10 +11,11 @@ class FormPluginTestCase(CMSTestCase):
         self.page = create_page('test page', 'test_page.html', 'en', published=True)
         self.placeholder = self.page.placeholders.get(slot='content')
 
-        self.form_plugin = add_plugin(self.placeholder, 'FormPlugin', 'en')
-        self.form_plugin.redirect_type = 'redirect_to_url'
-        self.form_plugin.url = 'http://www.google.com'
-        self.form_plugin.save()
+        plugin_data = {
+            'redirect_type': 'redirect_to_url',
+            'url': 'http://www.google.com',
+        }
+        self.form_plugin = add_plugin(self.placeholder, 'FormPlugin', 'en', **plugin_data)
 
         add_plugin(self.placeholder, 'SubmitButton', 'en', target=self.form_plugin)
 
@@ -46,10 +47,11 @@ class EmailNotificationFormPluginTestCase(CMSTestCase):
         self.page = create_page('test page', 'test_page.html', 'en', published=True)
         self.placeholder = self.page.placeholders.get(slot='content')
 
-        self.form_plugin = add_plugin(self.placeholder, 'EmailNotificationForm', 'en')
-        self.form_plugin.redirect_type = 'redirect_to_url'
-        self.form_plugin.url = 'http://www.google.com'
-        self.form_plugin.save()
+        plugin_data = {
+            'redirect_type': 'redirect_to_url',
+            'url': 'http://www.google.com',
+        }
+        self.form_plugin = add_plugin(self.placeholder, 'EmailNotificationForm', 'en', **plugin_data)
 
         add_plugin(self.placeholder, 'SubmitButton', 'en', target=self.form_plugin)
 

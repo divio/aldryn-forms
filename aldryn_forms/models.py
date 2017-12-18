@@ -23,8 +23,8 @@ from sizefield.models import FileSizeField
 
 from . import compat
 from .helpers import is_form_element
-from .storage_backends import ALDRYN_FORMS_STORAGE_BACKEND_KEY_MAX_SIZE, storage_backend_choices
-
+from .storage_backends import ALDRYN_FORMS_STORAGE_BACKEND_KEY_MAX_SIZE
+from .utils import storage_backend_choices
 
 AUTH_USER_MODEL = getattr(settings, 'AUTH_USER_MODEL', 'auth.User')
 
