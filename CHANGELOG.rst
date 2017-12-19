@@ -1,9 +1,10 @@
 Changelog
 =========
 
-2.2.10 (unreleased)
+2.3.0 (2017-12-19)
 -------------------
 * Fixed bootstrap3 templates missing custom classes
+* Added support for custom storage per form
 
 2.2.9 (2017-10-09)
 ------------------
