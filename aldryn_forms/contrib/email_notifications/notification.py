@@ -49,7 +49,7 @@ class BaseNotificationConf(object):
         return {}
 
     def get_context_keys_as_choices(self):
-        choices =  [
+        choices = [
             (
                 ugettext('Fields'),
                 list(self.form_plugin.get_form_fields_as_choices())

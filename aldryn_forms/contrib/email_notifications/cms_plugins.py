@@ -141,6 +141,7 @@ class EmailNotificationForm(FormPlugin):
                 'error_message',
                 'success_message',
                 'custom_classes',
+                'storage_backend',
             )
         }),
     )
@@ -159,7 +160,7 @@ class EmailNotificationForm(FormPlugin):
         try:
             connection = get_connection(fail_silently=False)
             connection.open()
-        except:
+        except:  # noqa
             # I use a "catch all" in order to not couple this handler to a specific email backend
             # different email backends have different exceptions.
             logger.exception("Could not send notification emails.")
@@ -181,7 +182,7 @@ class EmailNotificationForm(FormPlugin):
 
         try:
             connection.send_messages(emails)
-        except:
+        except:  # noqa
             # again, we catch all exceptions to be backend agnostic
             logger.exception("Could not send notification emails.")
             recipients = []

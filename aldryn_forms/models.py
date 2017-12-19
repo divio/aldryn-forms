@@ -1,14 +1,13 @@
 # -*- coding: utf-8 -*-
+from collections import defaultdict, namedtuple
 from functools import partial
 import json
-from collections import defaultdict, namedtuple
 
 from django.conf import settings
 from django.db import models
 from django.utils.encoding import python_2_unicode_compatible
 from django.utils.six import text_type
 from django.utils.translation import ugettext_lazy as _
-
 try:
     from django.utils.datastructures import SortedDict
 except ImportError:
@@ -24,7 +23,7 @@ from sizefield.models import FileSizeField
 
 from . import compat
 from .helpers import is_form_element
-
+from .utils import ALDRYN_FORMS_STORAGE_BACKEND_KEY_MAX_SIZE, storage_backend_choices
 
 AUTH_USER_MODEL = getattr(settings, 'AUTH_USER_MODEL', 'auth.User')
 
@@ -168,6 +167,13 @@ class FormPlugin(CMSPlugin):
         help_text=_('People who will get the form content via e-mail.')
     )
 
+    storage_backend = models.CharField(
+        verbose_name=_('Storage backend'),
+        max_length=ALDRYN_FORMS_STORAGE_BACKEND_KEY_MAX_SIZE,
+        default='default',
+        choices=storage_backend_choices(),
+    )
+
     cmsplugin_ptr = CMSPluginField()
 
     def __str__(self):
@@ -243,7 +249,7 @@ class FormPlugin(CMSPlugin):
         if self._form_field_key_cache is None:
             self._form_field_key_cache = {}
 
-        if not field.pk in self._form_field_key_cache:
+        if field.pk not in self._form_field_key_cache:
             fields_by_key = self.get_form_fields_by_name()
 
             for name, _field in fields_by_key.items():

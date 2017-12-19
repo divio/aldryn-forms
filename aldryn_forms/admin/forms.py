@@ -83,11 +83,11 @@ class BaseFormExportForm(forms.Form):
         )
 
         if from_date:
-            lower = datetime(*from_date.timetuple()[:6]) # inclusive
+            lower = datetime(*from_date.timetuple()[:6])  # inclusive
             queryset = queryset.filter(sent_at__gte=lower)
 
         if to_date:
-            upper = datetime(*to_date.timetuple()[:6]) + timedelta(days=1) # exclusive
+            upper = datetime(*to_date.timetuple()[:6]) + timedelta(days=1)  # exclusive
             queryset = queryset.filter(sent_at__lt=upper)
 
         return queryset

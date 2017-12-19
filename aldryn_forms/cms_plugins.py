@@ -38,6 +38,7 @@ from .forms import (
 from .helpers import get_user_name
 from .models import SerializedFormField
 from .signals import form_pre_save, form_post_save
+from .utils import get_storage_backends
 from .validators import (
     is_valid_recipient,
     MinChoicesValidator,
@@ -79,6 +80,7 @@ class FormPlugin(FieldContainer):
                 'success_message',
                 'recipients',
                 'custom_classes',
+                'storage_backend',
             )
         }),
     )
@@ -98,12 +100,8 @@ class FormPlugin(FieldContainer):
         return instance.form_template
 
     def form_valid(self, instance, request, form):
-        recipients = self.send_notifications(instance, form)
-
-        form.instance.set_recipients(recipients)
-        form.save()
-
-        self.send_success_message(instance, request)
+        storage = get_storage_backends()[form.form_plugin.storage_backend]()
+        return storage.form_valid(self, instance, request, form)
 
     def form_invalid(self, instance, request, form):
         if instance.error_message:
@@ -574,7 +572,7 @@ class FileField(Field):
         try:
             with Image.open(uploaded_file) as img:
                 img.verify()
-        except:
+        except:  # noqa
             model = filemodels.File
         else:
             model = imagemodels.Image

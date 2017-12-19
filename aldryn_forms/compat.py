@@ -4,12 +4,12 @@ import django
 try:
     from collections import OrderedDict
 except ImportError:
-    from django.utils.datastructures import SortedDict as OrderedDict
+    from django.utils.datastructures import SortedDict as OrderedDict  # noqa
 
 try:
     from formtools.wizard.views import SessionWizardView
 except ImportError:
-    from django.contrib.formtools.wizard.views import SessionWizardView
+    from django.contrib.formtools.wizard.views import SessionWizardView  # noqa
 
 if django.VERSION < (1, 7):
     from django.utils.module_loading import import_by_path

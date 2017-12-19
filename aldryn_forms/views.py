@@ -2,7 +2,6 @@
 from django.core.urlresolvers import resolve
 from django.http import HttpResponseRedirect, HttpResponseBadRequest
 from django.shortcuts import render
-from django.template import RequestContext
 
 from cms.utils.page_resolver import get_page_from_request
 

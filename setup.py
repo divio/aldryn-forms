@@ -3,6 +3,7 @@ from setuptools import setup, find_packages
 from aldryn_forms import __version__
 
 REQUIREMENTS = [
+    'aldryn-boilerplates>=0.7.5',
     'django-cms>=3.2',
     'django-emailit',
     'djangocms-text-ckeditor',
@@ -12,8 +13,9 @@ REQUIREMENTS = [
     'pillow',
     'django-filer',
     'django-sizefield',
-    'aldryn-boilerplates>=0.6',
-    'Django>=1.7',
+    'Django>=1.8,<2.0',
+    'openpyxl<=2.4.9',  # 2.5.0b1 is raising "ImportError: cannot import name '__version__'"
+    'six>=1.0',
 ]
 
 CLASSIFIERS = [
@@ -42,5 +44,6 @@ setup(
     install_requires=REQUIREMENTS,
     classifiers=CLASSIFIERS,
     include_package_data=True,
-    zip_safe=False
+    zip_safe=False,
+    test_suite='tests.settings.run',
 )

@@ -1,0 +1,4 @@
+djangocms-helper>=0.9.2,<0.10
+tox>=2.9.1
+coverage>=4.4.2
+flake8>=3.0.4

@@ -51,7 +51,7 @@ class EmailNotificationFormPlugin(FormPlugin):
 
     def get_notification_text_context_keys_as_choices(self):
         notification_conf = self.get_notification_conf()
-        choices =  notification_conf.get_context_keys_as_choices()
+        choices = notification_conf.get_context_keys_as_choices()
         return choices
 
 
