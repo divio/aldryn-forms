@@ -1,27 +1,25 @@
 # -*- coding: utf-8 -*-
-from collections import defaultdict, namedtuple
+from collections import defaultdict, namedtuple, OrderedDict as SortedDict
 from functools import partial
 import json
+import warnings
 
-from django.conf import settings
-from django.db import models
-from django.utils.encoding import python_2_unicode_compatible
-from django.utils.six import text_type
-from django.utils.translation import ugettext_lazy as _
-try:
-    from django.utils.datastructures import SortedDict
-except ImportError:
-    from collections import OrderedDict as SortedDict
-
+from cms.exceptions import DontUsePageAttributeWarning
 from cms.models.fields import PageField
 from cms.models.pluginmodel import CMSPlugin
 from cms.utils.plugins import build_plugin_tree, downcast_plugins
+from django.conf import settings
+from django.db import models
+from django.db.models.functions import Coalesce
+from django.utils.encoding import python_2_unicode_compatible
+from django.utils.functional import cached_property
+from django.utils.six import text_type
+from django.utils.translation import ugettext_lazy as _
+from djangocms_attributes_field.fields import AttributesField
 
 from filer.fields.folder import FilerFolderField
-
 from sizefield.models import FileSizeField
 
-from . import compat
 from .helpers import is_form_element
 from .utils import ALDRYN_FORMS_STORAGE_BACKEND_KEY_MAX_SIZE, storage_backend_choices
 
@@ -93,7 +91,6 @@ class SerializedFormField(BaseSerializedFormField):
 
 @python_2_unicode_compatible
 class BaseFormPlugin(CMSPlugin):
-
     FALLBACK_FORM_TEMPLATE = 'aldryn_forms/form.html'
     DEFAULT_FORM_TEMPLATE = getattr(
         settings, 'ALDRYN_FORMS_DEFAULT_TEMPLATE', FALLBACK_FORM_TEMPLATE)
@@ -116,7 +113,7 @@ class BaseFormPlugin(CMSPlugin):
     name = models.CharField(
         verbose_name=_('Name'),
         max_length=255,
-        help_text=_('Used to filter out form submissions.')
+        help_text=_('Used to filter out form submissions.'),
     )
     error_message = models.TextField(
         verbose_name=_('Error message'),
@@ -135,10 +132,9 @@ class BaseFormPlugin(CMSPlugin):
         verbose_name=_('Redirect to'),
         max_length=20,
         choices=REDIRECT_CHOICES,
-        help_text=_('Where to redirect the user when the form has been '
-                    'successfully sent?')
+        help_text=_('Where to redirect the user when the form has been successfully sent?'),
+        blank=True,
     )
-    page = PageField(verbose_name=_('CMS Page'), blank=True, null=True)
     url = models.URLField(_('Absolute URL'), blank=True, null=True)
     custom_classes = models.CharField(
         verbose_name=_('custom css classes'), max_length=255, blank=True)
@@ -165,6 +161,13 @@ class BaseFormPlugin(CMSPlugin):
         choices=storage_backend_choices(),
     )
 
+    form_attributes = AttributesField(
+        verbose_name=_('Attributes'),
+        blank=True,
+    )
+
+    redirect_page = PageField(verbose_name=_('CMS Page'), blank=True, null=True)
+
     cmsplugin_ptr = CMSPluginField()
 
     class Meta:
@@ -172,6 +175,35 @@ class BaseFormPlugin(CMSPlugin):
 
     def __str__(self):
         return self.name
+
+    @property
+    def page(self):
+        # From https://github.com/divio/django-cms/blob/release/3.4.x/cms/models/pluginmodel.py#L306
+        warnings.warn(
+            "Don't use the page attribute on CMSPlugins! CMSPlugins are not "
+            "guaranteed to have a page associated with them!",
+            DontUsePageAttributeWarning,
+            stacklevel=2,
+        )
+        return self.redirect_page
+
+    @page.setter
+    def page(self, value):
+        # From https://github.com/divio/django-cms/blob/release/3.4.x/cms/models/pluginmodel.py#L306
+        warnings.warn(
+            "Don't use the page attribute on CMSPlugins! CMSPlugins are not "
+            "guaranteed to have a page associated with them!",
+            DontUsePageAttributeWarning,
+            stacklevel=2,
+        )
+        self.redirect_page = value
+
+    @cached_property
+    def success_url(self):
+        if self.redirect_type == FormPlugin.REDIRECT_TO_PAGE:
+            return self.page.get_absolute_url()
+        elif self.redirect_type == FormPlugin.REDIRECT_TO_URL and self.url:
+            return self.url
 
     def copy_relations(self, oldinstance):
         for recipient in oldinstance.recipients.all():
@@ -290,7 +322,6 @@ class BaseFormPlugin(CMSPlugin):
 
 @python_2_unicode_compatible
 class FormPlugin(BaseFormPlugin):
-
     class Meta:
         abstract = False
 
@@ -309,7 +340,12 @@ class FieldsetPlugin(CMSPlugin):
 
 @python_2_unicode_compatible
 class FieldPluginBase(CMSPlugin):
-
+    name = models.CharField(
+        _('Name'),
+        max_length=255,
+        help_text=_('Used to set the field name'),
+        blank=True,
+    )
     label = models.CharField(_('Label'), max_length=255, blank=True)
     required = models.BooleanField(_('Field is required'), default=False)
     required_message = models.TextField(
@@ -333,6 +369,11 @@ class FieldPluginBase(CMSPlugin):
         help_text=_('Explanatory text displayed next to input field. Just like '
                     'this one.')
     )
+    attributes = AttributesField(
+        verbose_name=_('Attributes'),
+        blank=True,
+        excluded_keys=['name']
+    )
 
     # for text field those are min and max length
     # for multiple select those are min and max number of choices
@@ -346,6 +387,12 @@ class FieldPluginBase(CMSPlugin):
         _('Max value'),
         blank=True,
         null=True,
+    )
+    initial_value = models.CharField(
+        verbose_name=_('Initial value'),
+        max_length=255,
+        blank=True,
+        help_text=_('Default value of field.')
     )
 
     custom_classes = models.CharField(
@@ -373,7 +420,6 @@ class FieldPluginBase(CMSPlugin):
 
 
 class FieldPlugin(FieldPluginBase):
-
     def copy_relations(self, oldinstance):
         for option in oldinstance.option_set.all():
             option.pk = None  # copy on save
@@ -382,7 +428,6 @@ class FieldPlugin(FieldPluginBase):
 
 
 class TextAreaFieldPlugin(FieldPluginBase):
-
     text_area_columns = models.PositiveIntegerField(
         verbose_name=_('columns'), blank=True, null=True)
     text_area_rows = models.PositiveIntegerField(
@@ -449,22 +494,32 @@ class ImageUploadFieldPlugin(FileFieldPluginBase):
 
 @python_2_unicode_compatible
 class Option(models.Model):
+    field = models.ForeignKey(FieldPlugin, editable=False)
+    value = models.CharField(_('Value'), max_length=255)
+    default_value = models.BooleanField(_('Default'), default=False)
+    position = models.PositiveIntegerField(_('Position'), blank=True)
 
     class Meta:
         verbose_name = _('Option')
         verbose_name_plural = _('Options')
-
-    field = models.ForeignKey(FieldPlugin, editable=False)
-    value = models.CharField(_('Value'), max_length=255)
-    default_value = models.BooleanField(_('Default'), default=False)
+        ordering = ('position', )
 
     def __str__(self):
         return self.value
 
+    def set_position(self):
+        if self.position is None:
+            self.position = self.field.option_set.aggregate(
+                max_position=Coalesce(models.Max('position'), 0)
+            ).get('max_position', 0) + 10
+
+    def save(self, *args, **kwargs):
+        self.set_position()
+        return super(Option, self).save(*args, **kwargs)
+
 
 @python_2_unicode_compatible
 class FormButtonPlugin(CMSPlugin):
-
     label = models.CharField(_('Label'), max_length=255)
     custom_classes = models.CharField(
         verbose_name=_('custom css classes'), max_length=255, blank=True)

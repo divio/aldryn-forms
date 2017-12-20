@@ -19,7 +19,7 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name='emailfieldplugin',
             name='email_subject',
-            field=models.CharField(default=b'', help_text='Used as the email subject when email_send_notification is checked.', max_length=255, verbose_name='email subject', blank=True),
+            field=models.CharField(default='', help_text='Used as the email subject when email_send_notification is checked.', max_length=255, verbose_name='email subject', blank=True),
         ),
         migrations.AlterField(
             model_name='emailfieldplugin',
@@ -89,7 +89,7 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name='formplugin',
             name='form_template',
-            field=models.CharField(default=b'aldryn_forms/form.html', max_length=255, verbose_name='form template', choices=[(b'aldryn_forms/form.html', 'Default'), (b'aldryn_forms/horizontal/form.html', 'Horizontal')]),
+            field=models.CharField(default='aldryn_forms/form.html', max_length=255, verbose_name='form template', choices=[('aldryn_forms/form.html', 'Default'), ('aldryn_forms/horizontal/form.html', 'Horizontal')]),
         ),
         migrations.AlterField(
             model_name='formplugin',

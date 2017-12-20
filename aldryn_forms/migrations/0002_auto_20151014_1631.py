@@ -33,7 +33,7 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name='formdata',
             name='language',
-            field=models.CharField(default=b'en', max_length=10, verbose_name='language', choices=[(b'en', b'en'), (b'fr', b'fr'), (b'de', b'de')]),
+            field=models.CharField(default='en', max_length=10, verbose_name='language', choices=[('en', 'en'), ('fr', 'fr'), ('de', 'de')]),
             preserve_default=True,
         ),
         migrations.AlterField(

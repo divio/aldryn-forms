@@ -30,7 +30,7 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name='formdata',
             name='language',
-            field=models.CharField(default=b'en', max_length=10, verbose_name='language', choices=[(b'de', b'German'), (b'en', b'English')]),
+            field=models.CharField(default='en', max_length=10, verbose_name='language', choices=[('de', 'German'), ('en', 'English')]),
         ),
         migrations.AlterField(
             model_name='imageuploadfieldplugin',

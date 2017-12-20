@@ -7,6 +7,7 @@ from django.contrib import messages
 from django.contrib.admin import TabularInline
 from django.core.validators import MinLengthValidator
 from django.template.loader import select_template
+from django.utils.safestring import mark_safe
 from django.utils.six import text_type
 from django.utils.translation import ugettext, ugettext_lazy as _
 
@@ -34,6 +35,7 @@ from .forms import (
     RadioFieldForm,
     FileFieldForm,
     ImageFieldForm,
+    HiddenFieldForm,
 )
 from .helpers import get_user_name
 from .models import SerializedFormField
@@ -68,7 +70,7 @@ class FormPlugin(FieldContainer):
             'fields': (
                 'name',
                 'redirect_type',
-                'page',
+                'redirect_page',
                 'url',
             )
         }),
@@ -92,6 +94,7 @@ class FormPlugin(FieldContainer):
         form = self.process_form(instance, request)
 
         if form.is_valid():
+            context['post_success'] = True
             context['form_success_url'] = self.get_success_url(instance)
         context['form'] = form
         return context
@@ -187,12 +190,7 @@ class FormPlugin(FieldContainer):
         return kwargs
 
     def get_success_url(self, instance):
-        if instance.redirect_type == models.FormPlugin.REDIRECT_TO_PAGE:
-            return instance.page.get_absolute_url()
-        elif instance.redirect_type == models.FormPlugin.REDIRECT_TO_URL:
-            return instance.url
-        else:
-            raise RuntimeError('Form is not configured properly.')
+        return instance.success_url
 
     def send_success_message(self, instance, request):
         """
@@ -200,7 +198,7 @@ class FormPlugin(FieldContainer):
         using django's contrib.messages app.
         """
         message = instance.success_message or ugettext('The form has been sent.')
-        messages.success(request, message)
+        messages.success(request, mark_safe(message))
 
     def send_notifications(self, instance, form):
         users = instance.recipients.exclude(email='')
@@ -227,7 +225,7 @@ class FormPlugin(FieldContainer):
 
 
 class Fieldset(FieldContainer):
-    render_template = 'aldryn_forms/fieldset.html'
+    render_template = True
     name = _('Fieldset')
     model = models.FieldsetPlugin
 
@@ -244,6 +242,18 @@ class Fieldset(FieldContainer):
             )
         }),
     )
+
+    def get_render_template(self, context, instance, placeholder):
+        form_plugin = context['form'].form_plugin
+        templates = self.get_template_names(instance, form_plugin)
+        return select_template(templates)
+
+    def get_template_names(self, instance, form_plugin):
+        template_names = [
+            'aldryn_forms/{0}/fieldset.html'.format(form_plugin.plugin_type.lower()),
+            'aldryn_forms/fieldset.html',
+        ]
+        return template_names
 
 
 class Field(FormElement):
@@ -369,7 +379,8 @@ class Field(FormElement):
         return context
 
     def get_render_template(self, context, instance, placeholder):
-        templates = self.get_template_names(instance)
+        form_plugin = context['form'].form_plugin
+        templates = self.get_template_names(instance, form_plugin)
         return select_template(templates)
 
     def get_fieldsets(self, request, obj=None):
@@ -409,8 +420,9 @@ class Field(FormElement):
         disabled_options = self.form_field_disabled_options
         return [option for option in enabled_options if option not in disabled_options]
 
-    def get_template_names(self, instance):
+    def get_template_names(self, instance, form_plugin):
         template_names = [
+            'aldryn_forms/{0}/fields/{1}.html'.format(form_plugin.plugin_type.lower(), instance.field_type),
             'aldryn_forms/fields/{0}.html'.format(instance.field_type),
             'aldryn_forms/field.html',
         ]
@@ -424,12 +436,11 @@ class Field(FormElement):
         pass
 
 
-class HiddenField(Field):
-    pass
-
-
 class BaseTextField(Field):
+    form = TextFieldForm
     form_field = forms.CharField
+    form_field_widget = forms.CharField.widget
+    form_field_widget_input_type = 'text'
     form_field_enabled_options = [
         'label',
         'name',
@@ -451,24 +462,17 @@ class BaseTextField(Field):
 
     def get_form_field_widget_attrs(self, instance):
         attrs = super(BaseTextField, self).get_form_field_widget_attrs(instance)
-
-        if instance.type:
-            attrs['type'] = instance.type
+        attrs['type'] = self.form_field_widget_input_type
         return attrs
 
 
 class TextField(BaseTextField):
     name = _('Text Field')
 
-    form = TextFieldForm
-    form_field = forms.CharField
-    form_field_widget = forms.CharField.widget
-
 
 class TextAreaField(BaseTextField):
     name = _('Text Area Field')
     model = models.TextAreaFieldPlugin
-
     form = TextAreaFieldForm
     form_field_widget = forms.Textarea
     fieldset_general_fields = [
@@ -507,12 +511,31 @@ class TextAreaField(BaseTextField):
         return attrs
 
 
-class EmailField(TextField):
+class HiddenField(BaseTextField):
+    name = _('Hidden Field')
+    form = HiddenFieldForm
+    form_field_widget_input_type = 'hidden'
+    fieldset_general_fields = ['name', 'initial_value']
+    fieldset_advanced_fields = []
+
+
+class PhoneField(BaseTextField):
+    name = _('Phone Field')
+    form_field_widget_input_type = 'phone'
+
+
+class NumberField(BaseTextField):
+    name = _('Number Field')
+    form_field_widget_input_type = 'number'
+
+
+class EmailField(BaseTextField):
     name = _('Email Field')
     model = models.EmailFieldPlugin
-
     form = EmailFieldForm
     form_field = forms.EmailField
+    form_field_widget = forms.EmailInput
+    form_field_widget_input_type = 'email'
     fieldset_advanced_fields = [
         'email_send_notification',
         'email_subject',
@@ -844,6 +867,8 @@ plugin_pool.register_plugin(BooleanField)
 plugin_pool.register_plugin(EmailField)
 plugin_pool.register_plugin(FileField)
 plugin_pool.register_plugin(HiddenField)
+plugin_pool.register_plugin(PhoneField)
+plugin_pool.register_plugin(NumberField)
 plugin_pool.register_plugin(ImageField)
 plugin_pool.register_plugin(Fieldset)
 plugin_pool.register_plugin(FormPlugin)

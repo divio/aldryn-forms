@@ -18,7 +18,7 @@ class Migration(migrations.Migration):
             name='EmailNotification',
             fields=[
                 ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
-                ('theme', models.CharField(help_text='Provides the base theme for the email.', max_length=200, verbose_name='theme', choices=[(b'default', 'default')])),
+                ('theme', models.CharField(help_text='Provides the base theme for the email.', max_length=200, verbose_name='theme', choices=[('default', 'default')])),
                 ('to_name', models.CharField(max_length=200, verbose_name='to name', blank=True)),
                 ('to_email', models.CharField(max_length=200, verbose_name='to email', blank=True)),
                 ('from_name', models.CharField(max_length=200, verbose_name='from name', blank=True)),

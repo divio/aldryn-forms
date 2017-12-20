@@ -159,18 +159,22 @@ class FormPluginForm(ExtandableErrorForm):
 
     def clean(self):
         redirect_type = self.cleaned_data.get('redirect_type')
-        page = self.cleaned_data.get('page')
+        redirect_page = self.cleaned_data.get('redirect_page')
         url = self.cleaned_data.get('url')
 
         if redirect_type:
             if redirect_type == FormPlugin.REDIRECT_TO_PAGE:
-                if not page:
-                    self.append_to_errors('page', _('Please provide CMS page for redirect.'))
+                if not redirect_page:
+                    self.append_to_errors('redirect_page', _('Please provide CMS page for redirect.'))
                 self.cleaned_data['url'] = None
+
             if redirect_type == FormPlugin.REDIRECT_TO_URL:
                 if not url:
                     self.append_to_errors('url', _('Please provide an absolute URL for redirect.'))
-                self.cleaned_data['page'] = None
+                self.cleaned_data['redirect_page'] = None
+        else:
+            self.cleaned_data['url'] = None
+            self.cleaned_data['redirect_page'] = None
 
         return self.cleaned_data
 
@@ -232,6 +236,11 @@ class TextFieldForm(MinMaxValueForm):
     class Meta:
         fields = ['label', 'placeholder_text', 'help_text',
                   'min_value', 'max_value', 'required', 'required_message', 'custom_classes']
+
+
+class HiddenFieldForm(ExtandableErrorForm):
+    class Meta:
+        fields = ['name', 'initial_value']
 
 
 class EmailFieldForm(TextFieldForm):

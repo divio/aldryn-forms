@@ -2,6 +2,7 @@
 
 <form method="post"
     {% if form.is_multipart %}enctype="multipart/form-data"{% endif %}
+    {% if instance.form_attributes %} {{ instance.form_attributes_str }}{% endif %}
     {% if instance.custom_classes %} class="{{ instance.custom_classes }}"{% endif %}>
 
     {% if form.non_field_errors %}
@@ -10,16 +11,15 @@
         {% endfor %}
     {% endif %}
 
-    {% if form_success_url %}
+    {% if post_success %}
         <p>
-            {% blocktrans %}
-                Thank you for submitting your information, you will be
-                <a href="{{ form_success_url }}">redirected shortly</a>.
-            {% endblocktrans %}
-        </p>
-    {% endif %}
+            {% blocktrans %}Thank you for submitting your information.{% endblocktrans %}
 
-    {% if not form_success_url %}
+            {% if form_success_url %}
+                {% blocktrans %}You will be <a href="{{ form_success_url }}">redirected shortly</a>.{% endblocktrans %}
+            {% endif %}
+        </p>
+    {% else %}
         {% for plugin in instance.child_plugin_instances %}
             {% render_plugin plugin %}
         {% endfor %}
@@ -37,7 +37,7 @@
         <script>
             setTimeout(function () {
                 window.location.href = '{{ form_success_url }}';
-            }, 2000);
+            }, 5000);
         </script>
     {% endaddtoblock %}
 {% endif %}

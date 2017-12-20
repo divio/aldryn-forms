@@ -7,6 +7,7 @@ REQUIREMENTS = [
     'django-cms>=3.2',
     'django-emailit',
     'djangocms-text-ckeditor',
+    'djangocms-attributes-field>=0.3.0',
     'django-simple-captcha',
     'django-tablib',
     'tablib',
