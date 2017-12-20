@@ -255,14 +255,24 @@ class Field(FormElement):
     # Custom field related attributes
     form_field = None
     form_field_widget = None
-    form_field_enabled_options = ['label', 'help_text', 'required']
+    form_field_enabled_options = [
+        'label',
+        'name',
+        'help_text',
+        'required',
+        'attributes',
+    ]
     form_field_disabled_options = []
 
     # Used to configure default fieldset in admin form
     fieldset_general_fields = [
-        'label', 'placeholder_text', 'required',
+        'label',
+        'name',
+        'placeholder_text',
+        'required',
     ]
     fieldset_advanced_fields = [
+        'attributes',
         'help_text',
         ('min_value', 'max_value',),
         'required_message',
@@ -321,10 +331,8 @@ class Field(FormElement):
             kwargs['required'] = instance.required
         if 'validators' in allowed_options:
             kwargs['validators'] = self.get_form_field_validators(instance)
-        if 'default_value' in allowed_options:
-            qs = instance.option_set.filter(default_value=True)
-            kwargs['initial'] = qs[0] if qs.exists() else None
-
+        if 'initial_value' in allowed_options:
+            kwargs['initial'] = instance.initial_value
         return kwargs
 
     def get_form_field_widget(self, instance):
@@ -342,6 +350,8 @@ class Field(FormElement):
             attrs['placeholder'] = instance.placeholder_text
         if instance.custom_classes:
             attrs['class'] = instance.custom_classes
+        if instance.attributes:
+            attrs.update(instance.attributes)
         return attrs
 
     def get_form_field_widget_kwargs(self, instance):
@@ -414,20 +424,22 @@ class Field(FormElement):
         pass
 
 
-class TextField(Field):
-    name = _('Text Field')
+class HiddenField(Field):
+    pass
 
-    form = TextFieldForm
+
+class BaseTextField(Field):
     form_field = forms.CharField
-    form_field_widget = forms.CharField.widget
     form_field_enabled_options = [
         'label',
+        'name',
         'help_text',
         'required',
         'max_length',
         'error_messages',
         'validators',
         'placeholder',
+        'initial_value',
     ]
 
     def get_form_field_validators(self, instance):
@@ -437,8 +449,23 @@ class TextField(Field):
             validators.append(MinLengthValidator(instance.min_value))
         return validators
 
+    def get_form_field_widget_attrs(self, instance):
+        attrs = super(BaseTextField, self).get_form_field_widget_attrs(instance)
 
-class TextAreaField(TextField):
+        if instance.type:
+            attrs['type'] = instance.type
+        return attrs
+
+
+class TextField(BaseTextField):
+    name = _('Text Field')
+
+    form = TextFieldForm
+    form_field = forms.CharField
+    form_field_widget = forms.CharField.widget
+
+
+class TextAreaField(BaseTextField):
     name = _('Text Area Field')
     model = models.TextAreaFieldPlugin
 
@@ -446,6 +473,7 @@ class TextAreaField(TextField):
     form_field_widget = forms.Textarea
     fieldset_general_fields = [
         'label',
+        'name',
         'placeholder_text',
         ('text_area_rows', 'text_area_columns',),
         'required',
@@ -640,14 +668,17 @@ class BooleanField(Field):
     form_field_widget = form_field.widget
     form_field_enabled_options = [
         'label',
+        'name',
+        'attributes',
         'help_text',
         'required',
         'error_messages',
     ]
     fieldset_general_fields = [
-        'label', 'required',
+        'label', 'name', 'required',
     ]
     fieldset_advanced_fields = [
+        'attributes',
         'help_text',
         'required_message',
         'custom_classes',
@@ -669,15 +700,17 @@ class SelectField(Field):
     form_field_widget = form_field.widget
     form_field_enabled_options = [
         'label',
+        'name',
+        'attributes',
         'help_text',
         'required',
         'error_messages',
-        'default_value',
     ]
     fieldset_general_fields = [
-        'label', 'required',
+        'label', 'name', 'required',
     ]
     fieldset_advanced_fields = [
+        'attributes',
         'help_text',
         'required_message',
         'custom_classes',
@@ -703,14 +736,17 @@ class MultipleSelectField(SelectField):
     form_field_widget = forms.CheckboxSelectMultiple
     form_field_enabled_options = [
         'label',
+        'name',
+        'attributes',
         'help_text',
         'required',
         'validators',
     ]
     fieldset_general_fields = [
-        'label', 'required',
+        'label', 'name', 'required',
     ]
     fieldset_advanced_fields = [
+        'attributes',
         ('min_value', 'max_value'),
     ]
 
@@ -743,15 +779,17 @@ class RadioSelectField(Field):
     form_field_widget = forms.RadioSelect
     form_field_enabled_options = [
         'label',
+        'name',
+        'attributes',
         'help_text',
         'required',
         'error_messages',
-        'default_value',
     ]
     fieldset_general_fields = [
-        'label', 'required',
+        'label', 'name', 'required',
     ]
     fieldset_advanced_fields = [
+        'attributes',
         'help_text',
         'required_message',
         'custom_classes',
@@ -805,6 +843,7 @@ class SubmitButton(FormElement):
 plugin_pool.register_plugin(BooleanField)
 plugin_pool.register_plugin(EmailField)
 plugin_pool.register_plugin(FileField)
+plugin_pool.register_plugin(HiddenField)
 plugin_pool.register_plugin(ImageField)
 plugin_pool.register_plugin(Fieldset)
 plugin_pool.register_plugin(FormPlugin)

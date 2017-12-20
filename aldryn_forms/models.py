@@ -28,23 +28,14 @@ from .utils import ALDRYN_FORMS_STORAGE_BACKEND_KEY_MAX_SIZE, storage_backend_ch
 AUTH_USER_MODEL = getattr(settings, 'AUTH_USER_MODEL', 'auth.User')
 
 
-if compat.LTE_DJANGO_1_6:
-    # related_name='%(app_label)s_%(class)s' does not work on  Django 1.6
-    CMSPluginField = partial(
-        models.OneToOneField,
-        to=CMSPlugin,
-        related_name='+',
-        parent_link=True,
-    )
-else:
-    # Once djangoCMS < 3.3.1 support is dropped
-    # Remove the explicit cmsplugin_ptr field declarations
-    CMSPluginField = partial(
-        models.OneToOneField,
-        to=CMSPlugin,
-        related_name='%(app_label)s_%(class)s',
-        parent_link=True,
-    )
+# Once djangoCMS < 3.3.1 support is dropped
+# Remove the explicit cmsplugin_ptr field declarations
+CMSPluginField = partial(
+    models.OneToOneField,
+    to=CMSPlugin,
+    related_name='%(app_label)s_%(class)s',
+    parent_link=True,
+)
 
 FieldData = namedtuple(
     'FieldData',
@@ -101,7 +92,7 @@ class SerializedFormField(BaseSerializedFormField):
 
 
 @python_2_unicode_compatible
-class FormPlugin(CMSPlugin):
+class BaseFormPlugin(CMSPlugin):
 
     FALLBACK_FORM_TEMPLATE = 'aldryn_forms/form.html'
     DEFAULT_FORM_TEMPLATE = getattr(
@@ -175,6 +166,9 @@ class FormPlugin(CMSPlugin):
     )
 
     cmsplugin_ptr = CMSPluginField()
+
+    class Meta:
+        abstract = True
 
     def __str__(self):
         return self.name
@@ -292,6 +286,13 @@ class FormPlugin(CMSPlugin):
             self._form_elements = [
                 p for p in children_instances if is_form_element(p)]
         return self._form_elements
+
+
+@python_2_unicode_compatible
+class FormPlugin(BaseFormPlugin):
+
+    class Meta:
+        abstract = False
 
 
 @python_2_unicode_compatible
