@@ -3,7 +3,10 @@
 from __future__ import unicode_literals
 
 from django.db import migrations, models
+import cms.models.fields
 import djangocms_attributes_field.fields
+
+from ..models import BaseFormPlugin
 
 
 def forward_migration(apps, schema_editor):
@@ -24,10 +27,55 @@ def backward_migration(apps, schema_editor):
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('aldryn_forms', '0010_auto_20171220_1241'),
+        ('aldryn_forms', '0009_auto_20171218_1049'),
     ]
 
     operations = [
+        migrations.AlterModelOptions(
+            name='option',
+            options={'verbose_name': 'Option', 'verbose_name_plural': 'Options'},
+        ),
+        migrations.AlterField(
+            model_name='emailfieldplugin',
+            name='placeholder_text',
+            field=models.CharField(blank=True,
+                                   help_text='Default text in a form. Disappears when user starts typing. Example: "email@example.com"',
+                                   max_length=255, verbose_name='Placeholder text'),
+        ),
+        migrations.AlterField(
+            model_name='fieldplugin',
+            name='placeholder_text',
+            field=models.CharField(blank=True,
+                                   help_text='Default text in a form. Disappears when user starts typing. Example: "email@example.com"',
+                                   max_length=255, verbose_name='Placeholder text'),
+        ),
+        migrations.AlterField(
+            model_name='fileuploadfieldplugin',
+            name='placeholder_text',
+            field=models.CharField(blank=True,
+                                   help_text='Default text in a form. Disappears when user starts typing. Example: "email@example.com"',
+                                   max_length=255, verbose_name='Placeholder text'),
+        ),
+        migrations.AlterField(
+            model_name='formplugin',
+            name='form_template',
+            field=models.CharField(choices=BaseFormPlugin.FORM_TEMPLATES, default=BaseFormPlugin.DEFAULT_FORM_TEMPLATE,
+                                   max_length=255, verbose_name='form template'),
+        ),
+        migrations.AlterField(
+            model_name='imageuploadfieldplugin',
+            name='placeholder_text',
+            field=models.CharField(blank=True,
+                                   help_text='Default text in a form. Disappears when user starts typing. Example: "email@example.com"',
+                                   max_length=255, verbose_name='Placeholder text'),
+        ),
+        migrations.AlterField(
+            model_name='textareafieldplugin',
+            name='placeholder_text',
+            field=models.CharField(blank=True,
+                                   help_text='Default text in a form. Disappears when user starts typing. Example: "email@example.com"',
+                                   max_length=255, verbose_name='Placeholder text'),
+        ),
         migrations.AlterModelOptions(
             name='option',
             options={'ordering': ('position',), 'verbose_name': 'Option', 'verbose_name_plural': 'Options'},
@@ -36,6 +84,12 @@ class Migration(migrations.Migration):
             model_name='formplugin',
             old_name='page',
             new_name='redirect_page',
+        ),
+        migrations.AlterField(
+            model_name='formplugin',
+            name='redirect_page',
+            field=cms.models.fields.PageField(blank=True, null=True, on_delete=models.deletion.SET_NULL,
+                                              to='cms.Page', verbose_name='CMS Page'),
         ),
         migrations.AddField(
             model_name='emailfieldplugin',

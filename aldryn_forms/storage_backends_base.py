@@ -5,6 +5,7 @@ import six
 
 
 class BaseStorageBackend(six.with_metaclass(abc.ABCMeta)):
+
     @abc.abstractproperty
     def verbose_name(self):
         pass  # pragma: no cover

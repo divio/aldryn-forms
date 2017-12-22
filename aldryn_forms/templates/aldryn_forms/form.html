@@ -13,26 +13,27 @@
 
     {% if post_success %}
         <p>
-            {% blocktrans %}Thank you for submitting your information.{% endblocktrans %}
-
             {% if form_success_url %}
                 {% blocktrans %}You will be <a href="{{ form_success_url }}">redirected shortly</a>.{% endblocktrans %}
+            {% elif instance.success_message %}
+                {{ instance.success_message }}
+            {% else %}
+                {% blocktrans %}Thank you for submitting your information.{% endblocktrans %}
             {% endif %}
         </p>
     {% else %}
+        {% csrf_token %}
         {% for plugin in instance.child_plugin_instances %}
             {% render_plugin plugin %}
         {% endfor %}
+        {% for field in form.hidden_fields %}
+            {{ field }}
+        {% endfor %}
     {% endif %}
-
-    {% csrf_token %}
-    {% for field in form.hidden_fields %}
-        {{ field }}
-    {% endfor %}
 </form>
 
 {# INFO: this solution is currently required because we can't redirect from a plugin. #}
-{% if form_success_url %}
+{% if post_success and form_success_url %}
     {% addtoblock "js" %}
         <script>
             setTimeout(function () {

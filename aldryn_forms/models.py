@@ -1,10 +1,9 @@
 # -*- coding: utf-8 -*-
-from collections import defaultdict, namedtuple, OrderedDict as SortedDict
+from collections import defaultdict, namedtuple, OrderedDict
 from functools import partial
 import json
 import warnings
 
-from cms.exceptions import DontUsePageAttributeWarning
 from cms.models.fields import PageField
 from cms.models.pluginmodel import CMSPlugin
 from cms.utils.plugins import build_plugin_tree, downcast_plugins
@@ -166,7 +165,12 @@ class BaseFormPlugin(CMSPlugin):
         blank=True,
     )
 
-    redirect_page = PageField(verbose_name=_('CMS Page'), blank=True, null=True)
+    redirect_page = PageField(
+        verbose_name=_('CMS Page'),
+        blank=True,
+        null=True,
+        on_delete=models.SET_NULL,
+    )
 
     cmsplugin_ptr = CMSPluginField()
 
@@ -178,23 +182,19 @@ class BaseFormPlugin(CMSPlugin):
 
     @property
     def page(self):
-        # From https://github.com/divio/django-cms/blob/release/3.4.x/cms/models/pluginmodel.py#L306
         warnings.warn(
-            "Don't use the page attribute on CMSPlugins! CMSPlugins are not "
-            "guaranteed to have a page associated with them!",
-            DontUsePageAttributeWarning,
-            stacklevel=2,
+            'The "page" field has been renamed to redirect_page '
+            'and will be removed on Aldryn Forms 3.1.0',
+            PendingDeprecationWarning
         )
         return self.redirect_page
 
     @page.setter
     def page(self, value):
-        # From https://github.com/divio/django-cms/blob/release/3.4.x/cms/models/pluginmodel.py#L306
         warnings.warn(
-            "Don't use the page attribute on CMSPlugins! CMSPlugins are not "
-            "guaranteed to have a page associated with them!",
-            DontUsePageAttributeWarning,
-            stacklevel=2,
+            'The "page" field has been renamed to redirect_page '
+            'and will be removed on Aldryn Forms 3.1.0',
+            PendingDeprecationWarning
         )
         self.redirect_page = value
 
@@ -248,10 +248,13 @@ class BaseFormPlugin(CMSPlugin):
             if field_type in field_type_occurrences:
                 field_type_occurrences[field_type] += 1
 
+            field_label = field_plugin.get_label()
             field_type_occurrence = field_type_occurrences[field_type]
 
-            field_name = u'{0}_{1}'.format(field_type, field_type_occurrence)
-            field_label = field_plugin.get_label()
+            if field_plugin.name:
+                field_name = field_plugin.name
+            else:
+                field_name = u'{0}_{1}'.format(field_type, field_type_occurrence)
 
             if field_label:
                 field_id = u'{0}_{1}'.format(field_type, field_label)
@@ -290,7 +293,7 @@ class BaseFormPlugin(CMSPlugin):
 
     def get_form_fields_by_name(self):
         fields = self.get_form_fields()
-        fields_by_name = SortedDict((field.name, field) for field in fields)
+        fields_by_name = OrderedDict((field.name, field) for field in fields)
         return fields_by_name
 
     def get_form_elements(self):
@@ -409,7 +412,7 @@ class FieldPluginBase(CMSPlugin):
             setattr(self, attribute, True)
 
     def __str__(self):
-        return self.label or str(self.pk)
+        return self.label or self.name or str(self.pk)
 
     @property
     def field_type(self):

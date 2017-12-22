@@ -1,6 +1,18 @@
 Changelog
 =========
 
+3.0.0 (unreleased)
+-------------------
+* New fields were added to the ``FieldPluginBase`` class, as a result, any model
+  that inherits from it will need to update its migrations.
+* Added new ``name`` field to customize a field's name attribute.
+* Added a ``position`` field to the ``Option`` model for ordered choices support.
+* Renamed the form's ``page`` field to ``redirect_page``.
+* Introduced the ``BaseForm`` class to make it easier to create custom form types.
+* Introduced support for customizing the input's tag ``type`` attribute.
+* Introduced new ``Phone``, ``Number`` and ``Hidden`` fields.
+* Introduced custom attributes support for the forms and fields.
+
 2.3.0 (2017-12-19)
 -------------------
 * Fixed bootstrap3 templates missing custom classes

@@ -61,6 +61,7 @@ class FieldContainer(FormElement):
 class FormPlugin(FieldContainer):
     render_template = True
     name = _('Form')
+    module = _('Form types')
     model = models.FormPlugin
     form = FormPluginForm
     filter_horizontal = ['recipients']
@@ -81,8 +82,9 @@ class FormPlugin(FieldContainer):
                 'error_message',
                 'success_message',
                 'recipients',
-                'custom_classes',
                 'storage_backend',
+                'custom_classes',
+                'form_attributes',
             )
         }),
     )
