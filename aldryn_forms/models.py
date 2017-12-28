@@ -237,10 +237,10 @@ class BaseFormPlugin(CMSPlugin):
         field_type_occurrences = defaultdict(lambda: 1)
 
         form_elements = self.get_form_elements()
-        is_form_field = lambda plugin: issubclass(
-            plugin.get_plugin_class(), Field)
         field_plugins = [
-            plugin for plugin in form_elements if is_form_field(plugin)]
+            plugin for plugin in form_elements
+            if issubclass(plugin.get_plugin_class(), Field)
+        ]
 
         for field_plugin in field_plugins:
             field_type = field_plugin.field_type
