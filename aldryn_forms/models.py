@@ -325,8 +325,12 @@ class BaseFormPlugin(CMSPlugin):
 
 @python_2_unicode_compatible
 class FormPlugin(BaseFormPlugin):
+
     class Meta:
         abstract = False
+
+    def __str__(self):
+        return self.name
 
 
 @python_2_unicode_compatible
