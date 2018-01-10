@@ -42,8 +42,8 @@ class GetActionsTestCase(CMSTestCase):
     def test_default_backends(self):
         expected = {
             'default': DefaultAction,
-            'email_action': EmailAction,
-            'no_action': NoAction,
+            'email_only': EmailAction,
+            'none': NoAction,
         }
 
         backends = get_action_backends()
@@ -105,9 +105,9 @@ class GetActionsTestCase(CMSTestCase):
 class ActionChoicesTestCase(CMSTestCase):
     def test_default_backends(self):
         expected = [
-            ('default', _('Default action backend')),
-            ('email_action', _('Email action backend')),
-            ('no_action', _('No action backend')),
+            ('default', _('Default')),
+            ('email_only', _('Email only')),
+            ('none', _('None')),
         ]
 
         choices = action_backend_choices()

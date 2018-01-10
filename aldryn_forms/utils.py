@@ -12,8 +12,8 @@ from .action_backends_base import BaseAction
 
 DEFAULT_ALDRYN_FORMS_ACTION_BACKENDS = {
     'default': 'aldryn_forms.action_backends.DefaultAction',
-    'email_action': 'aldryn_forms.action_backends.EmailAction',
-    'no_action': 'aldryn_forms.action_backends.NoAction',
+    'email_only': 'aldryn_forms.action_backends.EmailAction',
+    'none': 'aldryn_forms.action_backends.NoAction',
 }
 ALDRYN_FORMS_ACTION_BACKEND_KEY_MAX_SIZE = 15
 

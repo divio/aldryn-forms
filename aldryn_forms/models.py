@@ -154,7 +154,7 @@ class BaseFormPlugin(CMSPlugin):
     )
 
     action_backend = models.CharField(
-        verbose_name=_('Storage backend'),
+        verbose_name=_('Action backend'),
         max_length=ALDRYN_FORMS_ACTION_BACKEND_KEY_MAX_SIZE,
         default='default',
         choices=action_backend_choices(),

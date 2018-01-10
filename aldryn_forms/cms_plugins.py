@@ -105,8 +105,8 @@ class FormPlugin(FieldContainer):
         return instance.form_template
 
     def form_valid(self, instance, request, form):
-        storage = get_action_backends()[form.form_plugin.action_backend]()
-        return storage.form_valid(self, instance, request, form)
+        action_backend = get_action_backends()[form.form_plugin.action_backend]()
+        return action_backend.form_valid(self, instance, request, form)
 
     def form_invalid(self, instance, request, form):
         if instance.error_message:

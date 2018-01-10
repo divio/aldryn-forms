@@ -5,24 +5,16 @@ from __future__ import unicode_literals
 from django.db import migrations
 
 
-BACKEND_FIELD_VALUE = (
-    ('email_storage', 'email_action'),
-    ('no_storage', 'no_action'),
-)
-
-
 def forward_migration(apps, schema_editor):
     db_alias = schema_editor.connection.alias
     FormPlugin = apps.get_model('aldryn_forms', 'FormPlugin')
-    for old, new in BACKEND_FIELD_VALUE:
-        FormPlugin.objects.using(db_alias).filter(action_backend=old).update(action_backend=new)
+    FormPlugin.objects.using(db_alias).filter(action_backend='no_storage').update(action_backend='none')
 
 
 def backward_migration(apps, schema_editor):
     db_alias = schema_editor.connection.alias
     FormPlugin = apps.get_model('aldryn_forms', 'FormPlugin')
-    for old, new in BACKEND_FIELD_VALUE:
-        FormPlugin.objects.using(db_alias).filter(action_backend=new).update(action_backend=old)
+    FormPlugin.objects.using(db_alias).filter(action_backend='none').update(action_backend='no_storage')
 
 
 class Migration(migrations.Migration):

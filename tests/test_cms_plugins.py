@@ -23,7 +23,7 @@ class FormPluginTestCase(CMSTestCase):
 
         add_plugin(self.placeholder, 'SubmitButton', 'en', target=self.form_plugin)
 
-    def test_form_submission_default_storage(self):
+    def test_form_submission_default_action(self):
         self.form_plugin.action_backend = 'default'
         self.form_plugin.save()
         self.page.publish('en')
@@ -34,8 +34,8 @@ class FormPluginTestCase(CMSTestCase):
         self.assertEquals(FormSubmission.objects.count(), 1)
         self.assertEquals(len(mail.outbox),  1)
 
-    def test_form_submission_email_storage(self):
-        self.form_plugin.action_backend = 'email_action'
+    def test_form_submission_email_action(self):
+        self.form_plugin.action_backend = 'email_only'
         self.form_plugin.save()
         self.page.publish('en')
 
@@ -45,8 +45,8 @@ class FormPluginTestCase(CMSTestCase):
         self.assertEquals(FormSubmission.objects.count(), 0)
         self.assertEquals(len(mail.outbox),  1)
 
-    def test_form_submission_no_storage(self):
-        self.form_plugin.action_backend = 'no_action'
+    def test_form_submission_no_action(self):
+        self.form_plugin.action_backend = 'none'
         self.form_plugin.save()
         self.page.publish('en')
 
@@ -74,7 +74,7 @@ class EmailNotificationFormPluginTestCase(CMSTestCase):
 
         add_plugin(self.placeholder, 'SubmitButton', 'en', target=self.form_plugin)
 
-    def test_form_submission_default_storage(self):
+    def test_form_submission_default_action(self):
         self.form_plugin.action_backend = 'default'
         self.form_plugin.save()
         self.page.publish('en')
@@ -85,8 +85,8 @@ class EmailNotificationFormPluginTestCase(CMSTestCase):
         self.assertEquals(FormSubmission.objects.count(), 1)
         self.assertEquals(len(mail.outbox),  1)
 
-    def test_form_submission_email_storage(self):
-        self.form_plugin.action_backend = 'email_action'
+    def test_form_submission_email_action(self):
+        self.form_plugin.action_backend = 'email_only'
         self.form_plugin.save()
         self.page.publish('en')
 
@@ -96,8 +96,8 @@ class EmailNotificationFormPluginTestCase(CMSTestCase):
         self.assertEquals(FormSubmission.objects.count(), 0)
         self.assertEquals(len(mail.outbox),  1)
 
-    def test_form_submission_no_storage(self):
-        self.form_plugin.action_backend = 'no_action'
+    def test_form_submission_no_action(self):
+        self.form_plugin.action_backend = 'none'
         self.form_plugin.save()
         self.page.publish('en')
 
