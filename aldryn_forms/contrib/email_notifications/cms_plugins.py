@@ -141,7 +141,7 @@ class EmailNotificationForm(FormPlugin):
                 'error_message',
                 'success_message',
                 'custom_classes',
-                'storage_backend',
+                'action_backend',
             )
         }),
     )

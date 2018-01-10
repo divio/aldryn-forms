@@ -20,7 +20,7 @@ from filer.fields.folder import FilerFolderField
 from sizefield.models import FileSizeField
 
 from .helpers import is_form_element
-from .utils import ALDRYN_FORMS_STORAGE_BACKEND_KEY_MAX_SIZE, storage_backend_choices
+from .utils import ALDRYN_FORMS_ACTION_BACKEND_KEY_MAX_SIZE, action_backend_choices
 
 AUTH_USER_MODEL = getattr(settings, 'AUTH_USER_MODEL', 'auth.User')
 
@@ -153,11 +153,11 @@ class BaseFormPlugin(CMSPlugin):
         help_text=_('People who will get the form content via e-mail.')
     )
 
-    storage_backend = models.CharField(
-        verbose_name=_('Storage backend'),
-        max_length=ALDRYN_FORMS_STORAGE_BACKEND_KEY_MAX_SIZE,
+    action_backend = models.CharField(
+        verbose_name=_('Action backend'),
+        max_length=ALDRYN_FORMS_ACTION_BACKEND_KEY_MAX_SIZE,
         default='default',
-        choices=storage_backend_choices(),
+        choices=action_backend_choices(),
     )
 
     form_attributes = AttributesField(
