@@ -7,18 +7,18 @@ from django.utils.module_loading import import_string
 from cms.utils.moderator import get_cmsplugin_queryset
 from cms.utils.plugins import downcast_plugins, build_plugin_tree
 
-from .storage_backends_base import BaseStorageBackend
+from .action_backends_base import BaseAction
 
 
 DEFAULT_ALDRYN_FORMS_STORAGE_BACKENDS = {
-    'default': 'aldryn_forms.storage_backends.DefaultStorageBackend',
-    'email_storage': 'aldryn_forms.storage_backends.EmailStorageBackend',
-    'no_storage': 'aldryn_forms.storage_backends.NoStorageBackend',
+    'default': 'aldryn_forms.action_backends.DefaultAction',
+    'email_action': 'aldryn_forms.action_backends.EmailAction',
+    'no_action': 'aldryn_forms.action_backends.NoAction',
 }
 ALDRYN_FORMS_STORAGE_BACKEND_KEY_MAX_SIZE = 15
 
 
-def get_storage_backends():
+def get_action_backends():
     base_error_msg = 'Invalid settings.ALDRYN_FORMS_STORAGE_BACKENDS.'
     max_key_size = ALDRYN_FORMS_STORAGE_BACKEND_KEY_MAX_SIZE
 
@@ -37,9 +37,9 @@ def get_storage_backends():
             '{} Ensure all keys are no longer than {} characters.'.format(base_error_msg, max_key_size)
         )
 
-    if not all(issubclass(klass, BaseStorageBackend) for klass in backends.values()):
+    if not all(issubclass(klass, BaseAction) for klass in backends.values()):
         raise ImproperlyConfigured(
-            '{} All classes must derive from aldryn_forms.storage_backends_base.BaseStorageBackend'
+            '{} All classes must derive from aldryn_forms.action_backends_base.BaseAction'
             .format(base_error_msg)
         )
 
@@ -53,8 +53,8 @@ def get_storage_backends():
     return backends
 
 
-def storage_backend_choices(*args, **kwargs):
-    choices = tuple((key, klass.verbose_name) for key, klass in get_storage_backends().items())
+def action_backend_choices(*args, **kwargs):
+    choices = tuple((key, klass.verbose_name) for key, klass in get_action_backends().items())
     return sorted(choices, key=lambda x: x[1])
 
 

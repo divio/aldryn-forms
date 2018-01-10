@@ -24,7 +24,7 @@ class FormPluginTestCase(CMSTestCase):
         add_plugin(self.placeholder, 'SubmitButton', 'en', target=self.form_plugin)
 
     def test_form_submission_default_storage(self):
-        self.form_plugin.storage_backend = 'default'
+        self.form_plugin.action_backend = 'default'
         self.form_plugin.save()
         self.page.publish('en')
 
@@ -35,7 +35,7 @@ class FormPluginTestCase(CMSTestCase):
         self.assertEquals(len(mail.outbox),  1)
 
     def test_form_submission_email_storage(self):
-        self.form_plugin.storage_backend = 'email_storage'
+        self.form_plugin.action_backend = 'email_action'
         self.form_plugin.save()
         self.page.publish('en')
 
@@ -46,7 +46,7 @@ class FormPluginTestCase(CMSTestCase):
         self.assertEquals(len(mail.outbox),  1)
 
     def test_form_submission_no_storage(self):
-        self.form_plugin.storage_backend = 'no_storage'
+        self.form_plugin.action_backend = 'no_action'
         self.form_plugin.save()
         self.page.publish('en')
 
@@ -75,7 +75,7 @@ class EmailNotificationFormPluginTestCase(CMSTestCase):
         add_plugin(self.placeholder, 'SubmitButton', 'en', target=self.form_plugin)
 
     def test_form_submission_default_storage(self):
-        self.form_plugin.storage_backend = 'default'
+        self.form_plugin.action_backend = 'default'
         self.form_plugin.save()
         self.page.publish('en')
 
@@ -86,7 +86,7 @@ class EmailNotificationFormPluginTestCase(CMSTestCase):
         self.assertEquals(len(mail.outbox),  1)
 
     def test_form_submission_email_storage(self):
-        self.form_plugin.storage_backend = 'email_storage'
+        self.form_plugin.action_backend = 'email_action'
         self.form_plugin.save()
         self.page.publish('en')
 
@@ -97,7 +97,7 @@ class EmailNotificationFormPluginTestCase(CMSTestCase):
         self.assertEquals(len(mail.outbox),  1)
 
     def test_form_submission_no_storage(self):
-        self.form_plugin.storage_backend = 'no_storage'
+        self.form_plugin.action_backend = 'no_action'
         self.form_plugin.save()
         self.page.publish('en')
 

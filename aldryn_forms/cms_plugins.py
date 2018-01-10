@@ -40,7 +40,7 @@ from .forms import (
 from .helpers import get_user_name
 from .models import SerializedFormField
 from .signals import form_pre_save, form_post_save
-from .utils import get_storage_backends
+from .utils import get_action_backends
 from .validators import (
     is_valid_recipient,
     MinChoicesValidator,
@@ -82,7 +82,7 @@ class FormPlugin(FieldContainer):
                 'error_message',
                 'success_message',
                 'recipients',
-                'storage_backend',
+                'action_backend',
                 'custom_classes',
                 'form_attributes',
             )
@@ -105,7 +105,7 @@ class FormPlugin(FieldContainer):
         return instance.form_template
 
     def form_valid(self, instance, request, form):
-        storage = get_storage_backends()[form.form_plugin.storage_backend]()
+        storage = get_action_backends()[form.form_plugin.action_backend]()
         return storage.form_valid(self, instance, request, form)
 
     def form_invalid(self, instance, request, form):
