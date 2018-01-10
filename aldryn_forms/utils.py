@@ -10,22 +10,22 @@ from cms.utils.plugins import downcast_plugins, build_plugin_tree
 from .action_backends_base import BaseAction
 
 
-DEFAULT_ALDRYN_FORMS_STORAGE_BACKENDS = {
+DEFAULT_ALDRYN_FORMS_ACTION_BACKENDS = {
     'default': 'aldryn_forms.action_backends.DefaultAction',
     'email_action': 'aldryn_forms.action_backends.EmailAction',
     'no_action': 'aldryn_forms.action_backends.NoAction',
 }
-ALDRYN_FORMS_STORAGE_BACKEND_KEY_MAX_SIZE = 15
+ALDRYN_FORMS_ACTION_BACKEND_KEY_MAX_SIZE = 15
 
 
 def get_action_backends():
-    base_error_msg = 'Invalid settings.ALDRYN_FORMS_STORAGE_BACKENDS.'
-    max_key_size = ALDRYN_FORMS_STORAGE_BACKEND_KEY_MAX_SIZE
+    base_error_msg = 'Invalid settings.ALDRYN_FORMS_ACTION_BACKENDS.'
+    max_key_size = ALDRYN_FORMS_ACTION_BACKEND_KEY_MAX_SIZE
 
     try:
-        backends = settings.ALDRYN_FORMS_STORAGE_BACKENDS
+        backends = settings.ALDRYN_FORMS_ACTION_BACKENDS
     except AttributeError:
-        backends = DEFAULT_ALDRYN_FORMS_STORAGE_BACKENDS
+        backends = DEFAULT_ALDRYN_FORMS_ACTION_BACKENDS
 
     try:
         backends = {k: import_string(v) for k, v in backends.items()}

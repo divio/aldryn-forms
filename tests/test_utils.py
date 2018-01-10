@@ -50,7 +50,7 @@ class GetActionsTestCase(CMSTestCase):
 
         self.assertDictEqual(backends, expected)
 
-    @override_settings(ALDRYN_FORMS_STORAGE_BACKENDS={
+    @override_settings(ALDRYN_FORMS_ACTION_BACKENDS={
         'default': 'tests.test_utils.FakeValidBackend',
         'x': 'tests.test_utils.FakeValidBackend2',
     })
@@ -64,38 +64,38 @@ class GetActionsTestCase(CMSTestCase):
 
         self.assertDictEqual(backends, expected)
 
-    @override_settings(ALDRYN_FORMS_STORAGE_BACKENDS={
+    @override_settings(ALDRYN_FORMS_ACTION_BACKENDS={
         'default': 'tests.test_utils.FakeValidBackend',
         'x' * 100: 'tests.test_utils.FakeValidBackend2',
     })
     def test_override_invalid_keys_too_big(self):
         self.assertRaises(ImproperlyConfigured, get_action_backends)
 
-    @override_settings(ALDRYN_FORMS_STORAGE_BACKENDS={
+    @override_settings(ALDRYN_FORMS_ACTION_BACKENDS={
         'default': 'tests.whatever.something.terribly.Wrong',
     })
     def test_override_invalid_path_to_class_not_found(self):
         self.assertRaises(ImproperlyConfigured, get_action_backends)
 
-    @override_settings(ALDRYN_FORMS_STORAGE_BACKENDS={
+    @override_settings(ALDRYN_FORMS_ACTION_BACKENDS={
         'default': 'tests.test_utils.FakeInvalidBackendNoInheritance',
     })
     def test_override_invalid_class_does_not_inherit_from_base_action_backend(self):
         self.assertRaises(ImproperlyConfigured, get_action_backends)
 
-    @override_settings(ALDRYN_FORMS_STORAGE_BACKENDS={
+    @override_settings(ALDRYN_FORMS_ACTION_BACKENDS={
         'custom': 'tests.test_utils.FakeValidBackend',
     })
     def test_override_invalid_key_default_missing(self):
         self.assertRaises(ImproperlyConfigured, get_action_backends)
 
-    @override_settings(ALDRYN_FORMS_STORAGE_BACKENDS={
+    @override_settings(ALDRYN_FORMS_ACTION_BACKENDS={
         'default': 'tests.test_utils.FakeInvalidBackendNoVerboseName',
     })
     def test_override_invalid_class_does_not_define_verbose_name(self):
         self.assertRaises(ImproperlyConfigured, get_action_backends)
 
-    @override_settings(ALDRYN_FORMS_STORAGE_BACKENDS={
+    @override_settings(ALDRYN_FORMS_ACTION_BACKENDS={
         'default': 'tests.test_utils.FakeInvalidBackendNoFormValid',
     })
     def test_override_invalid_class_does_not_define_form_valid(self):
@@ -114,7 +114,7 @@ class ActionChoicesTestCase(CMSTestCase):
 
         self.assertEquals(choices, expected)
 
-    @override_settings(ALDRYN_FORMS_STORAGE_BACKENDS={
+    @override_settings(ALDRYN_FORMS_ACTION_BACKENDS={
         'default': 'tests.test_utils.FakeValidBackend',
         'x': 'tests.test_utils.FakeValidBackend2',
     })
