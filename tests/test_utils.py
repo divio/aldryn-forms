@@ -3,7 +3,7 @@ from django.utils.translation import ugettext_lazy as _
 from django.test import override_settings
 from cms.test_utils.testcases import CMSTestCase
 
-from aldryn_forms.storage_backends import DefaultStorageBackend, NoStorageBackend
+from aldryn_forms.storage_backends import DefaultStorageBackend, EmailStorageBackend, NoStorageBackend
 from aldryn_forms.storage_backends_base import BaseStorageBackend
 from aldryn_forms.utils import get_storage_backends, storage_backend_choices
 
@@ -42,6 +42,7 @@ class GetStorageBackendsTestCase(CMSTestCase):
     def test_default_backends(self):
         expected = {
             'default': DefaultStorageBackend,
+            'email_storage': EmailStorageBackend,
             'no_storage': NoStorageBackend,
         }
 
@@ -104,6 +105,7 @@ class GetStorageBackendsTestCase(CMSTestCase):
 class StorageBackendChoicesTestCase(CMSTestCase):
     def test_default_backends(self):
         expected = [
+            ('email_storage', _('Email Only Storage')),
             ('no_storage', _('No Database Storage')),
             ('default', _('Regular Database Storage')),
         ]

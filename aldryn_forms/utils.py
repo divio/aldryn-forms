@@ -12,6 +12,7 @@ from .storage_backends_base import BaseStorageBackend
 
 DEFAULT_ALDRYN_FORMS_STORAGE_BACKENDS = {
     'default': 'aldryn_forms.storage_backends.DefaultStorageBackend',
+    'email_storage': 'aldryn_forms.storage_backends.EmailStorageBackend',
     'no_storage': 'aldryn_forms.storage_backends.NoStorageBackend',
 }
 ALDRYN_FORMS_STORAGE_BACKEND_KEY_MAX_SIZE = 15
