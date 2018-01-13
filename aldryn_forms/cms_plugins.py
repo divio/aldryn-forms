@@ -505,6 +505,8 @@ class TextAreaField(BaseTextField):
 
     def get_form_field_widget_attrs(self, instance):
         attrs = super(TextAreaField, self).get_form_field_widget_attrs(instance)
+        
+        del attrs['type']
 
         if instance.text_area_columns:
             attrs['cols'] = instance.text_area_columns
