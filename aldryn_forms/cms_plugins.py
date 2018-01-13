@@ -523,7 +523,7 @@ class HiddenField(BaseTextField):
 
 class PhoneField(BaseTextField):
     name = _('Phone Field')
-    form_field_widget_input_type = 'phone'
+    form_field_widget_input_type = 'tel'
 
 
 class NumberField(BaseTextField):
