@@ -43,5 +43,6 @@ def submit_form_view(request):
 
         if form.is_valid():
             success_url = form_plugin_instance.get_success_url(instance=form_plugin)
-            return HttpResponseRedirect(success_url)
+            if success_url:
+                return HttpResponseRedirect(success_url)
     return render(request, template, context)
