@@ -246,15 +246,21 @@ class Fieldset(FieldContainer):
     )
 
     def get_render_template(self, context, instance, placeholder):
-        form_plugin = context['form'].form_plugin
+        try:
+            form_plugin = context['form'].form_plugin
+        except KeyError:
+            # technically a fieldset is not allowed outside a form.
+            # unfortunately, there's no builtin way to enforce this on the cms
+            form_plugin = None
         templates = self.get_template_names(instance, form_plugin)
         return select_template(templates)
 
-    def get_template_names(self, instance, form_plugin):
-        template_names = [
-            'aldryn_forms/{0}/fieldset.html'.format(form_plugin.plugin_type.lower()),
-            'aldryn_forms/fieldset.html',
-        ]
+    def get_template_names(self, instance, form_plugin=None):
+        template_names = ['aldryn_forms/fieldset.html']
+
+        if form_plugin:
+            template = 'aldryn_forms/{}/fieldset.html'.format(form_plugin.plugin_type.lower())
+            template_names.insert(0, template)
         return template_names
 
 
@@ -381,7 +387,12 @@ class Field(FormElement):
         return context
 
     def get_render_template(self, context, instance, placeholder):
-        form_plugin = context['form'].form_plugin
+        try:
+            form_plugin = context['form'].form_plugin
+        except KeyError:
+            # technically a field is not allowed outside a form.
+            # unfortunately, there's no builtin way to enforce this on the cms
+            form_plugin = None
         templates = self.get_template_names(instance, form_plugin)
         return select_template(templates)
 
@@ -422,12 +433,18 @@ class Field(FormElement):
         disabled_options = self.form_field_disabled_options
         return [option for option in enabled_options if option not in disabled_options]
 
-    def get_template_names(self, instance, form_plugin):
+    def get_template_names(self, instance, form_plugin=None):
         template_names = [
-            'aldryn_forms/{0}/fields/{1}.html'.format(form_plugin.plugin_type.lower(), instance.field_type),
             'aldryn_forms/fields/{0}.html'.format(instance.field_type),
             'aldryn_forms/field.html',
         ]
+
+        if form_plugin:
+            template = 'aldryn_forms/{}/fields/{}.html'.format(
+                form_plugin.plugin_type.lower(),
+                instance.field_type,
+            )
+            template_names.insert(0, template)
         return template_names
 
     # hooks to allow processing of form data per field

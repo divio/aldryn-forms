@@ -201,7 +201,7 @@ class BaseFormPlugin(CMSPlugin):
     @cached_property
     def success_url(self):
         if self.redirect_type == FormPlugin.REDIRECT_TO_PAGE:
-            return self.page.get_absolute_url()
+            return self.redirect_page.get_absolute_url()
         elif self.redirect_type == FormPlugin.REDIRECT_TO_URL and self.url:
             return self.url
 
