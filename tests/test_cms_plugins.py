@@ -32,7 +32,7 @@ class FormPluginTestCase(CMSTestCase):
 
         self.assertEquals(response.status_code, 200)
         self.assertEquals(FormSubmission.objects.count(), 1)
-        self.assertEquals(len(mail.outbox),  1)
+        self.assertEquals(len(mail.outbox), 1)
 
     def test_form_submission_email_action(self):
         self.form_plugin.action_backend = 'email_only'
@@ -43,7 +43,7 @@ class FormPluginTestCase(CMSTestCase):
 
         self.assertEquals(response.status_code, 200)
         self.assertEquals(FormSubmission.objects.count(), 0)
-        self.assertEquals(len(mail.outbox),  1)
+        self.assertEquals(len(mail.outbox), 1)
 
     def test_form_submission_no_action(self):
         self.form_plugin.action_backend = 'none'
@@ -54,7 +54,7 @@ class FormPluginTestCase(CMSTestCase):
 
         self.assertEquals(response.status_code, 200)
         self.assertEquals(FormSubmission.objects.count(), 0)
-        self.assertEquals(len(mail.outbox),  0)
+        self.assertEquals(len(mail.outbox), 0)
 
 
 class EmailNotificationFormPluginTestCase(CMSTestCase):
@@ -83,7 +83,7 @@ class EmailNotificationFormPluginTestCase(CMSTestCase):
 
         self.assertEquals(response.status_code, 200)
         self.assertEquals(FormSubmission.objects.count(), 1)
-        self.assertEquals(len(mail.outbox),  1)
+        self.assertEquals(len(mail.outbox), 1)
 
     def test_form_submission_email_action(self):
         self.form_plugin.action_backend = 'email_only'
@@ -94,7 +94,7 @@ class EmailNotificationFormPluginTestCase(CMSTestCase):
 
         self.assertEquals(response.status_code, 200)
         self.assertEquals(FormSubmission.objects.count(), 0)
-        self.assertEquals(len(mail.outbox),  1)
+        self.assertEquals(len(mail.outbox), 1)
 
     def test_form_submission_no_action(self):
         self.form_plugin.action_backend = 'none'
@@ -105,4 +105,4 @@ class EmailNotificationFormPluginTestCase(CMSTestCase):
 
         self.assertEquals(response.status_code, 200)
         self.assertEquals(FormSubmission.objects.count(), 0)
-        self.assertEquals(len(mail.outbox),  0)
+        self.assertEquals(len(mail.outbox), 0)
