@@ -1,7 +1,7 @@
 Changelog
 =========
 
-3.0.0 (unreleased)
+3.0.0 (2018-02-01)
 -------------------
 * New fields were added to the ``FieldPluginBase`` class, as a result, any model
   that inherits from it will need to update its migrations.
