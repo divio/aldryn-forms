@@ -1,1 +1,3 @@
-{% extends "aldryn_forms/field.html" %}
+{% load aldryn_forms_tags %}
+
+{% render_form_widget field class=instance.custom_classes %}
