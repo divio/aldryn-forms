@@ -53,6 +53,10 @@ class FormElement(CMSPluginBase):
     cache = False
     module = _('Forms')
 
+    # Allow elements only under the FormPlugin:
+    require_parent = True
+    parent_classes = ['FormPlugin']
+
 
 class FieldContainer(FormElement):
     allow_children = True
@@ -65,6 +69,10 @@ class FormPlugin(FieldContainer):
     model = models.FormPlugin
     form = FormPluginForm
     filter_horizontal = ['recipients']
+
+    # Allow FormPlugin everywhere:
+    require_parent = False
+    parent_classes = None
 
     fieldsets = (
         (None, {
