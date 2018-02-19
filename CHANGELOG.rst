@@ -1,6 +1,10 @@
 Changelog
 =========
 
+3.0.1 (2018-02-19)
+-------------------
+* Add missing schema migrations
+
 3.0.0 (2018-02-01)
 -------------------
 * New fields were added to the ``FieldPluginBase`` class, as a result, any model
