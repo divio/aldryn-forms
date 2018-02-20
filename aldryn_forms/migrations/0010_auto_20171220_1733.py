@@ -28,6 +28,7 @@ class Migration(migrations.Migration):
 
     dependencies = [
         ('aldryn_forms', '0009_auto_20171218_1049'),
+        ('cms', '0006_auto_20160821_1039.py'),
     ]
 
     operations = [
