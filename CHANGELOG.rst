@@ -1,6 +1,10 @@
 Changelog
 =========
 
+3.0.2 (unreleased)
+-------------------
+* Added missing migration dependency
+
 3.0.1 (2018-02-19)
 -------------------
 * Add missing schema migrations
