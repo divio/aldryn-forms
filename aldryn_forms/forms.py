@@ -182,6 +182,10 @@ class FormPluginForm(ExtandableErrorForm):
 class BooleanFieldForm(forms.ModelForm):
 
     def __init__(self, *args, **kwargs):
+        instance = kwargs.get('instance')
+
+        if instance and not instance.required:
+            kwargs.setdefault('initial', {})['required'] = False
         if 'instance' not in kwargs:  # creating new one
             initial = kwargs.pop('initial', {})
             initial['required'] = False

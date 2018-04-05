@@ -1,7 +1,7 @@
 Changelog
 =========
 
-3.0.2 (unreleased)
+3.0.2 (2018-04-05)
 -------------------
 * Added missing migration dependency
 * Introduced django CMS 3.5 support
