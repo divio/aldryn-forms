@@ -1,6 +1,10 @@
 Changelog
 =========
 
+3.0.3 (2018-04-05)
+-------------------
+* Removed some redundant code in ``BooleanFieldForm``
+
 3.0.2 (2018-04-05)
 -------------------
 * Added missing migration dependency
