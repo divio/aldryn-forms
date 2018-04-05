@@ -116,7 +116,6 @@ class FormPlugin(FieldContainer):
         form_class = self.get_form_class(instance)
         form_kwargs = self.get_form_kwargs(instance, request)
         form = form_class(**form_kwargs)
-        #import ipdb;ipdb.set_trace()
 
         if form.is_valid():
             fields = [field for field in form.base_fields.values()
