@@ -74,9 +74,19 @@ class SubmitFormViewTest(CMSTestCase):
                 del sys.modules[module]
 
     def test_form_view_and_submission_with_apphook(self):
-        public_page_form_plugin = self.page.publisher_public.placeholders.first().cmsplugin_set.filter(  # noqa: E501
-            plugin_type='FormPlugin',
-        ).first()
+        public_placeholder = (
+            self
+            .page
+            .publisher_public
+            .placeholders
+            .first()
+        )
+        public_page_form_plugin = (
+            public_placeholder
+            .cmsplugin_set
+            .filter(plugin_type='FormPlugin')
+            .first()
+        )
         response = self.client.get(self.page.get_absolute_url('en'))
         self.assertContains(
             response,
