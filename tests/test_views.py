@@ -32,8 +32,6 @@ class SubmitFormViewTest(CMSTestCase):
             'url': self.redirect_url,
         }
         self.form_plugin = add_plugin(self.placeholder, 'FormPlugin', 'en', **plugin_data)  # noqa: E501
-        self.user = self.get_superuser()
-        self.form_plugin.recipients.add(self.user)
 
         add_plugin(
             self.placeholder,
@@ -76,10 +74,16 @@ class SubmitFormViewTest(CMSTestCase):
                 del sys.modules[module]
 
     def test_form_view_and_submission_with_apphook(self):
+        public_page_form_plugin = self.page.publisher_public.placeholders.first().cmsplugin_set.filter(  # noqa: E501
+            plugin_type='FormPlugin',
+        ).first()
         response = self.client.get(self.page.get_absolute_url('en'))
-        self.assertContains(response, 'Submit')
+        self.assertContains(
+            response,
+            '<input type="hidden" name="form_plugin_id" value="{}"'.format(public_page_form_plugin.id),  # noqa: E501
+        )
 
         response = self.client.post(self.page.get_absolute_url('en'), {
-            'form_plugin_id': self.form_plugin.id,
+            'form_plugin_id': public_page_form_plugin.id,
         })
         self.assertRedirects(response, self.redirect_url, fetch_redirect_response=False)  # noqa: E501
