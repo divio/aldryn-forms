@@ -1,10 +1,15 @@
 import sys
+from unittest import skipIf, skipUnless
 
+from django import VERSION as DJANGO_VERSION
 from django.core.urlresolvers import clear_url_caches
 
 from cms.api import add_plugin, create_page
 from cms.appresolver import clear_app_resolvers
 from cms.test_utils.testcases import CMSTestCase
+
+
+DJANGO_111 = DJANGO_VERSION[:2] >= (1, 11)
 
 
 class SubmitFormViewTest(CMSTestCase):
@@ -73,7 +78,8 @@ class SubmitFormViewTest(CMSTestCase):
             if module in sys.modules:
                 del sys.modules[module]
 
-    def test_form_view_and_submission_with_apphook(self):
+    @skipUnless(DJANGO_111, 'Django>=1.11')
+    def test_form_view_and_submission_with_apphook_django_gte_111(self):
         public_placeholder = (
             self
             .page
@@ -88,10 +94,34 @@ class SubmitFormViewTest(CMSTestCase):
             .first()
         )
         response = self.client.get(self.page.get_absolute_url('en'))
-        self.assertContains(
-            response,
-            '<input type="hidden" name="form_plugin_id" value="{}"'.format(public_page_form_plugin.id),  # noqa: E501
+
+        input_string = '<input type="hidden" name="form_plugin_id" value="{}"'
+        self.assertContains(response, input_string.format(public_page_form_plugin.id))  # noqa: E501
+
+        response = self.client.post(self.page.get_absolute_url('en'), {
+            'form_plugin_id': public_page_form_plugin.id,
+        })
+        self.assertRedirects(response, self.redirect_url, fetch_redirect_response=False)  # noqa: E501
+
+    @skipIf(DJANGO_111, 'Django<1.11')
+    def test_form_view_and_submission_with_apphook_django_lt_111(self):
+        public_placeholder = (
+            self
+            .page
+            .publisher_public
+            .placeholders
+            .first()
         )
+        public_page_form_plugin = (
+            public_placeholder
+            .cmsplugin_set
+            .filter(plugin_type='FormPlugin')
+            .first()
+        )
+        response = self.client.get(self.page.get_absolute_url('en'))
+
+        input_string = '<input id="id_form_plugin_id" name="form_plugin_id" type="hidden" value="{}"'  # noqa: E501
+        self.assertContains(response, input_string.format(public_page_form_plugin.id))  # noqa: E501
 
         response = self.client.post(self.page.get_absolute_url('en'), {
             'form_plugin_id': public_page_form_plugin.id,
