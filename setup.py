@@ -14,8 +14,8 @@ REQUIREMENTS = [
     'pillow',
     'django-filer',
     'django-sizefield',
-    'Django>=1.8,<2.0',
     'openpyxl<=2.4.9',  # 2.5.0b1 is raising "ImportError: cannot import name '__version__'"
+    'Django>=1.8,<2.0',
     'six>=1.0',
 ]
 
