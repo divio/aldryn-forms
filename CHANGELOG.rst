@@ -1,6 +1,11 @@
 Changelog
 =========
 
+3.0.4 (unreleased)
+------------------
+* Fixed ``ImportError`` on apphook endpoint in django CMS >= 3.5
+* Fixed missing migration error on Python 3
+
 3.0.3 (2018-04-05)
 -------------------
 * Removed some redundant code in ``BooleanFieldForm``
