@@ -8,12 +8,9 @@ from django.utils.module_loading import import_string
 
 from cms.utils.moderator import get_cmsplugin_queryset
 from cms.utils.plugins import downcast_plugins
-try:
-    from cms.utils.plugins import build_plugin_tree
-except ImportError:
-    from cms.utils.plugins import get_plugins_as_layered_tree
 
 from .action_backends_base import BaseAction
+from .compat import build_plugin_tree
 
 
 DEFAULT_ALDRYN_FORMS_ACTION_BACKENDS = {
@@ -114,10 +111,7 @@ def get_plugin_tree(model, **kwargs):
         current_level = get_next_level(current_level)
         current_level = downcast_plugins(current_level)
         plugin_list += current_level
-    try:
-        return build_plugin_tree(plugin_list)[0]
-    except NameError:
-        return get_plugins_as_layered_tree(plugin_list)[0]
+    return build_plugin_tree(plugin_list)[0]
 
 
 def get_next_level(current_level):

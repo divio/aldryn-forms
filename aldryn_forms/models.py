@@ -7,10 +7,6 @@ import warnings
 from cms.models.fields import PageField
 from cms.models.pluginmodel import CMSPlugin
 from cms.utils.plugins import downcast_plugins
-try:
-    from cms.utils.plugins import build_plugin_tree
-except ImportError:
-    from cms.utils.plugins import get_plugins_as_layered_tree
 from django.conf import settings
 from django.db import models
 from django.db.models.functions import Coalesce
@@ -23,6 +19,7 @@ from djangocms_attributes_field.fields import AttributesField
 from filer.fields.folder import FilerFolderField
 from sizefield.models import FileSizeField
 
+from .compat import build_plugin_tree
 from .helpers import is_form_element
 from .utils import ALDRYN_FORMS_ACTION_BACKEND_KEY_MAX_SIZE, action_backend_choices
 
@@ -315,10 +312,7 @@ class BaseFormPlugin(CMSPlugin):
             # the current instance
             descendants_with_self = [self] + list(descendants)
             # Let the cms build the tree
-            try:
-                build_plugin_tree(descendants_with_self)
-            except NameError:
-                get_plugins_as_layered_tree(descendants_with_self)
+            build_plugin_tree(descendants_with_self)
             # Set back the original parent
             self.parent_id = parent_id
 
