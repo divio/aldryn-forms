@@ -11,7 +11,10 @@ class FormPluginTestCase(CMSTestCase):
         super(FormPluginTestCase, self).setUp()
 
         self.page = create_page('test page', 'test_page.html', 'en', published=True)
-        self.placeholder = self.page.placeholders.get(slot='content')
+        try:
+            self.placeholder = self.page.placeholders.get(slot='content')
+        except AttributeError:
+            self.placeholder = self.page.get_placeholders('en').get(slot='content')
         self.user = User.objects.create_superuser('username', 'email@example.com', 'password')
 
         plugin_data = {
@@ -62,7 +65,10 @@ class EmailNotificationFormPluginTestCase(CMSTestCase):
         super(EmailNotificationFormPluginTestCase, self).setUp()
 
         self.page = create_page('test page', 'test_page.html', 'en', published=True)
-        self.placeholder = self.page.placeholders.get(slot='content')
+        try:
+            self.placeholder = self.page.placeholders.get(slot='content')
+        except AttributeError:
+            self.placeholder = self.page.get_placeholders('en').get(slot='content')
         self.user = User.objects.create_superuser('username', 'email@example.com', 'password')
 
         plugin_data = {

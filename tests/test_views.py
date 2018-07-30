@@ -29,7 +29,11 @@ class SubmitFormViewTest(CMSTestCase):
             published=True,
             apphook='FormsApp',
         )
-        self.placeholder = self.page.placeholders.get(slot='content')
+        try:
+            self.placeholder = self.page.placeholders.get(slot='content')
+        except AttributeError:
+            self.placeholder = self.page.get_placeholders('en').get(slot='content')
+
         self.redirect_url = 'http://www.google.com'
 
         plugin_data = {
@@ -80,13 +84,16 @@ class SubmitFormViewTest(CMSTestCase):
 
     @skipUnless(DJANGO_111, 'Django>=1.11')
     def test_form_view_and_submission_with_apphook_django_gte_111(self):
-        public_placeholder = (
+        public_page = (
             self
             .page
             .publisher_public
-            .placeholders
-            .first()
         )
+        try:
+            public_placeholder = public_page.placeholders.first()
+        except AttributeError:
+            public_placeholder = public_page.get_placeholders('en').first()
+
         public_page_form_plugin = (
             public_placeholder
             .cmsplugin_set
