@@ -7,9 +7,10 @@ from django.forms.forms import NON_FIELD_ERRORS
 from django.utils.module_loading import import_string
 
 from cms.utils.moderator import get_cmsplugin_queryset
-from cms.utils.plugins import downcast_plugins, build_plugin_tree
+from cms.utils.plugins import downcast_plugins
 
 from .action_backends_base import BaseAction
+from .compat import build_plugin_tree
 
 
 DEFAULT_ALDRYN_FORMS_ACTION_BACKENDS = {
