@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
 
+from django.apps import apps as django_apps
 from django.db import migrations, models
 from django.contrib.contenttypes.models import ContentType
 from django.contrib.auth.models import Permission
@@ -10,6 +11,7 @@ APP_LABEL = 'email_notifications'
 MODEL_NAME = 'emailnotificationformplugin'
 VERBOSE_MODEL_NAME = 'form (advanced)'
 ACTIONS = ('add', 'change', 'delete')
+APP_CONFIG_NAME = 'aldryn_forms.contrib.email_notifications'
 
 
 def get_content_type():
@@ -20,6 +22,18 @@ def get_content_type():
 
 
 def forwards(apps, schema_editor):
+    '''
+    For this to work we need to have content types synced for email_notifications app. Usually this run AFTER migrations,
+    so we need to force execution here
+    '''
+    try:
+        from django.contrib.contenttypes.management import update_contenttypes as create_contenttypes  # Django <1.11
+    except ImportError:
+        from django.contrib.contenttypes.management import create_contenttypes  # Django >= 1.11
+
+    app_config = list(filter(lambda x: x.name == APP_CONFIG_NAME, django_apps.get_app_configs()))[0]
+    create_contenttypes(app_config)
+
     content_type = get_content_type()
     if content_type:
         for action in ACTIONS:
@@ -49,6 +63,7 @@ def backwards(apps, schema_editor):
 class Migration(migrations.Migration):
 
     dependencies = [
+        ('contenttypes', '0001_initial'),
         ('email_notifications', '0001_initial'),
     ]
 
