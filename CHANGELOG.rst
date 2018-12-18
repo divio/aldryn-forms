@@ -1,6 +1,10 @@
 Changelog
 =========
 
+4.0.0 (unreleased)
+-----------------
+* Removed multi-boilerplate support
+
 3.0.4 (2018-07-25)
 ------------------
 * Fixed ``ImportError`` on apphook endpoint in django CMS >= 3.5
