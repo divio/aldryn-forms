@@ -84,6 +84,7 @@ class EmailNotification(models.Model):
         blank=True,
         null=True,
         limit_choices_to={'is_staff': True},
+        on_delete=models.CASCADE,
     )
     from_name = models.CharField(
         verbose_name=_('from name'),
@@ -112,7 +113,8 @@ class EmailNotification(models.Model):
     )
     form = models.ForeignKey(
         to=EmailNotificationFormPlugin,
-        related_name='email_notifications'
+        related_name='email_notifications',
+        on_delete=models.CASCADE,
     )
 
     def __str__(self):

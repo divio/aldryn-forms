@@ -20,7 +20,7 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='EmailFieldPlugin',
             fields=[
-                ('cmsplugin_ptr', models.OneToOneField(parent_link=True, auto_created=True, primary_key=True, serialize=False, to='cms.CMSPlugin')),
+                ('cmsplugin_ptr', models.OneToOneField(parent_link=True, auto_created=True, primary_key=True, serialize=False, to='cms.CMSPlugin', on_delete=models.CASCADE)),
                 ('label', models.CharField(max_length=50, verbose_name='Label', blank=True)),
                 ('required', models.BooleanField(default=True, verbose_name='Field is required')),
                 ('required_message', models.TextField(help_text='Error message displayed if the required field is left empty. Default: "This field is required".', null=True, verbose_name='Error message', blank=True)),
@@ -41,7 +41,7 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='FieldPlugin',
             fields=[
-                ('cmsplugin_ptr', models.OneToOneField(parent_link=True, auto_created=True, primary_key=True, serialize=False, to='cms.CMSPlugin')),
+                ('cmsplugin_ptr', models.OneToOneField(parent_link=True, auto_created=True, primary_key=True, serialize=False, to='cms.CMSPlugin', on_delete=models.CASCADE)),
                 ('label', models.CharField(max_length=50, verbose_name='Label', blank=True)),
                 ('required', models.BooleanField(default=True, verbose_name='Field is required')),
                 ('required_message', models.TextField(help_text='Error message displayed if the required field is left empty. Default: "This field is required".', null=True, verbose_name='Error message', blank=True)),
@@ -59,7 +59,7 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='FieldsetPlugin',
             fields=[
-                ('cmsplugin_ptr', models.OneToOneField(parent_link=True, auto_created=True, primary_key=True, serialize=False, to='cms.CMSPlugin')),
+                ('cmsplugin_ptr', models.OneToOneField(parent_link=True, auto_created=True, primary_key=True, serialize=False, to='cms.CMSPlugin', on_delete=models.CASCADE)),
                 ('legend', models.CharField(max_length=50, verbose_name='Legend', blank=True)),
                 ('custom_classes', models.CharField(max_length=200, verbose_name='custom css classes', blank=True)),
             ],
@@ -71,7 +71,7 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='FileUploadFieldPlugin',
             fields=[
-                ('cmsplugin_ptr', models.OneToOneField(parent_link=True, auto_created=True, primary_key=True, serialize=False, to='cms.CMSPlugin')),
+                ('cmsplugin_ptr', models.OneToOneField(parent_link=True, auto_created=True, primary_key=True, serialize=False, to='cms.CMSPlugin', on_delete=models.CASCADE)),
                 ('label', models.CharField(max_length=50, verbose_name='Label', blank=True)),
                 ('required', models.BooleanField(default=True, verbose_name='Field is required')),
                 ('required_message', models.TextField(help_text='Error message displayed if the required field is left empty. Default: "This field is required".', null=True, verbose_name='Error message', blank=True)),
@@ -91,7 +91,7 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='FormButtonPlugin',
             fields=[
-                ('cmsplugin_ptr', models.OneToOneField(parent_link=True, auto_created=True, primary_key=True, serialize=False, to='cms.CMSPlugin')),
+                ('cmsplugin_ptr', models.OneToOneField(parent_link=True, auto_created=True, primary_key=True, serialize=False, to='cms.CMSPlugin', on_delete=models.CASCADE)),
                 ('label', models.CharField(max_length=50, verbose_name='Label')),
                 ('custom_classes', models.CharField(max_length=200, verbose_name='custom css classes', blank=True)),
             ],
@@ -119,7 +119,7 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='FormPlugin',
             fields=[
-                ('cmsplugin_ptr', models.OneToOneField(parent_link=True, auto_created=True, primary_key=True, serialize=False, to='cms.CMSPlugin')),
+                ('cmsplugin_ptr', models.OneToOneField(parent_link=True, auto_created=True, primary_key=True, serialize=False, to='cms.CMSPlugin', on_delete=models.CASCADE)),
                 ('name', models.CharField(help_text='Used to filter out form submissions.', max_length=50, verbose_name='Name')),
                 ('error_message', models.TextField(help_text="An error message that will be displayed if the form doesn't validate.", null=True, verbose_name='Error message', blank=True)),
                 ('success_message', models.TextField(help_text='An success message that will be displayed.', null=True, verbose_name='Success message', blank=True)),
@@ -138,7 +138,7 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='ImageUploadFieldPlugin',
             fields=[
-                ('cmsplugin_ptr', models.OneToOneField(parent_link=True, auto_created=True, primary_key=True, serialize=False, to='cms.CMSPlugin')),
+                ('cmsplugin_ptr', models.OneToOneField(parent_link=True, auto_created=True, primary_key=True, serialize=False, to='cms.CMSPlugin', on_delete=models.CASCADE)),
                 ('label', models.CharField(max_length=50, verbose_name='Label', blank=True)),
                 ('required', models.BooleanField(default=True, verbose_name='Field is required')),
                 ('required_message', models.TextField(help_text='Error message displayed if the required field is left empty. Default: "This field is required".', null=True, verbose_name='Error message', blank=True)),
@@ -163,7 +163,7 @@ class Migration(migrations.Migration):
                 ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
                 ('value', models.CharField(max_length=50, verbose_name='Value')),
                 ('default_value', models.BooleanField(default=False, verbose_name='Default')),
-                ('field', models.ForeignKey(editable=False, to='aldryn_forms.FieldPlugin')),
+                ('field', models.ForeignKey(editable=False, to='aldryn_forms.FieldPlugin', on_delete=models.CASCADE)),
             ],
             options={
             },
@@ -172,7 +172,7 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='TextAreaFieldPlugin',
             fields=[
-                ('cmsplugin_ptr', models.OneToOneField(parent_link=True, auto_created=True, primary_key=True, serialize=False, to='cms.CMSPlugin')),
+                ('cmsplugin_ptr', models.OneToOneField(parent_link=True, auto_created=True, primary_key=True, serialize=False, to='cms.CMSPlugin', on_delete=models.CASCADE)),
                 ('label', models.CharField(max_length=50, verbose_name='Label', blank=True)),
                 ('required', models.BooleanField(default=True, verbose_name='Field is required')),
                 ('required_message', models.TextField(help_text='Error message displayed if the required field is left empty. Default: "This field is required".', null=True, verbose_name='Error message', blank=True)),
