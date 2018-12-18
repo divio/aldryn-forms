@@ -1,6 +1,10 @@
 Changelog
 =========
 
+4.0.0 (unreleased)
+-----------------
+* Removed multi-boilerplate support
+
 3.0.5 (unreleased)
 ------------------
 * Fixed issue with sending multiple instead of only one form on page
