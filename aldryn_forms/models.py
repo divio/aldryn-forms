@@ -502,7 +502,7 @@ class ImageUploadFieldPlugin(FileFieldPluginBase):
 
 @python_2_unicode_compatible
 class Option(models.Model):
-    field = models.ForeignKey(FieldPlugin, editable=False)
+    field = models.ForeignKey(FieldPlugin, editable=False, on_delete=models.CASCADE)
     value = models.CharField(_('Value'), max_length=255)
     default_value = models.BooleanField(_('Default'), default=False)
     position = models.PositiveIntegerField(_('Position'), blank=True)
