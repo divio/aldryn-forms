@@ -2,7 +2,7 @@ import sys
 from unittest import skipIf, skipUnless
 
 from django import VERSION as DJANGO_VERSION
-from django.core.urlresolvers import clear_url_caches
+from django.urls import clear_url_caches
 
 from cms.api import add_plugin, create_page
 from cms.appresolver import clear_app_resolvers
