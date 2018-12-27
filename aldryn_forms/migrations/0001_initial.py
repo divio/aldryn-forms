@@ -81,7 +81,7 @@ class Migration(migrations.Migration):
                 ('max_value', models.PositiveIntegerField(null=True, verbose_name='Max value', blank=True)),
                 ('custom_classes', models.CharField(max_length=200, verbose_name='custom css classes', blank=True)),
                 ('max_size', sizefield.models.FileSizeField(help_text='The maximum file size of the upload, in bytes. You can use common size suffixes (kB, MB, GB, ...).', null=True, verbose_name='Maximum file size', blank=True)),
-                ('upload_to', filer.fields.folder.FilerFolderField(verbose_name='Upload files to', to='filer.Folder', help_text='Select a folder to which all files submitted through this field will be uploaded to.')),
+                ('upload_to', filer.fields.folder.FilerFolderField(verbose_name='Upload files to', to='filer.Folder', help_text='Select a folder to which all files submitted through this field will be uploaded to.', on_delete=models.CASCADE)),
             ],
             options={
                 'abstract': False,
@@ -150,7 +150,7 @@ class Migration(migrations.Migration):
                 ('max_size', sizefield.models.FileSizeField(help_text='The maximum file size of the upload, in bytes. You can use common size suffixes (kB, MB, GB, ...).', null=True, verbose_name='Maximum file size', blank=True)),
                 ('max_width', models.PositiveIntegerField(help_text='The maximum width of the uploaded image, in pixels.', null=True, verbose_name='Maximum image width', blank=True)),
                 ('max_height', models.PositiveIntegerField(help_text='The maximum height of the uploaded image, in pixels.', null=True, verbose_name='Maximum image height', blank=True)),
-                ('upload_to', filer.fields.folder.FilerFolderField(verbose_name='Upload files to', to='filer.Folder', help_text='Select a folder to which all files submitted through this field will be uploaded to.')),
+                ('upload_to', filer.fields.folder.FilerFolderField(verbose_name='Upload files to', to='filer.Folder', help_text='Select a folder to which all files submitted through this field will be uploaded to.', on_delete=models.CASCADE)),
             ],
             options={
                 'abstract': False,
