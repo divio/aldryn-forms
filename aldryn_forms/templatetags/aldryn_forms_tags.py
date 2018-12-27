@@ -7,7 +7,7 @@ from django.utils import encoding
 register = template.Library()
 
 
-@register.assignment_tag(takes_context=True)
+@register.simple_tag(takes_context=True)
 def render_notification_text(context, email_notification, email_type):
     text_context = context.get('text_context')
 
