@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-from django.core.urlresolvers import resolve
+from django.urls import resolve
 from django.http import HttpResponseRedirect, HttpResponseBadRequest
 from django.shortcuts import render
 
