@@ -153,8 +153,7 @@ class FormPluginForm(ExtandableErrorForm):
     def __init__(self, *args, **kwargs):
         super(FormPluginForm, self).__init__(*args, **kwargs)
 
-        if (getattr(settings, 'ALDRYN_FORMS_SHOW_ALL_RECIPIENTS', False) and
-                'recipients' in self.fields):
+        if getattr(settings, 'ALDRYN_FORMS_SHOW_ALL_RECIPIENTS', False) and 'recipients' in self.fields:
             self.fields['recipients'].queryset = get_user_model().objects.all()
 
     def clean(self):
