@@ -13,12 +13,18 @@ REQUIREMENTS = [
     'yurl',
     'requests',
     'celery>=3.0,<4.0',  # aldryn-celery supports only 3.X
-]
+
+from aldryn_forms import __version__
 
 
 CLASSIFIERS = [
     'Development Status :: 5 - Production/Stable',
     'Environment :: Web Environment',
+
+    'Framework :: Django',
+    'Framework :: Django :: 1.11',
+    'Framework :: Django :: 2.0',
+    'Framework :: Django :: 2.1',
     'Intended Audience :: Developers',
     'License :: OSI Approved :: BSD License',
     'Operating System :: OS Independent',
