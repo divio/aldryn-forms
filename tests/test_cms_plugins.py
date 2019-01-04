@@ -4,6 +4,7 @@ from django.core import mail
 from django.contrib.auth.models import User
 
 from aldryn_forms.models import FormSubmission
+from tests.test_views import CMS_3_6
 
 
 class FormPluginTestCase(CMSTestCase):
@@ -29,7 +30,8 @@ class FormPluginTestCase(CMSTestCase):
     def test_form_submission_default_action(self):
         self.form_plugin.action_backend = 'default'
         self.form_plugin.save()
-        self.page.publish('en')
+        if CMS_3_6:
+            self.page.publish('en')
 
         response = self.client.post(self.page.get_absolute_url('en'), {})
 
@@ -40,7 +42,8 @@ class FormPluginTestCase(CMSTestCase):
     def test_form_submission_email_action(self):
         self.form_plugin.action_backend = 'email_only'
         self.form_plugin.save()
-        self.page.publish('en')
+        if CMS_3_6:
+            self.page.publish('en')
 
         response = self.client.post(self.page.get_absolute_url('en'), {})
 
@@ -51,7 +54,8 @@ class FormPluginTestCase(CMSTestCase):
     def test_form_submission_no_action(self):
         self.form_plugin.action_backend = 'none'
         self.form_plugin.save()
-        self.page.publish('en')
+        if CMS_3_6:
+            self.page.publish('en')
 
         response = self.client.post(self.page.get_absolute_url('en'), {})
 
@@ -83,7 +87,8 @@ class EmailNotificationFormPluginTestCase(CMSTestCase):
     def test_form_submission_default_action(self):
         self.form_plugin.action_backend = 'default'
         self.form_plugin.save()
-        self.page.publish('en')
+        if CMS_3_6:
+            self.page.publish('en')
 
         response = self.client.post(self.page.get_absolute_url('en'), {})
 
@@ -94,7 +99,8 @@ class EmailNotificationFormPluginTestCase(CMSTestCase):
     def test_form_submission_email_action(self):
         self.form_plugin.action_backend = 'email_only'
         self.form_plugin.save()
-        self.page.publish('en')
+        if CMS_3_6:
+            self.page.publish('en')
 
         response = self.client.post(self.page.get_absolute_url('en'), {})
 
@@ -105,7 +111,8 @@ class EmailNotificationFormPluginTestCase(CMSTestCase):
     def test_form_submission_no_action(self):
         self.form_plugin.action_backend = 'none'
         self.form_plugin.save()
-        self.page.publish('en')
+        if CMS_3_6:
+            self.page.publish('en')
 
         response = self.client.post(self.page.get_absolute_url('en'), {})
 
