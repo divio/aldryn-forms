@@ -14,7 +14,7 @@ from distutils.version import LooseVersion
 
 # These means "less than or equal"
 DJANGO_111 = DJANGO_VERSION[:2] >= (1, 11)
-CMS_3_6 = LooseVersion(cms.__version__) < LooseVersion('3.6')
+CMS_3_6 = LooseVersion(cms.__version__) < LooseVersion('4.0')
 
 
 class SubmitFormViewTest(CMSTestCase):
@@ -90,11 +90,10 @@ class SubmitFormViewTest(CMSTestCase):
 
     @skipUnless(DJANGO_111, 'Django>=1.11')
     def test_form_view_and_submission_with_apphook_django_gte_111(self):
-        public_page = (
-            self
-            .page
-            .publisher_public
-        )
+        if CMS_3_6:
+            public_page = self.page.publisher_public
+        else:
+            public_page = self.page
         try:
             public_placeholder = public_page.placeholders.first()
         except AttributeError:
