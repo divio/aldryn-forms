@@ -4,12 +4,17 @@ from unittest import skipIf, skipUnless
 from django import VERSION as DJANGO_VERSION
 from django.urls import clear_url_caches
 
+import cms
 from cms.api import add_plugin, create_page
 from cms.appresolver import clear_app_resolvers
 from cms.test_utils.testcases import CMSTestCase
 
+from distutils.version import LooseVersion
 
+
+# These means "less than or equal"
 DJANGO_111 = DJANGO_VERSION[:2] >= (1, 11)
+CMS_3_6 = LooseVersion(cms.__version__) < LooseVersion('3.6')
 
 
 class SubmitFormViewTest(CMSTestCase):
@@ -51,7 +56,8 @@ class SubmitFormViewTest(CMSTestCase):
         )
         self.form_plugin.action_backend = 'default'
         self.form_plugin.save()
-        self.page.publish('en')
+        if CMS_3_6:
+            self.page.publish('en')
 
         self.reload_urls()
         self.apphook_clear()
