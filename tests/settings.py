@@ -13,9 +13,6 @@ HELPER_SETTINGS = {
         'emailit',
         'filer',
     ],
-    'ALLOWED_HOSTS': [
-        'localhost'
-    ],
     'CMS_LANGUAGES': {
         1: [{
             'code': 'en',
