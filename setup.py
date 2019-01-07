@@ -8,7 +8,7 @@ from aldryn_forms import __version__
 REQUIREMENTS = [
     'aldryn-boilerplates>=0.8.0',
     'django-cms>=3.4.5',
-    'django-emailit',
+    'django-emailit>=0.2.4',
     'djangocms-text-ckeditor>=3.7.0',
     'djangocms-attributes-field>=1.0.0',
     'django-simple-captcha',
