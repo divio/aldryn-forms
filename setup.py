@@ -16,7 +16,7 @@ REQUIREMENTS = [
     'django-filer',
     'django-sizefield',
     'openpyxl<=2.4.9',  # 2.5.0b1 is raising "ImportError: cannot import name '__version__'"
-    'Django>=1.11,<2.2',
+    'Django>=1.11',
     'six>=1.0',
 ]
 
