@@ -6,7 +6,7 @@ from django.conf import settings
 from django.forms.forms import NON_FIELD_ERRORS
 from django.utils.translation import ugettext, ugettext_lazy as _
 
-from sizefield.utils import filesizeformat
+from aldryn_forms.sizefield.utils import filesizeformat
 
 from .models import FormSubmission, FormPlugin
 from .utils import add_form_error, get_user_model
