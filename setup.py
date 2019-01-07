@@ -15,7 +15,7 @@ REQUIREMENTS = [
     'django-tablib',
     'tablib',
     'pillow',
-    'django-filer',
+    'django-filer>=1.4.2',
     'django-sizefield',
     'openpyxl<=2.4.9',  # 2.5.0b1 is raising "ImportError: cannot import name '__version__'"
     'Django>=1.11',
