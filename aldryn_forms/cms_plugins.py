@@ -17,7 +17,7 @@ from cms.plugin_pool import plugin_pool
 from emailit.api import send_mail
 
 from filer.models import filemodels, imagemodels
-from sizefield.utils import filesizeformat
+from .sizefield.utils import filesizeformat
 
 from . import models
 from .forms import (
