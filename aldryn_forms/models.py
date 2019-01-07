@@ -17,7 +17,7 @@ from django.utils.translation import ugettext_lazy as _
 from djangocms_attributes_field.fields import AttributesField
 
 from filer.fields.folder import FilerFolderField
-from sizefield.models import FileSizeField
+from .sizefield.models import FileSizeField
 
 from .compat import build_plugin_tree
 from .helpers import is_form_element
