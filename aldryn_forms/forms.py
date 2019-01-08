@@ -1,14 +1,13 @@
 # -*- coding: utf-8 -*-
-from PIL import Image
-
 from django import forms
 from django.conf import settings
 from django.forms.forms import NON_FIELD_ERRORS
-from django.utils.translation import ugettext, ugettext_lazy as _
+from django.utils.translation import ugettext
+from django.utils.translation import ugettext_lazy as _
+from PIL import Image
 
-from aldryn_forms.sizefield.utils import filesizeformat
-
-from .models import FormSubmission, FormPlugin
+from .models import FormPlugin, FormSubmission
+from .sizefield.utils import filesizeformat
 from .utils import add_form_error, get_user_model
 
 
