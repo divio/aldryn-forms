@@ -17,6 +17,7 @@ from django.utils.translation import ugettext_lazy as _
 from djangocms_attributes_field.fields import AttributesField
 
 from filer.fields.folder import FilerFolderField
+import ipdb;ipdb.set_trace()
 from .sizefield.models import FileSizeField
 
 from .compat import build_plugin_tree
