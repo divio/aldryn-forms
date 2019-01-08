@@ -1,10 +1,9 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
 
-from django.db import migrations, models
-from django.contrib.contenttypes.models import ContentType
 from django.contrib.auth.models import Permission
-
+from django.contrib.contenttypes.models import ContentType
+from django.db import migrations, models
 
 APP_LABEL = 'email_notifications'
 MODEL_NAME = 'emailnotificationformplugin'

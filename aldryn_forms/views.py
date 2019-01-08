@@ -1,16 +1,16 @@
 # -*- coding: utf-8 -*-
-from django.urls import resolve
-from django.http import HttpResponseRedirect, HttpResponseBadRequest
+from django.http import HttpResponseBadRequest, HttpResponseRedirect
 from django.shortcuts import render
+from django.urls import resolve
+
+from .models import FormPlugin
+from .utils import get_plugin_tree
 
 try:
     from cms.utils.page import get_page_from_request
 except ImportError:
     # for django-cms<3.5
     from cms.utils.page_resolver import get_page_from_request
-
-from .models import FormPlugin
-from .utils import get_plugin_tree
 
 
 def submit_form_view(request):

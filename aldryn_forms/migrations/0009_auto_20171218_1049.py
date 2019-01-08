@@ -3,6 +3,7 @@
 from __future__ import unicode_literals
 
 from django.db import migrations, models
+
 import aldryn_forms.utils
 
 action_backends_choices = aldryn_forms.utils.action_backend_choices()
