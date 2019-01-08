@@ -1,5 +1,9 @@
 # -*- coding: utf-8 -*-
+<<<<<<< HEAD
 from django.http import HttpResponseRedirect, HttpResponseBadRequest
+=======
+from django.http import HttpResponseBadRequest, HttpResponseRedirect
+>>>>>>> 48926e3... Fix import order
 from django.shortcuts import render
 from django.urls import resolve
 
