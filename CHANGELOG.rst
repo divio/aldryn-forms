@@ -14,6 +14,7 @@ Changelog
 ------------------
 * Fixed issue with sending multiple instead of only one form on page
 
+
 3.0.4 (2018-07-25)
 ==================
 
