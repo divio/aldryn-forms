@@ -1,10 +1,8 @@
 # -*- coding: utf-8 -*-
 import os
-
 from string import Template
 
 from emailit.utils import get_template_name
-
 
 EMAIL_TEMPLATES_BASE = 'aldryn_forms/email_notifications/emails/'
 
