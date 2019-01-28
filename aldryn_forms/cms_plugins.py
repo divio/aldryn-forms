@@ -117,7 +117,7 @@ class FormPlugin(FieldContainer):
         form_kwargs = self.get_form_kwargs(instance, request)
         form = form_class(**form_kwargs)
 
-        if form.is_valid():
+        if form.is_valid() and request.POST.get('form_plugin_id') == str(instance.id):
             fields = [field for field in form.base_fields.values()
                       if hasattr(field, '_plugin_instance')]
 
