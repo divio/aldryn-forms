@@ -95,7 +95,7 @@ class FormPlugin(FieldContainer):
 
         form = self.process_form(instance, request)
 
-        if form.is_valid() and request.POST.get('form_plugin_id') == str(instance.id):
+        if request.POST.get('form_plugin_id') == str(instance.id) and form.is_valid():
             context['post_success'] = True
             context['form_success_url'] = self.get_success_url(instance)
         context['form'] = form
@@ -117,7 +117,7 @@ class FormPlugin(FieldContainer):
         form_kwargs = self.get_form_kwargs(instance, request)
         form = form_class(**form_kwargs)
 
-        if form.is_valid() and request.POST.get('form_plugin_id') == str(instance.id):
+        if request.POST.get('form_plugin_id') == str(instance.id) and form.is_valid():
             fields = [field for field in form.base_fields.values()
                       if hasattr(field, '_plugin_instance')]
 
