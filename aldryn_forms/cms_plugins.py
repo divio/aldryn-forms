@@ -95,7 +95,7 @@ class FormPlugin(FieldContainer):
 
         form = self.process_form(instance, request)
 
-        if form.is_valid():
+        if form.is_valid() and request.POST.get('form_plugin_id') == str(instance.id):
             context['post_success'] = True
             context['form_success_url'] = self.get_success_url(instance)
         context['form'] = form
