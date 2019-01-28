@@ -154,6 +154,15 @@ class SubmitFormViewTest(CMSTestCase):
 
         add_plugin(
             placeholder,
+            'TextField',
+            'en',
+            required=True,
+            target=form_plugin,
+            label='Submit',
+        )
+
+        add_plugin(
+            placeholder,
             'SubmitButton',
             'en',
             target=form_plugin,
