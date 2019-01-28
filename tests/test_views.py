@@ -134,3 +134,63 @@ class SubmitFormViewTest(CMSTestCase):
             'form_plugin_id': public_page_form_plugin.id,
         })
         self.assertRedirects(response, self.redirect_url, fetch_redirect_response=False)  # noqa: E501
+
+    def test_view_submit_one_form_instead_multiply(self):
+        """Test checks if only one form is send instead of multiply on page together"""
+        page = create_page(
+            'multiply forms',
+            'test_page.html',
+            'en',
+            published=True,
+            apphook='FormsApp',
+        )
+        placeholder = page.placeholders.get(slot='content')
+
+        form_plugin = add_plugin(
+            placeholder,
+            'FormPlugin',
+            'en',
+        )  # noqa: E501
+
+        add_plugin(
+            placeholder,
+            'SubmitButton',
+            'en',
+            target=form_plugin,
+            label='Submit',
+        )
+
+        form_plugin.action_backend = 'default'
+        form_plugin.save()
+
+        plugin_data2 = {
+            'redirect_type': 'redirect_to_url',
+            'url': 'https://google.com/',
+        }
+
+        form_plugin2 = add_plugin(
+            placeholder,
+            'FormPlugin',
+            'en',
+            **plugin_data2
+        )  # noqa: E501
+
+        add_plugin(
+            placeholder,
+            'SubmitButton',
+            'en',
+            target=form_plugin2,
+            label='Submit',
+        )
+
+        form_plugin2.action_backend = 'default'
+        form_plugin2.save()
+
+        page.publish('en')
+        self.reload_urls()
+        self.apphook_clear()
+
+        response = self.client.post(self.page.get_absolute_url('en'), {
+            'form_plugin_id': form_plugin2.id,
+        })
+        self.assertRedirects(response, plugin_data2['url'], fetch_redirect_response=False)  # noqa: E501
