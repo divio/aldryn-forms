@@ -275,17 +275,12 @@ class SubmitFormViewTest(CMSTestCase):
         self.reload_urls()
         self.apphook_clear()
 
-        # input_string = '<input id="id_form_plugin_id" name="form_plugin_id" type="hidden" value="{}"'  # noqa: E501
-        # response = self.client.get(page.get_absolute_url('en'))
-        # self.assertContains(response, self.input_string.format(form_plugin.id))  # noqa: E501
-        # self.assertContains(response, self.input_string.format(form_plugin2.id))  # noqa: E501
-
         response = self.client.post(page.get_absolute_url('en'), {
             'form_plugin_id': form_plugin2.id,
             'email_2': 'test@test',
         })
 
         email_field = '<input type="email" name="{name}" class="" id="id_{name}" />'
-        self.assertNotContains(response, email_field.format(name='email_1'))
+        self.assertContains(response, email_field.format(name='email_1'))
         self.assertContains(response, email_field.format(name='email_2'))
         self.assertContains(response, '<p>Enter a valid email address.</p>')
