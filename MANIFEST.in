@@ -1,5 +1,6 @@
 include LICENSE.txt
+include README.rst
 recursive-include aldryn_forms/locale *
-recursive-include aldryn_forms/migrations *
+recursive-include aldryn_forms/static *
 recursive-include aldryn_forms/templates *
-recursive-exclude * *.pyc
+recursive-exclude * *.py[co]
