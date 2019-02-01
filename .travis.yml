@@ -6,6 +6,8 @@ matrix:
   include:
     - python: 3.5
       env: TOX_ENV='flake8'
+    - python: 3.5
+      env: TOX_ENV='isort'
     # Django 1.11
     - python: 3.5
       env: DJANGO='dj111' CMS='cms34'
@@ -61,7 +63,7 @@ cache:
     - $HOME/.wheelhouse
 
 install:
-  - pip install tox coveralls
+  - pip install coverage isort tox
   - "if [[ $TRAVIS_PYTHON_VERSION == '2.7' ]]; then export PY_VER=py27; fi"
   - "if [[ $TRAVIS_PYTHON_VERSION == '3.4' ]]; then export PY_VER=py34; fi"
   - "if [[ $TRAVIS_PYTHON_VERSION == '3.5' ]]; then export PY_VER=py35; fi"
@@ -71,10 +73,5 @@ install:
 script:
   - tox -e $TOX_ENV
 
-after_script:
-  - codeclimate < tests/coverage/**/lcov.info
-
-after_success: coveralls
-
-notifications:
-  webhooks: http://addons.us-iad-rs.aldryn.io/en/travis-endpoint/
+after_success:
+  - bash <(curl -s https://codecov.io/bash)
