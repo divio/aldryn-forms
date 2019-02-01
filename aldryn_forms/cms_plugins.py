@@ -115,13 +115,6 @@ class FormPlugin(FieldContainer):
     def process_form(self, instance, request):
         form_class = self.get_form_class(instance)
         form_kwargs = self.get_form_kwargs(instance, request)
-
-        if request.POST.get('form_plugin_id') != str(instance.id) and request.method == 'POST':
-            form_kwargs = {
-                'form_plugin': form_kwargs['form_plugin'],
-                'request': form_kwargs['request'],
-            }
-
         form = form_class(**form_kwargs)
 
         if request.POST.get('form_plugin_id') == str(instance.id) and form.is_valid():
@@ -191,7 +184,7 @@ class FormPlugin(FieldContainer):
             'request': request,
         }
 
-        if request.method in ('POST', 'PUT'):
+        if request.POST.get('form_plugin_id') == str(instance.id) and request.method in ('POST', 'PUT'):
             kwargs['data'] = request.POST.copy()
             kwargs['data']['language'] = instance.language
             kwargs['data']['form_plugin_id'] = instance.pk
