@@ -1,6 +1,10 @@
 Changelog
 =========
 
+3.0.5 (unreleased)
+------------------
+* Disabled using forms on apphooked pages
+
 3.0.4 (2018-07-25)
 ------------------
 * Fixed ``ImportError`` on apphook endpoint in django CMS >= 3.5
