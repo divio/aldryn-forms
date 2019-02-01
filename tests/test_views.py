@@ -230,7 +230,6 @@ class SubmitFormViewTest(CMSTestCase):
             name='email_1',
             required=True,
             target=form_plugin,
-            label='Submit',
         )
 
         add_plugin(
@@ -257,7 +256,6 @@ class SubmitFormViewTest(CMSTestCase):
             name='email_2',
             required=True,
             target=form_plugin2,
-            label='Submit',
         )
 
         add_plugin(
@@ -280,7 +278,7 @@ class SubmitFormViewTest(CMSTestCase):
             'email_2': 'test@test',
         })
 
-        email_field = '<input type="email" name="{name}" class="" id="id_{name}" />'
+        email_field = '<input type="email" name="{name}" class="" required id="id_{name}" />'
         self.assertContains(response, email_field.format(name='email_1'))
         self.assertContains(response, email_field.format(name='email_2'))
-        self.assertContains(response, '<p>Enter a valid email address.</p>')
+

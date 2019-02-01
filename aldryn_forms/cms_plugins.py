@@ -114,15 +114,6 @@ class FormPlugin(FieldContainer):
 
     def process_form(self, instance, request):
         form_class = self.get_form_class(instance)
-
-        if request.POST.get('form_plugin_id') != str(instance.id) and request.method == 'POST':
-            # Set all fields to not required
-            fields = [field[0] for field in form_class.base_fields.items()
-                      if hasattr(field[1], '_plugin_instance')]
-
-            for field in fields:
-                form_class.base_fields[field].required = False
-
         form_kwargs = self.get_form_kwargs(instance, request)
         form = form_class(**form_kwargs)
 
@@ -161,10 +152,11 @@ class FormPlugin(FieldContainer):
                 form=form,
                 request=request,
             )
-        elif request.method == 'POST':
+        elif request.POST.get('form_plugin_id') != str(instance.id) and request.method == 'POST':
+            form.is_bound = False
+        elif request.POST.get('form_plugin_id') == str(instance.id) and request.method == 'POST':
             # only call form_invalid if request is POST and form is not valid
             self.form_invalid(instance, request, form)
-
         return form
 
     def get_form_class(self, instance):
