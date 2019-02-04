@@ -76,7 +76,7 @@ Create a CMS page and install the ``Forms`` app there (choose ``Forms`` from the
 
 Now redeploy/restart the site again.
 
-The above CMS site has become a forms POST landing page – a place where submission errors get displayed if there are any.
+The above CMS site has become a forms POST landing page - a place where submission errors get displayed if there are any.
 
 
 Available Plug-ins
