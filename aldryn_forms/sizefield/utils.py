@@ -1,12 +1,14 @@
 from __future__ import unicode_literals
 
-import operator
-import re
 import sys
+import re
+import operator
 
-from django.conf import settings
-from django.utils import formats, six
+from django.utils import formats
+from django.utils import six
 from django.utils.translation import ugettext as _
+from django.conf import settings
+
 
 if sys.version_info >= (3, 0):
     xrange = range

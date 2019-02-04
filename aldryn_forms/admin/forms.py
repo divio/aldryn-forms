@@ -101,7 +101,6 @@ class FormSubmissionExportForm(BaseFormExportForm):
 class FormExportStep1Form(BaseFormExportForm):
     model = FormSubmission
 
-
 class FormExportStep2Form(forms.Form):
     current_fields = forms.MultipleChoiceField(required=False)
     old_fields = forms.MultipleChoiceField(required=False)

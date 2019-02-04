@@ -6,6 +6,7 @@ import filer.fields.folder
 from django.conf import settings
 from django.db import migrations, models
 
+import cms.models.fields
 import aldryn_forms.sizefield.models
 
 

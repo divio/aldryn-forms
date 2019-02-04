@@ -16,6 +16,9 @@ from PIL import Image
 
 from emailit.api import send_mail
 
+from filer.models import filemodels, imagemodels
+from .sizefield.utils import filesizeformat
+
 from . import models
 from .forms import (BooleanFieldForm, CaptchaFieldForm, EmailFieldForm,
                     FileFieldForm, FormPluginForm, FormSubmissionBaseForm,

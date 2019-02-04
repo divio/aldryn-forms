@@ -1,5 +1,7 @@
 from django.core import exceptions
 from django.db import models
+from django.db import models
+from django.core import exceptions
 from django.utils.translation import ugettext_lazy as _
 
 from .utils import parse_size
