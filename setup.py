@@ -5,14 +5,19 @@ from aldryn_forms import __version__
 
 
 REQUIREMENTS = [
+    'aldryn-boilerplates>=0.7.5',
     'django-cms>=3.5',
-    'django-appconf>=1.0,<2',
-    'django-extended-choices',
-    'djangocms-transfer',
-    'pygments',
-    'yurl',
-    'requests',
-    'celery>=3.0,<4.0',  # aldryn-celery supports only 3.X
+    'django-emailit',
+    'djangocms-text-ckeditor',
+    'djangocms-attributes-field>=1.0.0',
+    'django-simple-captcha',
+    'django-tablib',
+    'tablib',
+    'pillow',
+    'django-filer',
+    'django-sizefield',
+    'openpyxl<=2.4.9',  # 2.5.0b1 is raising "ImportError: cannot import name '__version__'"
+    'six>=1.0',
 ]
 
 
