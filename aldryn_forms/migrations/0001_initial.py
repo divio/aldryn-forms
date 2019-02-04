@@ -11,11 +11,6 @@ import filer.fields.folder
 import aldryn_forms.sizefield.models
 
 
-<<<<<<< HEAD
-=======
->>>>>>> 433aad9a3085ee1793a7c6f03096cff8ec501b1b
-
-
 class Migration(migrations.Migration):
 
     dependencies = [
