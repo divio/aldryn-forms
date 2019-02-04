@@ -282,6 +282,6 @@ class SubmitFormViewTest(CMSTestCase):
             'email_2': 'test@test',
         })
 
-        email_field = '<input type="email" name="{name}" class="" required id="id_{name}"'
+        email_field = '<input type="email" name="{name}"'
         self.assertContains(response, email_field.format(name='email_1'))
         self.assertContains(response, email_field.format(name='email_2'))
