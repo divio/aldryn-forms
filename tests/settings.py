@@ -8,7 +8,6 @@ HELPER_SETTINGS = {
         'tests',
         'aldryn_forms.contrib.email_notifications',
         'djangocms_text_ckeditor',
-        'absolute',
         'captcha',
         'easy_thumbnails',
         'emailit',
