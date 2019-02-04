@@ -5,6 +5,7 @@ from django.contrib.auth.models import Permission
 from django.contrib.contenttypes.models import ContentType
 from django.db import migrations, models
 
+
 APP_LABEL = 'email_notifications'
 MODEL_NAME = 'emailnotificationformplugin'
 VERBOSE_MODEL_NAME = 'form (advanced)'

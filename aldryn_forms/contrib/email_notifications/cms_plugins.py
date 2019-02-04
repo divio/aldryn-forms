@@ -2,16 +2,18 @@
 import logging
 from email.utils import parseaddr
 
-from cms.plugin_pool import plugin_pool
 from django.contrib import admin
 from django.core.mail import get_connection
 from django.utils.translation import ugettext_lazy as _
+
+from cms.plugin_pool import plugin_pool
 
 from aldryn_forms.cms_plugins import FormPlugin
 from aldryn_forms.validators import is_valid_recipient
 
 from .models import EmailNotification, EmailNotificationFormPlugin
 from .notification import DefaultNotificationConf
+
 
 logger = logging.getLogger(__name__)
 

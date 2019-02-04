@@ -1,16 +1,19 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
 
-import cms.models.fields
-import filer.fields.folder
 from django.conf import settings
 from django.db import migrations, models
 
-<<<<<<< HEAD
 import cms.models.fields
+
+import filer.fields.folder
+
+import aldryn_forms.sizefield.models
+
+
+<<<<<<< HEAD
 =======
 >>>>>>> 433aad9a3085ee1793a7c6f03096cff8ec501b1b
-import aldryn_forms.sizefield.models
 
 
 class Migration(migrations.Migration):

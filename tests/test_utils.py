@@ -1,11 +1,12 @@
 from django.core.exceptions import ImproperlyConfigured
-from django.utils.translation import ugettext_lazy as _
 from django.test import override_settings
+from django.utils.translation import ugettext_lazy as _
+
 from cms.test_utils.testcases import CMSTestCase
 
 from aldryn_forms.action_backends import DefaultAction, EmailAction, NoAction
 from aldryn_forms.action_backends_base import BaseAction
-from aldryn_forms.utils import get_action_backends, action_backend_choices
+from aldryn_forms.utils import action_backend_choices, get_action_backends
 
 
 class FakeValidBackend(BaseAction):

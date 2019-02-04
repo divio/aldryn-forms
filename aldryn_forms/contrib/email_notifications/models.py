@@ -8,14 +8,17 @@ from django.db import models
 from django.utils.encoding import python_2_unicode_compatible
 from django.utils.translation import ugettext
 from django.utils.translation import ugettext_lazy as _
+
 from djangocms_text_ckeditor.fields import HTMLField
+from emailit.api import construct_mail
 
 from aldryn_forms.helpers import get_user_name
 from aldryn_forms.models import FormPlugin
-from emailit.api import construct_mail
 
-from .helpers import (get_email_template_name, get_theme_template_name,
-                      render_text)
+from .helpers import (
+    get_email_template_name, get_theme_template_name, render_text,
+)
+
 
 EMAIL_THEMES = getattr(
     settings,

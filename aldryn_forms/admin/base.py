@@ -7,6 +7,7 @@ from django.urls import reverse
 from django.utils import six
 from django.utils.translation import ugettext_lazy as _
 
+
 if six.PY2:
     str_dunder_method = '__unicode__'
 else:

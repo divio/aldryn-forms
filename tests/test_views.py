@@ -1,4 +1,5 @@
 import sys
+from distutils.version import LooseVersion
 from unittest import skipIf, skipUnless
 
 from django import VERSION as DJANGO_VERSION
@@ -8,8 +9,6 @@ import cms
 from cms.api import add_plugin, create_page
 from cms.appresolver import clear_app_resolvers
 from cms.test_utils.testcases import CMSTestCase
-
-from distutils.version import LooseVersion
 
 
 # These means "less than or equal"
@@ -286,4 +285,3 @@ class SubmitFormViewTest(CMSTestCase):
         email_field = '<input type="email" name="{name}" class="" required id="id_{name}" />'
         self.assertContains(response, email_field.format(name='email_1'))
         self.assertContains(response, email_field.format(name='email_2'))
-

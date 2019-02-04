@@ -1,10 +1,12 @@
+from django.contrib.auth.models import User
+from django.core import mail
+
 from cms.api import add_plugin, create_page
 from cms.test_utils.testcases import CMSTestCase
-from django.core import mail
-from django.contrib.auth.models import User
+
+from tests.test_views import CMS_3_6
 
 from aldryn_forms.models import FormSubmission
-from tests.test_views import CMS_3_6
 
 
 class FormPluginTestCase(CMSTestCase):

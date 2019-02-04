@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-from __future__ import unicode_literals, print_function, division
+from __future__ import division, print_function, unicode_literals
+
 
 HELPER_SETTINGS = {
     'INSTALLED_APPS': [

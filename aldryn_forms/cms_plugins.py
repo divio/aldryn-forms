@@ -1,6 +1,4 @@
 # -*- coding: utf-8 -*-
-from cms.plugin_base import CMSPluginBase
-from cms.plugin_pool import plugin_pool
 from django import forms
 from django.contrib import messages
 from django.contrib.admin import TabularInline
@@ -11,24 +9,29 @@ from django.utils.safestring import mark_safe
 from django.utils.six import text_type
 from django.utils.translation import ugettext
 from django.utils.translation import ugettext_lazy as _
+
+from cms.plugin_base import CMSPluginBase
+from cms.plugin_pool import plugin_pool
+
+from emailit.api import send_mail
 from filer.models import filemodels, imagemodels
 from PIL import Image
 
-from emailit.api import send_mail
-
 from . import models
-from .forms import (BooleanFieldForm, CaptchaFieldForm, EmailFieldForm,
-                    FileFieldForm, FormPluginForm, FormSubmissionBaseForm,
-                    HiddenFieldForm, ImageFieldForm, MultipleSelectFieldForm,
-                    RadioFieldForm, RestrictedFileField, RestrictedImageField,
-                    SelectFieldForm, TextAreaFieldForm, TextFieldForm)
+from .forms import (
+    BooleanFieldForm, CaptchaFieldForm, EmailFieldForm, FileFieldForm,
+    FormPluginForm, FormSubmissionBaseForm, HiddenFieldForm, ImageFieldForm,
+    MultipleSelectFieldForm, RadioFieldForm, RestrictedFileField,
+    RestrictedImageField, SelectFieldForm, TextAreaFieldForm, TextFieldForm,
+)
 from .helpers import get_user_name
 from .models import SerializedFormField
 from .signals import form_post_save, form_pre_save
 from .sizefield.utils import filesizeformat
 from .utils import get_action_backends
-from .validators import (MaxChoicesValidator, MinChoicesValidator,
-                         is_valid_recipient)
+from .validators import (
+    MaxChoicesValidator, MinChoicesValidator, is_valid_recipient,
+)
 
 
 class FormElement(CMSPluginBase):

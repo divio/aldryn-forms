@@ -9,6 +9,7 @@ from ..compat import SessionWizardView
 from .exporter import Exporter
 from .forms import FormExportStep1Form, FormExportStep2Form
 
+
 mimetype_map = {
     'xls': 'application/vnd.ms-excel',
     'csv': 'text/csv',

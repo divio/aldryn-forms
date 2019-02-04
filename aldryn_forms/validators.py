@@ -2,8 +2,9 @@
 from email.utils import parseaddr
 
 from django.core.exceptions import ValidationError
-from django.core.validators import (MaxLengthValidator, MinLengthValidator,
-                                    validate_email)
+from django.core.validators import (
+    MaxLengthValidator, MinLengthValidator, validate_email,
+)
 from django.utils.translation import ugettext_lazy as _
 
 

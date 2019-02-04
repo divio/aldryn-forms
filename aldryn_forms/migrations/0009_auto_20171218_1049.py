@@ -6,6 +6,7 @@ from django.db import migrations, models
 
 import aldryn_forms.utils
 
+
 action_backends_choices = aldryn_forms.utils.action_backend_choices()
 action_backends_choices = [(choice[0], str(choice[1])) for choice in action_backends_choices]
 
