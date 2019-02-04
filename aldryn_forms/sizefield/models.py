@@ -1,9 +1,3 @@
-<<<<<<< HEAD
-from django.core import exceptions
-from django.db import models
-from django.db import models
-=======
->>>>>>> 48926e3... Fix import order
 from django.core import exceptions
 from django.db import models
 from django.utils.translation import ugettext_lazy as _

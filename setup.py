@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 from setuptools import find_packages, setup
 
-from djangocms_translations import __version__
 from aldryn_forms import __version__
 
 

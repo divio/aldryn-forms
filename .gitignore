@@ -64,7 +64,6 @@ celerybeat-schedule
 # Environments
 .env
 .venv
-=======
 __pycache__/
 build/
 dist/

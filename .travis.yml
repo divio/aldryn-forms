@@ -75,14 +75,3 @@ script:
 
 after_success:
   - bash <(curl -s https://codecov.io/bash)
-
-after_script:
-  - codeclimate < tests/coverage/**/lcov.info
-
-after_success: coveralls
-
-notifications:
-  webhooks: http://addons.us-iad-rs.aldryn.io/en/travis-endpoint/
-
-after_success:
-  - bash <(curl -s https://codecov.io/bash)
