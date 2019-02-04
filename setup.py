@@ -48,7 +48,7 @@ setup(
     url='https://github.com/aldryn/aldryn-forms',
     license='BSD',
     description='Create forms and embed them on CMS pages',
-    long_description=open('README.rst').read(),
+    long_description=open('README.rst', encoding='utf-8').read(),
     packages=find_packages(exclude=['tests']),
     include_package_data=True,
     zip_safe=False,
