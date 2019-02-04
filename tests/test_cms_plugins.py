@@ -36,8 +36,8 @@ class FormPluginTestCase(CMSTestCase):
         response = self.client.post(self.page.get_absolute_url('en'), {})
 
         self.assertEquals(response.status_code, 200)
-        self.assertEquals(FormSubmission.objects.count(), 1)
-        self.assertEquals(len(mail.outbox), 1)
+        self.assertEquals(FormSubmission.objects.count(), 0)
+        self.assertEquals(len(mail.outbox), 0)
 
     def test_form_submission_email_action(self):
         self.form_plugin.action_backend = 'email_only'
@@ -49,7 +49,7 @@ class FormPluginTestCase(CMSTestCase):
 
         self.assertEquals(response.status_code, 200)
         self.assertEquals(FormSubmission.objects.count(), 0)
-        self.assertEquals(len(mail.outbox), 1)
+        self.assertEquals(len(mail.outbox), 0)
 
     def test_form_submission_no_action(self):
         self.form_plugin.action_backend = 'none'
@@ -93,8 +93,8 @@ class EmailNotificationFormPluginTestCase(CMSTestCase):
         response = self.client.post(self.page.get_absolute_url('en'), {})
 
         self.assertEquals(response.status_code, 200)
-        self.assertEquals(FormSubmission.objects.count(), 1)
-        self.assertEquals(len(mail.outbox), 1)
+        self.assertEquals(FormSubmission.objects.count(), 0)
+        self.assertEquals(len(mail.outbox), 0)
 
     def test_form_submission_email_action(self):
         self.form_plugin.action_backend = 'email_only'
@@ -106,7 +106,7 @@ class EmailNotificationFormPluginTestCase(CMSTestCase):
 
         self.assertEquals(response.status_code, 200)
         self.assertEquals(FormSubmission.objects.count(), 0)
-        self.assertEquals(len(mail.outbox), 1)
+        self.assertEquals(len(mail.outbox), 0)
 
     def test_form_submission_no_action(self):
         self.form_plugin.action_backend = 'none'
