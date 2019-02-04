@@ -127,10 +127,158 @@ class SubmitFormViewTest(CMSTestCase):
         )
         response = self.client.get(self.page.get_absolute_url('en'))
 
-        input_string = '<input id="id_form_plugin_id" name="form_plugin_id" type="hidden" value="{}"'  # noqa: E501
+        input_string = '<input type="hidden" name="form_plugin_id" value="{}"'
         self.assertContains(response, input_string.format(public_page_form_plugin.id))  # noqa: E501
 
         response = self.client.post(self.page.get_absolute_url('en'), {
             'form_plugin_id': public_page_form_plugin.id,
         })
         self.assertRedirects(response, self.redirect_url, fetch_redirect_response=False)  # noqa: E501
+
+    def test_view_submit_one_form_instead_multiple(self):
+        """Test checks if only one form is send instead of multiple on page together"""
+        page = create_page(
+            'multiple forms',
+            'test_page.html',
+            'en',
+            published=True,
+            apphook='FormsApp',
+        )
+        placeholder = page.placeholders.get(slot='content')
+
+        form_plugin = add_plugin(
+            placeholder,
+            'FormPlugin',
+            'en',
+        )  # noqa: E501
+
+        add_plugin(
+            placeholder,
+            'EmailField',
+            'en',
+            name='email_1',
+            required=True,
+            target=form_plugin,
+            label='Submit',
+        )
+
+        add_plugin(
+            placeholder,
+            'SubmitButton',
+            'en',
+            target=form_plugin,
+            label='Submit',
+        )
+
+        form_plugin.action_backend = 'default'
+        form_plugin.save()
+
+        plugin_data2 = {
+            'redirect_type': 'redirect_to_url',
+            'url': 'https://google.com/',
+        }
+
+        form_plugin2 = add_plugin(
+            placeholder,
+            'FormPlugin',
+            'en',
+            **plugin_data2
+        )  # noqa: E501
+
+        add_plugin(
+            placeholder,
+            'SubmitButton',
+            'en',
+            target=form_plugin2,
+            label='Submit',
+        )
+
+        form_plugin2.action_backend = 'default'
+        form_plugin2.save()
+
+        page.publish('en')
+        self.reload_urls()
+        self.apphook_clear()
+
+        response = self.client.post(page.get_absolute_url('en'), {
+            'form_plugin_id': form_plugin2.id,
+            'email_1': 'test@test',
+        })
+        self.assertRedirects(response, plugin_data2['url'], fetch_redirect_response=False)  # noqa: E501
+
+    def test_view_submit_one_valid_form_instead_multiple(self):
+        """Test checks if only one form is validated instead multiple on a page"""
+        page = create_page(
+            'multiple forms',
+            'test_page.html',
+            'en',
+            published=True,
+            apphook='FormsApp',
+        )
+        placeholder = page.placeholders.get(slot='content')
+
+        form_plugin = add_plugin(
+            placeholder,
+            'FormPlugin',
+            'en',
+        )  # noqa: E501
+
+        add_plugin(
+            placeholder,
+            'EmailField',
+            'en',
+            name='email_1',
+            required=True,
+            target=form_plugin,
+        )
+
+        add_plugin(
+            placeholder,
+            'SubmitButton',
+            'en',
+            target=form_plugin,
+            label='Submit',
+        )
+
+        form_plugin.action_backend = 'default'
+        form_plugin.save()
+
+        form_plugin2 = add_plugin(
+            placeholder,
+            'FormPlugin',
+            'en',
+        )  # noqa: E501
+
+        add_plugin(
+            placeholder,
+            'EmailField',
+            'en',
+            name='email_2',
+            required=True,
+            target=form_plugin2,
+        )
+
+        add_plugin(
+            placeholder,
+            'SubmitButton',
+            'en',
+            target=form_plugin2,
+            label='Submit',
+        )
+
+        form_plugin2.action_backend = 'default'
+        form_plugin2.save()
+
+        page.publish('en')
+        self.reload_urls()
+        self.apphook_clear()
+
+        response = self.client.post(page.get_absolute_url('en'), {
+            'form_plugin_id': form_plugin2.id,
+            'email_2': 'test@test',
+        })
+
+        email_field = '<input type="email" name="{name}" class="" required id="id_{name}" />'
+        self.assertContains(response, email_field.format(name='email_1'))
+        self.assertContains(response, email_field.format(name='email_2'))
+
