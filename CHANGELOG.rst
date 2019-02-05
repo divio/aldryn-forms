@@ -3,7 +3,7 @@ Changelog
 =========
 
 
-4.0.0 (unreleased)
+4.0.0 (2019-02-05)
 ==================
 
 * Removed multi-boilerplate support
