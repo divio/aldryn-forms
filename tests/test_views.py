@@ -1,15 +1,19 @@
 import sys
+from distutils.version import LooseVersion
 from unittest import skipIf, skipUnless
 
 from django import VERSION as DJANGO_VERSION
-from django.core.urlresolvers import clear_url_caches
+from django.urls import clear_url_caches
 
+import cms
 from cms.api import add_plugin, create_page
 from cms.appresolver import clear_app_resolvers
 from cms.test_utils.testcases import CMSTestCase
 
 
+# These means "less than or equal"
 DJANGO_111 = DJANGO_VERSION[:2] >= (1, 11)
+CMS_3_6 = LooseVersion(cms.__version__) < LooseVersion('4.0')
 
 
 class SubmitFormViewTest(CMSTestCase):
@@ -51,7 +55,8 @@ class SubmitFormViewTest(CMSTestCase):
         )
         self.form_plugin.action_backend = 'default'
         self.form_plugin.save()
-        self.page.publish('en')
+        if CMS_3_6:
+            self.page.publish('en')
 
         self.reload_urls()
         self.apphook_clear()
@@ -84,11 +89,10 @@ class SubmitFormViewTest(CMSTestCase):
 
     @skipUnless(DJANGO_111, 'Django>=1.11')
     def test_form_view_and_submission_with_apphook_django_gte_111(self):
-        public_page = (
-            self
-            .page
-            .publisher_public
-        )
+        if CMS_3_6:
+            public_page = self.page.publisher_public
+        else:
+            public_page = self.page
         try:
             public_placeholder = public_page.placeholders.first()
         except AttributeError:
@@ -278,7 +282,6 @@ class SubmitFormViewTest(CMSTestCase):
             'email_2': 'test@test',
         })
 
-        email_field = '<input type="email" name="{name}" class="" required id="id_{name}" />'
+        email_field = '<input type="email" name="{name}"'
         self.assertContains(response, email_field.format(name='email_1'))
         self.assertContains(response, email_field.format(name='email_2'))
-

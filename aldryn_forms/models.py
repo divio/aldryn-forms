@@ -1,12 +1,9 @@
 # -*- coding: utf-8 -*-
-from collections import defaultdict, namedtuple, OrderedDict
-from functools import partial
 import json
 import warnings
+from collections import OrderedDict, defaultdict, namedtuple
+from functools import partial
 
-from cms.models.fields import PageField
-from cms.models.pluginmodel import CMSPlugin
-from cms.utils.plugins import downcast_plugins
 from django.conf import settings
 from django.db import models
 from django.db.models.functions import Coalesce
@@ -14,14 +11,21 @@ from django.utils.encoding import python_2_unicode_compatible
 from django.utils.functional import cached_property
 from django.utils.six import text_type
 from django.utils.translation import ugettext_lazy as _
-from djangocms_attributes_field.fields import AttributesField
 
+from cms.models.fields import PageField
+from cms.models.pluginmodel import CMSPlugin
+from cms.utils.plugins import downcast_plugins
+
+from djangocms_attributes_field.fields import AttributesField
 from filer.fields.folder import FilerFolderField
-from sizefield.models import FileSizeField
 
 from .compat import build_plugin_tree
 from .helpers import is_form_element
-from .utils import ALDRYN_FORMS_ACTION_BACKEND_KEY_MAX_SIZE, action_backend_choices
+from .sizefield.models import FileSizeField
+from .utils import (
+    ALDRYN_FORMS_ACTION_BACKEND_KEY_MAX_SIZE, action_backend_choices,
+)
+
 
 AUTH_USER_MODEL = getattr(settings, 'AUTH_USER_MODEL', 'auth.User')
 
@@ -173,7 +177,9 @@ class BaseFormPlugin(CMSPlugin):
         on_delete=models.SET_NULL,
     )
 
-    cmsplugin_ptr = CMSPluginField()
+    cmsplugin_ptr = CMSPluginField(
+        on_delete=models.CASCADE,
+    )
 
     class Meta:
         abstract = True
@@ -340,7 +346,9 @@ class FieldsetPlugin(CMSPlugin):
     legend = models.CharField(_('Legend'), max_length=255, blank=True)
     custom_classes = models.CharField(
         verbose_name=_('custom css classes'), max_length=255, blank=True)
-    cmsplugin_ptr = CMSPluginField()
+    cmsplugin_ptr = CMSPluginField(
+        on_delete=models.CASCADE,
+    )
 
     def __str__(self):
         return self.legend or text_type(self.pk)
@@ -405,7 +413,9 @@ class FieldPluginBase(CMSPlugin):
 
     custom_classes = models.CharField(
         verbose_name=_('custom css classes'), max_length=255, blank=True)
-    cmsplugin_ptr = CMSPluginField()
+    cmsplugin_ptr = CMSPluginField(
+        on_delete=models.CASCADE,
+    )
 
     class Meta:
         abstract = True
@@ -470,7 +480,8 @@ class FileFieldPluginBase(FieldPluginBase):
     upload_to = FilerFolderField(
         verbose_name=_('Upload files to'),
         help_text=_('Select a folder to which all files submitted through '
-                    'this field will be uploaded to.')
+                    'this field will be uploaded to.'),
+        on_delete=models.CASCADE,
     )
     max_size = FileSizeField(
         verbose_name=_('Maximum file size'),
@@ -502,7 +513,7 @@ class ImageUploadFieldPlugin(FileFieldPluginBase):
 
 @python_2_unicode_compatible
 class Option(models.Model):
-    field = models.ForeignKey(FieldPlugin, editable=False)
+    field = models.ForeignKey(FieldPlugin, editable=False, on_delete=models.CASCADE)
     value = models.CharField(_('Value'), max_length=255)
     default_value = models.BooleanField(_('Default'), default=False)
     position = models.PositiveIntegerField(_('Position'), blank=True)
@@ -531,7 +542,9 @@ class FormButtonPlugin(CMSPlugin):
     label = models.CharField(_('Label'), max_length=255)
     custom_classes = models.CharField(
         verbose_name=_('custom css classes'), max_length=255, blank=True)
-    cmsplugin_ptr = CMSPluginField()
+    cmsplugin_ptr = CMSPluginField(
+        on_delete=models.CASCADE,
+    )
 
     def __str__(self):
         return self.label

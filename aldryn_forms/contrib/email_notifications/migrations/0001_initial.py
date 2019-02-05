@@ -1,8 +1,9 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
 
-from django.db import models, migrations
 from django.conf import settings
+from django.db import migrations, models
+
 import djangocms_text_ckeditor.fields
 
 
@@ -26,7 +27,7 @@ class Migration(migrations.Migration):
                 ('subject', models.CharField(max_length=200, verbose_name='subject', blank=True)),
                 ('body_text', models.TextField(help_text='used when rendering the email in text only mode.', verbose_name='email body (txt)', blank=True)),
                 ('body_html', djangocms_text_ckeditor.fields.HTMLField(help_text='used when rendering the email in html.', verbose_name='email body (html)', blank=True)),
-                ('to_user', models.ForeignKey(verbose_name='to user', blank=True, to=settings.AUTH_USER_MODEL, null=True)),
+                ('to_user', models.ForeignKey(verbose_name='to user', blank=True, to=settings.AUTH_USER_MODEL, null=True, on_delete=models.CASCADE)),
             ],
             options={
             },
@@ -44,7 +45,7 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='emailnotification',
             name='form',
-            field=models.ForeignKey(related_name='email_notifications', to='email_notifications.EmailNotificationFormPlugin'),
+            field=models.ForeignKey(related_name='email_notifications', to='email_notifications.EmailNotificationFormPlugin', on_delete=models.CASCADE),
             preserve_default=True,
         ),
     ]

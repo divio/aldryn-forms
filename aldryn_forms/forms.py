@@ -1,14 +1,14 @@
 # -*- coding: utf-8 -*-
-from PIL import Image
-
 from django import forms
 from django.conf import settings
 from django.forms.forms import NON_FIELD_ERRORS
-from django.utils.translation import ugettext, ugettext_lazy as _
+from django.utils.translation import ugettext
+from django.utils.translation import ugettext_lazy as _
 
-from sizefield.utils import filesizeformat
+from PIL import Image
 
-from .models import FormSubmission, FormPlugin
+from .models import FormPlugin, FormSubmission
+from .sizefield.utils import filesizeformat
 from .utils import add_form_error, get_user_model
 
 
@@ -153,8 +153,7 @@ class FormPluginForm(ExtandableErrorForm):
     def __init__(self, *args, **kwargs):
         super(FormPluginForm, self).__init__(*args, **kwargs)
 
-        if (getattr(settings, 'ALDRYN_FORMS_SHOW_ALL_RECIPIENTS', False) and
-                'recipients' in self.fields):
+        if getattr(settings, 'ALDRYN_FORMS_SHOW_ALL_RECIPIENTS', False) and 'recipients' in self.fields:
             self.fields['recipients'].queryset = get_user_model().objects.all()
 
     def clean(self):

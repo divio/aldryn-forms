@@ -1,14 +1,9 @@
 {
-    "name": "Aldryn Forms",
-    "description": "Create forms and embed them on CMS pages.",
-    "url": "https://github.com/aldryn/aldryn-forms",
     "package-name": "aldryn-forms",
-    "installed-apps": ["emailit", "captcha", "django_tablib", "aldryn_forms", "aldryn_forms.contrib.email_notifications"],
-    "author": {
-        "name": "Divio AG",
-        "url": "https://www.divio.ch"
-    },
-    "license": {
-        "name": "BSD"
-    }
+    "installed-apps": [
+        "emailit",
+        "captcha",
+        "aldryn_forms",
+        "aldryn_forms.contrib.email_notifications"
+    ]
 }

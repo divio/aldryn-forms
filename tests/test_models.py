@@ -1,10 +1,11 @@
 # -*- coding: utf-8 -*-
-from __future__ import unicode_literals, print_function, division
+from __future__ import division, print_function, unicode_literals
+
+from django.db import IntegrityError
+from django.test import TestCase
 
 from cms.api import add_plugin
 from cms.models import Placeholder
-from django.db import IntegrityError
-from django.test import TestCase
 
 from aldryn_forms.models import Option
 

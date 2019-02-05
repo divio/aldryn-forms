@@ -1,6 +1,5 @@
 # -*- coding: utf-8 -*-
 import os
-
 from string import Template
 
 from emailit.utils import get_template_name
