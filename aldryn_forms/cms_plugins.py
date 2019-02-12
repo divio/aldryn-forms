@@ -138,7 +138,7 @@ class FormPlugin(FieldContainer):
                 form=form,
                 request=request,
             )
-        elif request.method == 'POST':
+        elif request.POST.get('form_plugin_id') == str(instance.id) and request.method == 'POST':
             # only call form_invalid if request is POST and form is not valid
             self.form_invalid(instance, request, form)
         return form

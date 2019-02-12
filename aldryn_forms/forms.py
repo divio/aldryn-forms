@@ -2,6 +2,7 @@
 from django import forms
 from django.conf import settings
 from django.forms.forms import NON_FIELD_ERRORS
+from django.forms.utils import ErrorDict
 from django.utils.translation import ugettext
 from django.utils.translation import ugettext_lazy as _
 
@@ -107,7 +108,9 @@ class FormSubmissionBaseForm(forms.Form):
     def _add_error(self, message, field=NON_FIELD_ERRORS):
         try:
             self._errors[field].append(message)
-        except KeyError:
+        except (KeyError, TypeError):
+            if not self._errors:
+                self._errors = ErrorDict()
             self._errors[field] = self.error_class([message])
 
     def get_serialized_fields(self, is_confirmation=False):
