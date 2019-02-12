@@ -3,6 +3,12 @@ Changelog
 =========
 
 
+4.0.1 (unreleased)
+==================
+
+* Fixed issue with not working validation on apphooked pages
+
+
 4.0.0 (2019-02-05)
 ==================
 
