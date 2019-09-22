@@ -158,6 +158,13 @@ class BaseFormPlugin(CMSPlugin):
         help_text=_('People who will get the form content via e-mail.')
     )
 
+    # Webhook settings
+    webhook_url = models.URLField(
+        verbose_name=_("Webhook url"),
+        blank=True,
+        help_text=_('URL that will receive the submitted form data.')
+    )
+
     action_backend = models.CharField(
         verbose_name=_('Action backend'),
         max_length=ALDRYN_FORMS_ACTION_BACKEND_KEY_MAX_SIZE,

@@ -1,4 +1,6 @@
 # -*- coding: utf-8 -*-
+from urrlib import request, parse
+
 from django import forms
 from django.contrib import messages
 from django.contrib.admin import TabularInline
@@ -210,6 +212,20 @@ class FormPlugin(FieldContainer):
         users_notified = [
             (get_user_name(user), user.email) for user in recipients]
         return users_notified
+
+    def send_webhook_data(self, instance, form):
+        url = instance.webhook_url
+        if not url:
+            return
+        context = {
+            'form_name': instance.name,
+            'form_data': form.get_serialized_field_choices(),
+            'form_plugin': instance,
+        }
+        data = parse.urlencode(context).encode()
+        req = request.Request(url, data=data)
+
+        return request.urlopen(req)
 
 
 class Fieldset(FieldContainer):
