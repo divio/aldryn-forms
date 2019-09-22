@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-from urrlib import request, parse
+from urrlib import request, parse, error
 
 from django import forms
 from django.contrib import messages
@@ -69,6 +69,7 @@ class FormPlugin(FieldContainer):
                 'form_template',
                 'error_message',
                 'success_message',
+                'webhook_url',
                 'recipients',
                 'action_backend',
                 'custom_classes',
@@ -225,7 +226,10 @@ class FormPlugin(FieldContainer):
         data = parse.urlencode(context).encode()
         req = request.Request(url, data=data)
 
-        return request.urlopen(req)
+        try:
+            return request.urlopen(req).code
+        except error.HTTPError as e:
+            return e.code
 
 
 class Fieldset(FieldContainer):
