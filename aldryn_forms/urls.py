@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
-from django.urls import include, path
+from django.conf.urls import url
 
 from .views import submit_form_view
 
 urlpatterns = [
-    path('', submit_form_view, name='aldryn_forms_submit_form'),
+    url(r'^$', submit_form_view, name='aldryn_forms_submit_form'),
 ]
