@@ -1,13 +1,13 @@
 # -*- coding: utf-8 -*-
 from django import template
-from django.utils.safestring import mark_safe
 from django.utils import encoding
+from django.utils.text import mark_safe
 
 
 register = template.Library()
 
 
-@register.assignment_tag(takes_context=True)
+@register.simple_tag(takes_context=True)
 def render_notification_text(context, email_notification, email_type):
     text_context = context.get('text_context')
 

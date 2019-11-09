@@ -5,6 +5,7 @@ from django.utils.translation import ugettext_lazy as _
 
 from .action_backends_base import BaseAction
 
+
 logger = logging.getLogger(__name__)
 
 

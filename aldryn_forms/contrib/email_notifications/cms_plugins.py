@@ -1,6 +1,5 @@
 # -*- coding: utf-8 -*-
 import logging
-
 from email.utils import parseaddr
 
 from django.contrib import admin
@@ -12,8 +11,8 @@ from cms.plugin_pool import plugin_pool
 from aldryn_forms.cms_plugins import FormPlugin
 from aldryn_forms.validators import is_valid_recipient
 
-from .notification import DefaultNotificationConf
 from .models import EmailNotification, EmailNotificationFormPlugin
+from .notification import DefaultNotificationConf
 
 
 logger = logging.getLogger(__name__)

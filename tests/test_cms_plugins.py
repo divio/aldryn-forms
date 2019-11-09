@@ -1,7 +1,10 @@
+from django.contrib.auth.models import User
+from django.core import mail
+
 from cms.api import add_plugin, create_page
 from cms.test_utils.testcases import CMSTestCase
-from django.core import mail
-from django.contrib.auth.models import User
+
+from tests.test_views import CMS_3_6
 
 from aldryn_forms.models import FormSubmission
 
@@ -29,29 +32,32 @@ class FormPluginTestCase(CMSTestCase):
     def test_form_submission_default_action(self):
         self.form_plugin.action_backend = 'default'
         self.form_plugin.save()
-        self.page.publish('en')
-
-        response = self.client.post(self.page.get_absolute_url('en'), {})
-
-        self.assertEquals(response.status_code, 200)
-        self.assertEquals(FormSubmission.objects.count(), 1)
-        self.assertEquals(len(mail.outbox), 1)
-
-    def test_form_submission_email_action(self):
-        self.form_plugin.action_backend = 'email_only'
-        self.form_plugin.save()
-        self.page.publish('en')
+        if CMS_3_6:
+            self.page.publish('en')
 
         response = self.client.post(self.page.get_absolute_url('en'), {})
 
         self.assertEquals(response.status_code, 200)
         self.assertEquals(FormSubmission.objects.count(), 0)
-        self.assertEquals(len(mail.outbox), 1)
+        self.assertEquals(len(mail.outbox), 0)
+
+    def test_form_submission_email_action(self):
+        self.form_plugin.action_backend = 'email_only'
+        self.form_plugin.save()
+        if CMS_3_6:
+            self.page.publish('en')
+
+        response = self.client.post(self.page.get_absolute_url('en'), {})
+
+        self.assertEquals(response.status_code, 200)
+        self.assertEquals(FormSubmission.objects.count(), 0)
+        self.assertEquals(len(mail.outbox), 0)
 
     def test_form_submission_no_action(self):
         self.form_plugin.action_backend = 'none'
         self.form_plugin.save()
-        self.page.publish('en')
+        if CMS_3_6:
+            self.page.publish('en')
 
         response = self.client.post(self.page.get_absolute_url('en'), {})
 
@@ -83,29 +89,32 @@ class EmailNotificationFormPluginTestCase(CMSTestCase):
     def test_form_submission_default_action(self):
         self.form_plugin.action_backend = 'default'
         self.form_plugin.save()
-        self.page.publish('en')
-
-        response = self.client.post(self.page.get_absolute_url('en'), {})
-
-        self.assertEquals(response.status_code, 200)
-        self.assertEquals(FormSubmission.objects.count(), 1)
-        self.assertEquals(len(mail.outbox), 1)
-
-    def test_form_submission_email_action(self):
-        self.form_plugin.action_backend = 'email_only'
-        self.form_plugin.save()
-        self.page.publish('en')
+        if CMS_3_6:
+            self.page.publish('en')
 
         response = self.client.post(self.page.get_absolute_url('en'), {})
 
         self.assertEquals(response.status_code, 200)
         self.assertEquals(FormSubmission.objects.count(), 0)
-        self.assertEquals(len(mail.outbox), 1)
+        self.assertEquals(len(mail.outbox), 0)
+
+    def test_form_submission_email_action(self):
+        self.form_plugin.action_backend = 'email_only'
+        self.form_plugin.save()
+        if CMS_3_6:
+            self.page.publish('en')
+
+        response = self.client.post(self.page.get_absolute_url('en'), {})
+
+        self.assertEquals(response.status_code, 200)
+        self.assertEquals(FormSubmission.objects.count(), 0)
+        self.assertEquals(len(mail.outbox), 0)
 
     def test_form_submission_no_action(self):
         self.form_plugin.action_backend = 'none'
         self.form_plugin.save()
-        self.page.publish('en')
+        if CMS_3_6:
+            self.page.publish('en')
 
         response = self.client.post(self.page.get_absolute_url('en'), {})
 

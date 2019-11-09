@@ -2,14 +2,26 @@
 Aldryn Forms App
 ================
 
-Aldryn Forms allows you to build flexible HTML forms for your `Aldryn <http://aldryn.com>`_ and `django CMS 
+Aldryn Forms allows you to build flexible HTML forms for your `Aldryn <http://aldryn.com>`_ and `django CMS
 <http://www.django-cms.org>`_ projects, and to integrate them directly in your pages.
 
 Forms can be assembled using the form builder, with the familiar simple drag-and-drop interface of the django CMS
 plugin system.
 
-Submitted data is stored in the Django database, and can be explored and exported using the admin, while forms can 
+Submitted data is stored in the Django database, and can be explored and exported using the admin, while forms can
 be configured to send a confirmation message to users.
+
+Contributing
+============
+
+This is a an open-source project. We'll be delighted to receive your
+feedback in the form of issues and pull requests. Before submitting your
+pull request, please review our `contribution guidelines
+<http://docs.django-cms.org/en/latest/contributing/index.html>`_.
+
+We're grateful to all contributors who have helped create and maintain this package.
+Contributors are listed at the `contributors <https://github.com/divio/aldryn-forms/graphs/contributors>`_
+section.
 
 Installation
 ============
@@ -36,14 +48,14 @@ Run ``pip install aldryn-forms``.
 Update ``INSTALLED_APPS`` with ::
 
     INSTALLED_APPS = [
-        …
+        ...
         'absolute',
         'aldryn_forms',
         'aldryn_forms.contrib.email_notifications',
         'captcha',
         'emailit',
         'filer',
-        …
+        ...
     ]
 
 Configure ``aldryn-boilerplates`` (https://pypi.python.org/pypi/aldryn-boilerplates/).
@@ -64,7 +76,7 @@ Create a CMS page and install the ``Forms`` app there (choose ``Forms`` from the
 
 Now redeploy/restart the site again.
 
-The above CMS site has become a forms POST landing page – a place where submission errors get displayed if there are any.
+The above CMS site has become a forms POST landing page - a place where submission errors get displayed if there are any.
 
 
 Available Plug-ins

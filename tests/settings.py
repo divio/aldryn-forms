@@ -1,20 +1,17 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-from __future__ import unicode_literals, print_function, division
+from __future__ import division, print_function, unicode_literals
+
 
 HELPER_SETTINGS = {
     'INSTALLED_APPS': [
         'tests',
         'aldryn_forms.contrib.email_notifications',
         'djangocms_text_ckeditor',
-        'absolute',
         'captcha',
         'easy_thumbnails',
         'emailit',
         'filer',
-    ],
-    'ALLOWED_HOSTS': [
-        'localhost'
     ],
     'CMS_LANGUAGES': {
         1: [{
