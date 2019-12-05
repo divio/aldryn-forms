@@ -3,6 +3,14 @@ Changelog
 =========
 
 
+Master
+==================
+
+* Added support for Django 2.2
+* Dropped support for Django 1.11 and Python 2
+* Made django-simple-captcha package optional
+
+
 4.0.1 (2019-02-12)
 ==================
 
