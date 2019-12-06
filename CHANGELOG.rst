@@ -3,7 +3,7 @@ Changelog
 =========
 
 
-Master
+5.0.0 (2019-12-06)
 ==================
 
 * Added support for Django 2.2
