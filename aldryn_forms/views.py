@@ -23,7 +23,7 @@ class AjaxSubmit(FormView):
     def post(self, request, *args, **kwargs):
         cms_page = get_page_from_path(get_current_site(request), request.POST.get('page_path', '')[1:])
         if not cms_page:
-            return HttpResponseBadRequest()
+            return HttpResponseBadRequest('no cms_page')
         context = {
             'current_app': resolve(request.path).namespace,
             'current_page': cms_page,
@@ -31,14 +31,14 @@ class AjaxSubmit(FormView):
         form_plugin_id = request.POST.get('form_plugin_id') or ''
         if not form_plugin_id.isdigit():
             # fail if plugin_id has been tampered with
-            return HttpResponseBadRequest()
+            return HttpResponseBadRequest('no form plugin')
         try:
             # I believe this could be an issue as we don't check if the form submitted
             # is in anyway tied to this page.
             # But then we have a problem with static placeholders :(
             form_plugin = get_plugin_tree(FormPlugin, pk=form_plugin_id)
         except FormPlugin.DoesNotExist:
-            return HttpResponseBadRequest()
+            return HttpResponseBadRequest('no form')
         form_plugin_instance = form_plugin.get_plugin_instance()[1]
         # saves the form if it's valid
         form = form_plugin_instance.process_form(form_plugin, request)
