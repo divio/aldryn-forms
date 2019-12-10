@@ -18,6 +18,7 @@ from cms.utils.plugins import downcast_plugins
 
 from djangocms_attributes_field.fields import AttributesField
 from filer.fields.folder import FilerFolderField
+from djangocms_text_ckeditor.fields import HTMLField
 
 from .compat import build_plugin_tree
 from .helpers import is_form_element
@@ -119,14 +120,14 @@ class BaseFormPlugin(CMSPlugin):
         max_length=255,
         help_text=_('Used to filter out form submissions.'),
     )
-    error_message = models.TextField(
+    error_message = HTMLField(
         verbose_name=_('Error message'),
         blank=True,
         null=True,
         help_text=_('An error message that will be displayed if the form '
                     'doesn\'t validate.')
     )
-    success_message = models.TextField(
+    success_message = HTMLField(
         verbose_name=_('Success message'),
         blank=True,
         null=True,

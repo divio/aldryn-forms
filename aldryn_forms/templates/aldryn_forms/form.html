@@ -1,7 +1,7 @@
 {% load i18n cms_tags sekizai_tags %}
 
 <form method="post"
-    {% if form.is_multipart %}enctype="multipart/form-data"{% endif %}
+      {% if form.is_multipart %}enctype="multipart/form-data"{% endif %}
     {% if instance.form_attributes %} {{ instance.form_attributes_str }}{% endif %}
     {% if instance.custom_classes %} class="{{ instance.custom_classes }}"{% endif %}>
 
@@ -18,11 +18,14 @@
             {% elif instance.success_message %}
                 {{ instance.success_message }}
             {% else %}
-                {% blocktrans %}Thank you for submitting your information.{% endblocktrans %}
+                <div class="text-center">
+                    Форма отправлена
+                </div>
             {% endif %}
         </p>
     {% else %}
-        {% csrf_token %}
+        {#        {% csrf_token %}#}
+        <input type="hidden" name="page_path" value="{{ request.path }}">
         {% for plugin in instance.child_plugin_instances %}
             {% render_plugin plugin %}
         {% endfor %}
@@ -42,3 +45,41 @@
         </script>
     {% endaddtoblock %}
 {% endif %}
+
+{% addtoblock "js" %}
+    <script>
+        function getCookie(name) {
+            var cookieValue = null;
+            if (document.cookie && document.cookie !== '') {
+                var cookies = document.cookie.split(';');
+                for (var i = 0; i < cookies.length; i++) {
+                    var cookie = cookies[i].trim();
+                    // Does this cookie string begin with the name we want?
+                    if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                        break;
+                    }
+                }
+            }
+            return cookieValue;
+        }
+
+        $(function () {
+            $("input[name=form_plugin_id]").each(function (index) {
+                var form = $(this).parents('form');
+                $(form).submit(function (event) {
+                    event.preventDefault();
+                    $.ajax({
+                        type: 'POST',
+                        headers: {'X-CSRFToken': getCookie('csrftoken')},
+                        data: form.serialize(),
+                        url: {% url 'aldryn_forms_ajax_submit_form' %},
+                        success: function (response) {
+                            $(form).html(response);
+                        },
+                    });
+                })
+            });
+        })
+    </script>
+{% endaddtoblock %}

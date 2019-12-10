@@ -36,7 +36,7 @@ from .validators import (
 
 class FormElement(CMSPluginBase):
     # Don't cache anything.
-    cache = False
+    cache = True
     module = _('Forms')
 
 
