@@ -69,6 +69,7 @@
                 var form = $(this).parents('form');
                 $(form).submit(function (event) {
                     event.preventDefault();
+                    $(form).children("input").attr("disabled", 'disabled');
                     $.ajax({
                         type: 'POST',
                         headers: {'X-CSRFToken': getCookie('csrftoken')},
@@ -78,7 +79,6 @@
                             $(form).html(response);
                         },
                     });
-                    $(form).children("input").attr("disabled", true);
                 })
             });
         })
