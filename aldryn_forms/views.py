@@ -6,6 +6,8 @@ from django.views.generic import FormView
 from .models import FormPlugin
 from .utils import get_plugin_tree
 from django.contrib.sites.shortcuts import get_current_site
+from django.utils.decorators import method_decorator
+from django.views.decorators.csrf import csrf_exempt
 
 try:
     from cms.utils.page import get_page_from_request, get_page_from_path
@@ -14,11 +16,12 @@ except ImportError:
     from cms.utils.page_resolver import get_page_from_request, get_page_from_path
 
 
+@method_decorator(csrf_exempt, name='dispatch')
 class AjaxSubmit(FormView):
     # template_name = 'aldryn_forms/form.html'
 
     def post(self, request, *args, **kwargs):
-        cms_page = get_page_from_path(get_current_site(request), request.POST.get('page_path','')[1:])
+        cms_page = get_page_from_path(get_current_site(request), request.POST.get('page_path', '')[1:])
         if not cms_page:
             return HttpResponseBadRequest()
         context = {
