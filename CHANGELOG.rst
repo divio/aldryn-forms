@@ -3,6 +3,12 @@ Changelog
 =========
 
 
+5.0.1 (2020-01-06)
+==================
+
+* Add autoescape to users emails template
+
+
 5.0.0 (2019-12-06)
 ==================
 
