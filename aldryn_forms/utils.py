@@ -2,10 +2,13 @@
 from __future__ import unicode_literals
 
 from django.conf import settings
+from django.contrib import messages
 from django.core.exceptions import ImproperlyConfigured
 from django.forms.forms import NON_FIELD_ERRORS
 from django.utils.module_loading import import_string
+from django.utils.translation import ugettext_lazy as _
 
+from cms.operations import MOVE_PLUGIN, PASTE_PLUGIN
 from cms.utils.moderator import get_cmsplugin_queryset
 from cms.utils.plugins import downcast_plugins
 
@@ -124,3 +127,46 @@ def add_form_error(form, message, field=NON_FIELD_ERRORS):
         form._errors[field].append(message)
     except KeyError:
         form._errors[field] = form.error_class([message])
+
+
+def find_plugin_form(parent):
+    """Return parent plugin if it is a Form type, or if not, return None."""
+    while parent is not None:
+        if parent.plugin_type in ('FormPlugin', 'EmailNotificationForm'):
+            return parent
+        parent = parent.get_parent()
+    return parent
+
+
+def get_form_fields_names(instance, plugin_form):
+    """Return form field names."""
+    names = []
+    if plugin_form is None:
+        return names
+    for obj in plugin_form.get_descendants():
+        plugin_inst = obj.get_plugin_instance()[0]
+        if plugin_inst and instance.pk != plugin_inst.pk and getattr(plugin_inst, "unique_field_name", False):
+            names.append(plugin_inst.name)
+    return names
+
+
+def make_unique_name(request, instance, field_names):
+    """Make unique name that is not in field_names array."""
+    unique_field_name = instance.name
+    while unique_field_name in field_names:
+        unique_field_name += "_"
+    text = _("The field '{}' has been renamed to '{}', because such a name is already in the form.")
+    message = text.format(instance.name, unique_field_name)
+    messages.success(request, message)
+    return unique_field_name
+
+
+def rename_field_name(request, operation, plugin=None, *args, **kwargs):
+    """Rename the field name if it already exists in the form."""
+    if operation in (MOVE_PLUGIN, PASTE_PLUGIN):
+        instance = plugin.get_plugin_instance()[0]
+        if getattr(instance, "unique_field_name", False):
+            field_names = get_form_fields_names(instance, find_plugin_form(instance.get_parent()))
+            if instance.name in field_names:
+                instance.name = make_unique_name(request, instance, field_names)
+                instance.save()

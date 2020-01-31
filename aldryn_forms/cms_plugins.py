@@ -12,6 +12,7 @@ from django.utils.translation import ugettext_lazy as _
 
 from cms.plugin_base import CMSPluginBase
 from cms.plugin_pool import plugin_pool
+from cms.signals import post_placeholder_operation
 
 from emailit.api import send_mail
 from filer.models import filemodels, imagemodels
@@ -28,7 +29,10 @@ from .helpers import get_user_name
 from .models import SerializedFormField
 from .signals import form_post_save, form_pre_save
 from .sizefield.utils import filesizeformat
-from .utils import get_action_backends
+from .utils import (
+    find_plugin_form, get_action_backends, get_form_fields_names,
+    make_unique_name, rename_field_name,
+)
 from .validators import (
     MaxChoicesValidator, MinChoicesValidator, is_valid_recipient,
 )
@@ -439,6 +443,13 @@ class Field(FormElement):
 
     def form_post_save(self, instance, form, **kwargs):
         pass
+
+    def save_model(self, request, obj, form, change):
+        """For new field ensures, that the field name is unique on the form."""
+        field_names = get_form_fields_names(obj, find_plugin_form(obj.parent))
+        if obj.name in field_names:
+            obj.name = make_unique_name(request, obj, field_names)
+        return super(Field, self).save_model(request, obj, form, change)
 
 
 class BaseTextField(Field):
@@ -884,3 +895,5 @@ plugin_pool.register_plugin(SelectField)
 plugin_pool.register_plugin(SubmitButton)
 plugin_pool.register_plugin(TextAreaField)
 plugin_pool.register_plugin(TextField)
+
+post_placeholder_operation.connect(rename_field_name)

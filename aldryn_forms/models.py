@@ -356,6 +356,9 @@ class FieldsetPlugin(CMSPlugin):
 
 @python_2_unicode_compatible
 class FieldPluginBase(CMSPlugin):
+
+    unique_field_name = True  # Ensure that `name` is the unique input in the form. Used in class UniqueFieldNameMixin.
+
     name = models.CharField(
         _('Name'),
         max_length=255,

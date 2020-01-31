@@ -10,7 +10,9 @@ from PIL import Image
 
 from .models import FormPlugin, FormSubmission
 from .sizefield.utils import filesizeformat
-from .utils import add_form_error, get_user_model
+from .utils import (
+    add_form_error, find_plugin_form, get_form_fields_names, get_user_model,
+)
 
 
 class FileSizeCheckMixin(object):
@@ -33,11 +35,21 @@ class FileSizeCheckMixin(object):
         return data
 
 
-class RestrictedFileField(FileSizeCheckMixin, forms.FileField):
+class UniqueFieldNameMixin(object):
+
+    def clean_name(self):
+        name = self.cleaned_data["name"]
+        if name in get_form_fields_names(self.instance, find_plugin_form(self.instance.get_parent())):
+            raise forms.ValidationError(_('This field name is already used in the form. Please select another.'),
+                                        code='not_unique_field_name')
+        return name
+
+
+class RestrictedFileField(UniqueFieldNameMixin, FileSizeCheckMixin, forms.FileField):
     pass
 
 
-class RestrictedImageField(FileSizeCheckMixin, forms.ImageField):
+class RestrictedImageField(UniqueFieldNameMixin, FileSizeCheckMixin, forms.ImageField):
 
     def __init__(self, *args, **kwargs):
         self.max_width = kwargs.pop('max_width', None)
@@ -181,7 +193,7 @@ class FormPluginForm(ExtandableErrorForm):
         return self.cleaned_data
 
 
-class BooleanFieldForm(forms.ModelForm):
+class BooleanFieldForm(UniqueFieldNameMixin, forms.ModelForm):
 
     def __init__(self, *args, **kwargs):
         if 'instance' not in kwargs:  # creating new one
@@ -194,26 +206,26 @@ class BooleanFieldForm(forms.ModelForm):
         fields = ['label', 'help_text', 'required', 'required_message', 'custom_classes']
 
 
-class SelectFieldForm(forms.ModelForm):
+class SelectFieldForm(UniqueFieldNameMixin, forms.ModelForm):
 
     class Meta:
         fields = ['label', 'help_text', 'required', 'required_message', 'custom_classes']
 
 
-class RadioFieldForm(forms.ModelForm):
+class RadioFieldForm(UniqueFieldNameMixin, forms.ModelForm):
 
     class Meta:
         fields = ['label', 'help_text', 'required', 'required_message', 'custom_classes']
 
 
-class CaptchaFieldForm(forms.ModelForm):
+class CaptchaFieldForm(UniqueFieldNameMixin, forms.ModelForm):
 
     class Meta:
         # captcha is always required
         fields = ['label', 'help_text', 'required_message']
 
 
-class MinMaxValueForm(ExtandableErrorForm):
+class MinMaxValueForm(UniqueFieldNameMixin, ExtandableErrorForm):
 
     def clean(self):
         min_value = self.cleaned_data.get('min_value')
@@ -240,7 +252,7 @@ class TextFieldForm(MinMaxValueForm):
                   'min_value', 'max_value', 'required', 'required_message', 'custom_classes']
 
 
-class HiddenFieldForm(ExtandableErrorForm):
+class HiddenFieldForm(UniqueFieldNameMixin, ExtandableErrorForm):
     class Meta:
         fields = ['name', 'initial_value']
 
@@ -268,7 +280,7 @@ class EmailFieldForm(TextFieldForm):
         ]
 
 
-class FileFieldForm(forms.ModelForm):
+class FileFieldForm(UniqueFieldNameMixin, forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super(FileFieldForm, self).__init__(*args, **kwargs)
         self.fields['help_text'].help_text = _(
@@ -281,7 +293,7 @@ class FileFieldForm(forms.ModelForm):
                   'custom_classes', 'upload_to', 'max_size']
 
 
-class ImageFieldForm(forms.ModelForm):
+class ImageFieldForm(UniqueFieldNameMixin, forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super(ImageFieldForm, self).__init__(*args, **kwargs)
         self.fields['help_text'].help_text = _(
