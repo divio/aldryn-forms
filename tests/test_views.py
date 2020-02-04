@@ -1,6 +1,7 @@
 import sys
 from distutils.version import LooseVersion
 from unittest import skipIf, skipUnless
+from urllib.parse import urlencode
 
 from django import VERSION as DJANGO_VERSION
 from django.urls import clear_url_caches
@@ -8,7 +9,11 @@ from django.urls import clear_url_caches
 import cms
 from cms.api import add_plugin, create_page
 from cms.appresolver import clear_app_resolvers
-from cms.test_utils.testcases import CMSTestCase
+from cms.test_utils.testcases import (
+    URL_CMS_PLUGIN_ADD, URL_CMS_PLUGIN_EDIT, URL_CMS_PLUGIN_MOVE, CMSTestCase,
+)
+
+from aldryn_forms import models as aldryn_models
 
 
 # These means "less than or equal"
@@ -16,7 +21,7 @@ DJANGO_111 = DJANGO_VERSION[:2] >= (1, 11)
 CMS_3_6 = LooseVersion(cms.__version__) < LooseVersion('4.0')
 
 
-class SubmitFormViewTest(CMSTestCase):
+class InitAppUrlsMixin:
 
     def setUp(self):
         self.APP_MODULE = 'aldryn_forms.cms_apps.FormsApp'
@@ -86,6 +91,9 @@ class SubmitFormViewTest(CMSTestCase):
         for module in url_modules:
             if module in sys.modules:
                 del sys.modules[module]
+
+
+class SubmitFormViewTest(InitAppUrlsMixin, CMSTestCase):
 
     @skipUnless(DJANGO_111, 'Django>=1.11')
     def test_form_view_and_submission_with_apphook_django_gte_111(self):
@@ -285,3 +293,115 @@ class SubmitFormViewTest(CMSTestCase):
         email_field = '<input type="email" name="{name}"'
         self.assertContains(response, email_field.format(name='email_1'))
         self.assertContains(response, email_field.format(name='email_2'))
+
+
+class UniqueFieldNameTest(InitAppUrlsMixin, CMSTestCase):
+
+    def setUp(self):
+        super(UniqueFieldNameTest, self).setUp()
+        add_plugin(self.placeholder, 'TextField', 'en', target=self.form_plugin, name="first_name", label="First name")
+        add_plugin(self.placeholder, 'TextField', 'en', target=self.form_plugin, name="last_name", label="Last name")
+        fldset = add_plugin(self.placeholder, 'Fieldset', 'en', target=self.form_plugin, legend="Private")
+        self.email = add_plugin(fldset.placeholder, 'EmailField', 'en', target=fldset, name="email", label="E-mail")
+        if CMS_3_6:
+            self.page.publish('en')
+
+    def _get_params(self):
+        return {
+            "placeholder_id": self.form_plugin.placeholder.pk,
+            "plugin_type": "EmailField",
+            "cms_path": self.page.get_absolute_url(),
+            "plugin_language": "en",
+            "plugin_parent": self.form_plugin.pk,
+        }
+
+    def test_add_field(self):
+        url = "{}?{}".format(URL_CMS_PLUGIN_ADD, urlencode(self._get_params()))
+        superuser = self.get_superuser()
+        with self.login_user_context(superuser):
+            response = self.client.post(url, {"name": "alt-email"})
+        self.assertEqual(response.status_code, 200)
+        self.assertTrue(aldryn_models.EmailFieldPlugin.objects.filter(name="alt-email").exists())
+
+    def test_add_field_with_duplicate_name(self):
+        url = "{}?{}".format(URL_CMS_PLUGIN_ADD, urlencode(self._get_params()))
+        superuser = self.get_superuser()
+        with self.login_user_context(superuser):
+            response = self.client.post(url, {"name": "email"})
+        self.assertEqual(response.status_code, 200)
+        self.assertTrue(aldryn_models.EmailFieldPlugin.objects.filter(name="email_").exists())
+
+    def test_change_field(self):
+        params = {"cms_path": self.page.get_absolute_url()}
+        url = "{}{}/?{}".format(URL_CMS_PLUGIN_EDIT, self.email.pk, urlencode(params))
+        superuser = self.get_superuser()
+        with self.login_user_context(superuser):
+            response = self.client.post(url, {"name": "email-2"})
+        self.assertEqual(response.status_code, 200)
+        self.assertTrue(aldryn_models.EmailFieldPlugin.objects.filter(name="email-2").exists())
+
+    def test_change_field_with_duplicate_name(self):
+        params = {"cms_path": self.page.get_absolute_url()}
+        url = "{}{}/?{}".format(URL_CMS_PLUGIN_EDIT, self.email.pk, urlencode(params))
+        superuser = self.get_superuser()
+        with self.login_user_context(superuser):
+            response = self.client.post(url, {"name": "last_name"})
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.context['adminform'].errors, {'name': [
+            'This field name is already used in the form. Please select another.']})
+
+    def _get_move_params(self, plugin):
+        return {
+            "placeholder_id": self.form_plugin.placeholder.pk,
+            "plugin_id": plugin.pk,
+            "plugin_parent": self.form_plugin.pk,
+            "target_language": "en",
+        }
+
+    def test_move_field(self):
+        params = {"cms_path": self.page.get_absolute_url()}
+        url = "{}?{}".format(URL_CMS_PLUGIN_MOVE, urlencode(params))
+        new_field = add_plugin(self.placeholder, 'EmailField', 'en', name="email-2", label="E-mail 2")
+        data = self._get_move_params(new_field)
+        superuser = self.get_superuser()
+        with self.login_user_context(superuser):
+            response = self.client.post(url, data)
+        self.assertEqual(response.status_code, 200)
+        self.assertTrue(aldryn_models.EmailFieldPlugin.objects.filter(name="email-2").exists())
+
+    def test_move_field_with_duplicate_name(self):
+        params = {"cms_path": self.page.get_absolute_url()}
+        url = "{}?{}".format(URL_CMS_PLUGIN_MOVE, urlencode(params))
+        new_field = add_plugin(self.placeholder, 'EmailField', 'en', name="email", label="E-mail")
+        data = self._get_move_params(new_field)
+        superuser = self.get_superuser()
+        with self.login_user_context(superuser):
+            response = self.client.post(url, data)
+        self.assertEqual(response.status_code, 200)
+        self.assertTrue(aldryn_models.EmailFieldPlugin.objects.filter(name="email_").exists())
+
+    def test_paste_field(self):
+        params = {"cms_path": self.page.get_absolute_url()}
+        url = "{}?{}".format(URL_CMS_PLUGIN_MOVE, urlencode(params))
+        new_field = add_plugin(self.placeholder, 'EmailField', 'en', name="email-2", label="E-mail 2")
+        data = self._get_move_params(new_field)
+        data['move_a_copy'] = True
+        data['plugin_order[]'] = '__COPY__'
+        superuser = self.get_superuser()
+        with self.login_user_context(superuser):
+            response = self.client.post(url, data)
+        self.assertEqual(response.status_code, 200)
+        self.assertTrue(aldryn_models.EmailFieldPlugin.objects.filter(name="email-2").exists())
+
+    def test_paste_field_with_duplicate_name(self):
+        params = {"cms_path": self.page.get_absolute_url()}
+        url = "{}?{}".format(URL_CMS_PLUGIN_MOVE, urlencode(params))
+        new_field = add_plugin(self.placeholder, 'EmailField', 'en', name="email", label="E-mail")
+        data = self._get_move_params(new_field)
+        data['move_a_copy'] = True
+        data['plugin_order[]'] = '__COPY__'
+        superuser = self.get_superuser()
+        with self.login_user_context(superuser):
+            response = self.client.post(url, data)
+        self.assertEqual(response.status_code, 200)
+        self.assertTrue(aldryn_models.EmailFieldPlugin.objects.filter(name="email_").exists())

@@ -2,12 +2,12 @@
 from __future__ import division, print_function, unicode_literals
 
 from django.db import IntegrityError
-from django.test import TestCase
+from django.test import SimpleTestCase, TestCase
 
 from cms.api import add_plugin
 from cms.models import Placeholder
 
-from aldryn_forms.models import Option
+from aldryn_forms.models import FieldPluginBase, Option
 
 
 class OptionTestCase(TestCase):
@@ -90,3 +90,10 @@ class OptionTestCase(TestCase):
         self.assertEquals(option1.position, 960)  # We force a value for it on Option.save
 
         self.assertRaises(IntegrityError, Option.objects.update, position=None)  # See? Not nullable
+
+
+class FieldPluginBaseTest(SimpleTestCase):
+
+    def test_field_plugin_base(self):
+        obj = FieldPluginBase()
+        self.assertTrue(obj.unique_field_name)
