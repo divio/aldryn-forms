@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+from cms.cms_plugins import AliasPlugin
 
 
 def get_user_name(user):
@@ -17,5 +18,8 @@ def is_form_element(plugin):
     # cms_plugins.CMSPlugin subclass
     cms_plugin = plugin.get_plugin_class_instance(None)
     is_orphan_plugin = cms_plugin.model != plugin.__class__
-    is_element_subclass = issubclass(plugin.get_plugin_class(), FormElement)
+    plugin_class = plugin.get_plugin_class()
+    if plugin.get_plugin_class() == AliasPlugin:
+        plugin_class = plugin.plugin.get_plugin_class()
+    is_element_subclass = issubclass(plugin_class, FormElement)
     return (not is_orphan_plugin) and is_element_subclass
