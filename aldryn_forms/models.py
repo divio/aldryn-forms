@@ -2,6 +2,7 @@
 import json
 import warnings
 from collections import OrderedDict, defaultdict, namedtuple
+from distutils.version import LooseVersion
 from functools import partial
 
 from django.conf import settings
@@ -12,6 +13,7 @@ from django.utils.functional import cached_property
 from django.utils.six import text_type
 from django.utils.translation import ugettext_lazy as _
 
+import cms
 from cms.cms_plugins import AliasPlugin
 from cms.models.fields import PageField
 from cms.models.pluginmodel import CMSPlugin
@@ -28,6 +30,7 @@ from .utils import (
 )
 
 
+CMS_LESS_THAN_4_0 = LooseVersion(cms.__version__) < LooseVersion('4.0')
 AUTH_USER_MODEL = getattr(settings, 'AUTH_USER_MODEL', 'auth.User')
 
 
@@ -317,7 +320,10 @@ class BaseFormPlugin(CMSPlugin):
         from .utils import get_nested_plugins
 
         if self.child_plugin_instances is None:
-            descendants = self.get_descendants().order_by('path')
+            if CMS_LESS_THAN_4_0:
+                descendants = self.get_descendants().order_by('path')
+            else:
+                descendants = self.get_descendants().order_by('position')
             # Set parent_id to None in order to
             # fool the build_plugin_tree function.
             # This is sadly necessary to avoid getting all nodes

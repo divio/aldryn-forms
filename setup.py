@@ -5,9 +5,9 @@ from aldryn_forms import __version__
 
 
 REQUIREMENTS = [
-    'django>=1.11',
+    'django>=1.11,<2.2',
     'aldryn-boilerplates>=0.7.5',
-    'django-cms>=3.5',
+    'django-cms>=3.5,<4.0',
     'django-emailit',
     'djangocms-text-ckeditor',
     'djangocms-attributes-field>=1.0.0',
@@ -34,6 +34,8 @@ CLASSIFIERS = [
     'Programming Language :: Python :: 3.4',
     'Programming Language :: Python :: 3.5',
     'Programming Language :: Python :: 3.6',
+    'Programming Language :: Python :: 3.7',
+    'Programming Language :: Python :: 3.8',
     'Topic :: Internet :: WWW/HTTP',
     'Topic :: Internet :: WWW/HTTP :: Dynamic Content',
     'Topic :: Software Development',
