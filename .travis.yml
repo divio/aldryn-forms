@@ -23,19 +23,11 @@ matrix:
       env: DJANGO='dj20' CMS='cms36'
     - python: 3.6
       env: DJANGO='dj20' CMS='cms36'
-    - python: 3.5
-      env: DJANGO='dj20' CMS='cms40'
-    - python: 3.6
-      env: DJANGO='dj20' CMS='cms40'
     # Django 2.1
     - python: 3.5
       env: DJANGO='dj21' CMS='cms36'
     - python: 3.6
       env: DJANGO='dj21' CMS='cms36'
-    - python: 3.5
-      env: DJANGO='dj21' CMS='cms40'
-    - python: 3.6
-      env: DJANGO='dj21' CMS='cms40'
 
 cache:
   directories:
