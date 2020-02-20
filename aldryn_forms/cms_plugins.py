@@ -285,7 +285,7 @@ class Field(FormElement):
 
     def serialize_value(self, instance, value, is_confirmation=False):
         if isinstance(value, query.QuerySet):
-            value = u', '.join(map(text_type, value))
+            value = ', '.join(map(text_type, value))
         elif value is None:
             value = '-'
         return text_type(value)
