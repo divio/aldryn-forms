@@ -119,7 +119,7 @@ class EmailNotification(models.Model):
     def __str__(self):
         to_name = self.get_recipient_name()
         to_email = self.get_recipient_email()
-        return u'{0} ({1})'.format(to_name, to_email)
+        return '{0} ({1})'.format(to_name, to_email)
 
     def clean(self):
         recipient_email = self.get_recipient_email()

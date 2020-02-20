@@ -75,10 +75,10 @@ class SerializedFormField(BaseSerializedFormField):
         field_label = self.label.strip()
 
         if field_label:
-            field_as_string = u'{}-{}'.format(field_label, self.field_type)
+            field_as_string = '{}-{}'.format(field_label, self.field_type)
         else:
             field_as_string = self.name
-        field_id = u'{}:{}'.format(field_as_string, self.field_occurrence)
+        field_id = '{}:{}'.format(field_as_string, self.field_occurrence)
         return field_id
 
     @property
@@ -267,10 +267,10 @@ class BaseFormPlugin(CMSPlugin):
             if field_plugin.name:
                 field_name = field_plugin.name
             else:
-                field_name = u'{0}_{1}'.format(field_type, field_type_occurrence)
+                field_name = '{0}_{1}'.format(field_type, field_type_occurrence)
 
             if field_label:
-                field_id = u'{0}_{1}'.format(field_type, field_label)
+                field_id = '{0}_{1}'.format(field_type, field_label)
             else:
                 field_id = field_name
 
@@ -591,7 +591,7 @@ class FormSubmission(models.Model):
 
         if field_label:
             field_type = data['name'].rpartition('_')[0]
-            field_id = u'{}_{}'.format(field_type, field_label)
+            field_id = '{}_{}'.format(field_type, field_label)
         else:
             field_id = data['name']
 

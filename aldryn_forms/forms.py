@@ -218,7 +218,7 @@ class MinMaxValueForm(ExtandableErrorForm):
         min_value = self.cleaned_data.get('min_value')
         max_value = self.cleaned_data.get('max_value')
         if min_value and max_value and min_value > max_value:
-            self.append_to_errors('min_value', _(u'Min value can not be greater than max value.'))
+            self.append_to_errors('min_value', _('Min value can not be greater than max value.'))
         return self.cleaned_data
 
 
@@ -227,11 +227,11 @@ class TextFieldForm(MinMaxValueForm):
     def __init__(self, *args, **kwargs):
         super(TextFieldForm, self).__init__(*args, **kwargs)
 
-        self.fields['min_value'].label = _(u'Min length')
-        self.fields['min_value'].help_text = _(u'Required number of characters to type.')
+        self.fields['min_value'].label = _('Min length')
+        self.fields['min_value'].help_text = _('Required number of characters to type.')
 
-        self.fields['max_value'].label = _(u'Max length')
-        self.fields['max_value'].help_text = _(u'Maximum number of characters to type.')
+        self.fields['max_value'].label = _('Max length')
+        self.fields['max_value'].help_text = _('Maximum number of characters to type.')
         self.fields['max_value'].required = False
 
     class Meta:
@@ -308,11 +308,11 @@ class MultipleSelectFieldForm(MinMaxValueForm):
     def __init__(self, *args, **kwargs):
         super(MultipleSelectFieldForm, self).__init__(*args, **kwargs)
 
-        self.fields['min_value'].label = _(u'Min choices')
-        self.fields['min_value'].help_text = _(u'Required amount of elements to chose.')
+        self.fields['min_value'].label = _('Min choices')
+        self.fields['min_value'].help_text = _('Required amount of elements to chose.')
 
-        self.fields['max_value'].label = _(u'Max choices')
-        self.fields['max_value'].help_text = _(u'Maximum amount of elements to chose.')
+        self.fields['max_value'].label = _('Max choices')
+        self.fields['max_value'].help_text = _('Maximum amount of elements to chose.')
 
     class Meta:
         # 'required' and 'required_message' depend on min_value field validator
