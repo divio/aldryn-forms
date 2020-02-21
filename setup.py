@@ -12,7 +12,7 @@ REQUIREMENTS = [
     'djangocms-text-ckeditor',
     'djangocms-attributes-field>=1.0.0',
     'django-tablib',
-    'tablib',
+    'tablib==0.13.0',
     'pillow',
     'django-filer',
     'django-sizefield',
