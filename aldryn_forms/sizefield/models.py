@@ -8,7 +8,7 @@ from .widgets import FileSizeWidget
 
 class FileSizeField(models.BigIntegerField):
     default_error_messages = {
-        'invalid': _(u'Incorrect file size format.'),
+        'invalid': _('Incorrect file size format.'),
     }
 
     def formfield(self, **kwargs):

@@ -4,6 +4,7 @@ from email.utils import parseaddr
 
 from django.contrib import admin
 from django.core.mail import get_connection
+from django.utils.html import mark_safe
 from django.utils.translation import ugettext_lazy as _
 
 from cms.plugin_pool import plugin_pool
@@ -104,14 +105,14 @@ class ExistingEmailNotificationInline(admin.StackedInline):
 
         for category, choices in choices_by_category:
             # <li>field_1</li><li>field_2</li>
-            fields_li = u''.join((u'<li>{0} | {1}</li>'.format(*var) for var in choices))
+            fields_li = ''.join(('<li>{0} | {1}</li>'.format(*var) for var in choices))
 
             if fields_li:
-                li_item = u'<li>{0}</li><ul>{1}</ul>'.format(category, fields_li)
+                li_item = '<li>{0}</li><ul>{1}</ul>'.format(category, fields_li)
                 li_items.append(li_item)
-        unordered_list = u'<ul>{0}</ul>'.format(u''.join(li_items))
-        help_text = u'<p class="help">{0}</p>'.format(self.text_variables_help_text)
-        return unordered_list + u'\n' + help_text
+        unordered_list = '<ul>{0}</ul>'.format(''.join(li_items))
+        help_text = '<p class="help">{0}</p>'.format(self.text_variables_help_text)
+        return mark_safe(unordered_list + '\n' + help_text)
     text_variables.allow_tags = True
     text_variables.short_description = _('available text variables')
 
