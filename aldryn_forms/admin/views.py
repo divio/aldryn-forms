@@ -92,16 +92,10 @@ class FormExportWizardView(SessionWizardView):
         dataset = Exporter(queryset=queryset).get_dataset(fields=fields)
 
         filename = step_1_form.get_filename(extension=self.file_type)
-
-        content_type = self.get_content_type()
-
-        response_kwargs = {}
-
-        if int(get_version().split('.')[1]) > 6:
-            response_kwargs['content_type'] = content_type
-        else:
-            # Django <= 1.6 compatibility
-            response_kwargs['mimetype'] = content_type
+        
+        response_kwargs = {
+            'content_type': self.get_content_type()
+        }
 
         response = HttpResponse(dataset.xls, **response_kwargs)
         response['Content-Disposition'] = 'attachment; filename=%s' % filename
