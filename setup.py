@@ -54,9 +54,6 @@ setup(
     include_package_data=True,
     zip_safe=False,
     install_requires=REQUIREMENTS,
-    extras_require={
-        'captcha': ['django-simple-captcha'],
-    },
     classifiers=CLASSIFIERS,
     test_suite='tests.settings.run',
 )
