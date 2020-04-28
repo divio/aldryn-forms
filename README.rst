@@ -1,3 +1,6 @@
+.. image:: https://secure.travis-ci.org/zbohm/aldryn-forms.png?branch=alias_and_unique_field_names
+   :target: http://travis-ci.com/zbohm/aldryn-forms
+
 ================
 Aldryn Forms App
 ================

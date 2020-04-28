@@ -8,7 +8,8 @@ matrix:
       env: TOX_ENV='flake8'
     - python: 3.5
       env: TOX_ENV='isort'
-    # Django 1.11
+
+    # python 3.5 + Django 1.11 + CMS 34, 35, 36, 37, 40
     - python: 3.5
       env: DJANGO='dj111' CMS='cms34'
     - python: 3.5
@@ -16,47 +17,84 @@ matrix:
     - python: 3.5
       env: DJANGO='dj111' CMS='cms36'
     - python: 3.5
+      env: DJANGO='dj111' CMS='cms37'
+    - python: 3.5
+      env: DJANGO='dj111' CMS='cms40'
+    # python 3.6 + Django 1.11 + CMS 34, 35, 36, 37, 40
+    - python: 3.6
+      env: DJANGO='dj111' CMS='cms34'
+    - python: 3.6
+      env: DJANGO='dj111' CMS='cms35'
+    - python: 3.6
+      env: DJANGO='dj111' CMS='cms36'
+    - python: 3.6
+      env: DJANGO='dj111' CMS='cms37'
+    - python: 3.6
+      env: DJANGO='dj111' CMS='cms40'
+    # python 3.7 + Django 1.11 + CMS 34, 35, 36, 37, 40
+    - python: 3.7
+      env: DJANGO='dj111' CMS='cms34'
+    - python: 3.7
+      env: DJANGO='dj111' CMS='cms35'
+    - python: 3.7
+      env: DJANGO='dj111' CMS='cms36'
+    - python: 3.7
+      env: DJANGO='dj111' CMS='cms37'
+    - python: 3.7
+      env: DJANGO='dj111' CMS='cms40'
+    # python 3.8 + Django 1.11 + CMS 34, 35, 36, 37, 40
+    - python: 3.8
+      env: DJANGO='dj111' CMS='cms34'
+    - python: 3.8
+      env: DJANGO='dj111' CMS='cms35'
+    - python: 3.8
+      env: DJANGO='dj111' CMS='cms36'
+    - python: 3.8
+      env: DJANGO='dj111' CMS='cms37'
+    - python: 3.8
       env: DJANGO='dj111' CMS='cms40'
 
-    - python: 3.4
-      env: DJANGO='dj111' CMS='cms34'
-    - python: 3.4
-      env: DJANGO='dj111' CMS='cms35'
-    - python: 3.4
-      env: DJANGO='dj111' CMS='cms36'
-    - python: 3.4
-      env: DJANGO='dj111' CMS='cms40'
+    # python 3.5 + Django 2.0 + CMS 36, 37
+    - python: 3.5
+      env: DJANGO='dj20' CMS='cms36'
+    - python: 3.5
+      env: DJANGO='dj20' CMS='cms37'
+    # python 3.6 + Django 2.0 + CMS 36, 37
+    - python: 3.6
+      env: DJANGO='dj20' CMS='cms36'
+    - python: 3.6
+      env: DJANGO='dj20' CMS='cms37'
+    # python 3.7 + Django 2.0 + CMS 36, 37
+    - python: 3.7
+      env: DJANGO='dj20' CMS='cms36'
+    - python: 3.7
+      env: DJANGO='dj20' CMS='cms37'
+    # python 3.8 + Django 2.0 + CMS 36, 37
+    - python: 3.8
+      env: DJANGO='dj20' CMS='cms36'
+    - python: 3.8
+      env: DJANGO='dj20' CMS='cms37'
 
-    - python: 2.7
-      env: DJANGO='dj111' CMS='cms34'
-    - python: 2.7
-      env: DJANGO='dj111' CMS='cms35'
-    - python: 2.7
-      env: DJANGO='dj111' CMS='cms36'
-    - python: 2.7
-      env: DJANGO='dj111' CMS='cms40'
-    # Django 2.0
-    - python: 3.4
-      env: DJANGO='dj20' CMS='cms36'
-    - python: 3.5
-      env: DJANGO='dj20' CMS='cms36'
-    - python: 3.6
-      env: DJANGO='dj20' CMS='cms36'
-    - python: 3.4
-      env: DJANGO='dj20' CMS='cms40'
-    - python: 3.5
-      env: DJANGO='dj20' CMS='cms40'
-    - python: 3.6
-      env: DJANGO='dj20' CMS='cms40'
-    # Django 2.1
+    # python 3.5 + Django 2.1 + CMS 36, 37
     - python: 3.5
       env: DJANGO='dj21' CMS='cms36'
+    - python: 3.5
+      env: DJANGO='dj21' CMS='cms37'
+    # python 3.6 + Django 2.1 + CMS 36, 37
     - python: 3.6
       env: DJANGO='dj21' CMS='cms36'
-    - python: 3.5
-      env: DJANGO='dj21' CMS='cms40'
     - python: 3.6
-      env: DJANGO='dj21' CMS='cms40'
+      env: DJANGO='dj21' CMS='cms37'
+    # python 3.7 + Django 2.1 + CMS 36, 37
+    - python: 3.7
+      env: DJANGO='dj21' CMS='cms36'
+    - python: 3.7
+      env: DJANGO='dj21' CMS='cms37'
+    # python 3.8 + Django 2.1 + CMS 36, 37
+    - python: 3.8
+      env: DJANGO='dj21' CMS='cms36'
+    - python: 3.8
+      env: DJANGO='dj21' CMS='cms37'
 
 cache:
   directories:
@@ -64,10 +102,10 @@ cache:
 
 install:
   - pip install coverage isort tox
-  - "if [[ $TRAVIS_PYTHON_VERSION == '2.7' ]]; then export PY_VER=py27; fi"
-  - "if [[ $TRAVIS_PYTHON_VERSION == '3.4' ]]; then export PY_VER=py34; fi"
   - "if [[ $TRAVIS_PYTHON_VERSION == '3.5' ]]; then export PY_VER=py35; fi"
   - "if [[ $TRAVIS_PYTHON_VERSION == '3.6' ]]; then export PY_VER=py36; fi"
+  - "if [[ $TRAVIS_PYTHON_VERSION == '3.7' ]]; then export PY_VER=py37; fi"
+  - "if [[ $TRAVIS_PYTHON_VERSION == '3.8' ]]; then export PY_VER=py38; fi"
   - "if [[ ${DJANGO}z != 'z' ]]; then export TOX_ENV=$PY_VER-$DJANGO-$CMS; fi"
 
 script:

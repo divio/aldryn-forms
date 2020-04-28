@@ -2,6 +2,7 @@
 import json
 import warnings
 from collections import OrderedDict, defaultdict, namedtuple
+from distutils.version import LooseVersion
 from functools import partial
 
 from django.conf import settings
@@ -12,6 +13,8 @@ from django.utils.functional import cached_property
 from django.utils.six import text_type
 from django.utils.translation import ugettext_lazy as _
 
+import cms
+from cms.cms_plugins import AliasPlugin
 from cms.models.fields import PageField
 from cms.models.pluginmodel import CMSPlugin
 from cms.utils.plugins import downcast_plugins
@@ -27,6 +30,7 @@ from .utils import (
 )
 
 
+CMS_LESS_THAN_4_0 = LooseVersion(cms.__version__) < LooseVersion('4.0')
 AUTH_USER_MODEL = getattr(settings, 'AUTH_USER_MODEL', 'auth.User')
 
 
@@ -244,11 +248,15 @@ class BaseFormPlugin(CMSPlugin):
         field_type_occurrences = defaultdict(lambda: 1)
 
         form_elements = self.get_form_elements()
-        field_plugins = [
-            plugin for plugin in form_elements
-            if issubclass(plugin.get_plugin_class(), Field)
-        ]
+        field_plugins = []
+        for plugin in form_elements:
+            if issubclass(plugin.get_plugin_class(), Field):
+                field_plugins.append(plugin)
+            elif issubclass(plugin.get_plugin_class(), AliasPlugin) and \
+                    issubclass(plugin.plugin.get_plugin_class(), Field):
+                field_plugins.append(plugin.plugin.get_plugin_instance()[0])
 
+        unique_field_names = []
         for field_plugin in field_plugins:
             field_type = field_plugin.field_type
 
@@ -270,6 +278,11 @@ class BaseFormPlugin(CMSPlugin):
 
             if field_id in field_occurrences:
                 field_occurrences[field_id] += 1
+
+            # Make filed names unique.
+            while field_name in unique_field_names:
+                field_name += "_"
+            unique_field_names.append(field_name)
 
             field = FormField(
                 name=field_name,
@@ -307,7 +320,10 @@ class BaseFormPlugin(CMSPlugin):
         from .utils import get_nested_plugins
 
         if self.child_plugin_instances is None:
-            descendants = self.get_descendants().order_by('path')
+            if CMS_LESS_THAN_4_0:
+                descendants = self.get_descendants().order_by('path')
+            else:
+                descendants = self.get_descendants().order_by('position')
             # Set parent_id to None in order to
             # fool the build_plugin_tree function.
             # This is sadly necessary to avoid getting all nodes

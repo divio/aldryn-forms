@@ -1,16 +1,21 @@
-# -*- coding: utf-8 -*-
-from __future__ import division, print_function, unicode_literals
+from distutils.version import LooseVersion
 
 from django.db import IntegrityError
 from django.test import TestCase
 
-from cms.api import add_plugin
+import cms
+from cms.api import add_plugin, create_page
 from cms.models import Placeholder
+from cms.test_utils.testcases import CMSTestCase
 
 from aldryn_forms.models import Option
 
 
+CMS_3_6 = LooseVersion(cms.__version__) < LooseVersion('4.0')
+
+
 class OptionTestCase(TestCase):
+
     def setUp(self):
         super(TestCase, self).setUp()
         self.placeholder = Placeholder.objects.create(slot='test')
@@ -90,3 +95,40 @@ class OptionTestCase(TestCase):
         self.assertEquals(option1.position, 960)  # We force a value for it on Option.save
 
         self.assertRaises(IntegrityError, Option.objects.update, position=None)  # See? Not nullable
+
+
+class FormPluginTestGetFormFields(CMSTestCase):
+
+    def setUp(self):
+        page = create_page('test page', 'test_page.html', 'en')
+        if CMS_3_6:
+            self.placeholder = page.placeholders.get(slot='content')
+        else:
+            self.placeholder = page.get_placeholders('en').get(slot='content')
+        self.form = add_plugin(self.placeholder, 'FormPlugin', 'en')
+
+    def test_field_with_different_names(self):
+        add_plugin(self.form.placeholder, 'EmailField', 'en', target=self.form, name="email-1")
+        add_plugin(self.form.placeholder, 'EmailField', 'en', target=self.form, name="email-2")
+        self.assertEquals([fld.name for fld in self.form.get_form_fields()], ['email-1', 'email-2'])
+
+    def test_field_with_duplicate_names(self):
+        add_plugin(self.form.placeholder, 'EmailField', 'en', target=self.form, name="email")
+        add_plugin(self.form.placeholder, 'EmailField', 'en', target=self.form, name="email")
+        self.assertEquals([fld.name for fld in self.form.get_form_fields()], ['email', 'email_'])
+
+    def test_alias_with_field(self):
+        field = add_plugin(self.placeholder, 'EmailField', 'en', name="email")
+        add_plugin(self.form.placeholder, 'AliasPlugin', 'en', plugin=field, target=self.form)
+        self.assertEquals([fld.name for fld in self.form.get_form_fields()], ['email'])
+
+    def test_alias_without_field(self):
+        field = add_plugin(self.placeholder, 'TextPlugin', 'en')
+        add_plugin(self.form.placeholder, 'AliasPlugin', 'en', plugin=field, target=self.form)
+        self.assertEquals([fld.name for fld in self.form.get_form_fields()], [])
+
+    def test_alias_with_field_and_duplicate_name(self):
+        add_plugin(self.form.placeholder, 'EmailField', 'en', target=self.form, name="email")
+        field = add_plugin(self.placeholder, 'EmailField', 'en', name="email")
+        add_plugin(self.form.placeholder, 'AliasPlugin', 'en', plugin=field, target=self.form)
+        self.assertEquals([fld.name for fld in self.form.get_form_fields()], ['email', 'email_'])
