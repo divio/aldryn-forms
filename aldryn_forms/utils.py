@@ -16,6 +16,7 @@ from .compat import build_plugin_tree
 DEFAULT_ALDRYN_FORMS_ACTION_BACKENDS = {
     'default': 'aldryn_forms.action_backends.DefaultAction',
     'email_only': 'aldryn_forms.action_backends.EmailAction',
+    'webhook_only': 'aldryn_forms.action_backends.WebhookAction',
     'none': 'aldryn_forms.action_backends.NoAction',
 }
 ALDRYN_FORMS_ACTION_BACKEND_KEY_MAX_SIZE = 15

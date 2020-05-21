@@ -27,6 +27,15 @@ class EmailAction(BaseAction):
         logger.info('Sent email notifications to {} recipients.'.format(len(recipients)))
 
 
+class WebhookAction(BaseAction):
+    verbose_name = _('Webhook')
+
+    def form_valid(self, cmsplugin, instance, request, form):
+        super().form_valid(self, instance, request, form)
+        status = cmsplugin.send_webhook_data(instance, form)
+        logger.info('Sent webhook and received {} response-code'.format(status))
+
+
 class NoAction(BaseAction):
     verbose_name = _('None')
 

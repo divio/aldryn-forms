@@ -4,7 +4,7 @@ from django.utils.translation import ugettext_lazy as _
 
 from cms.test_utils.testcases import CMSTestCase
 
-from aldryn_forms.action_backends import DefaultAction, EmailAction, NoAction
+from aldryn_forms.action_backends import DefaultAction, EmailAction, NoAction, WebhookAction
 from aldryn_forms.action_backends_base import BaseAction
 from aldryn_forms.utils import action_backend_choices, get_action_backends
 
@@ -44,6 +44,7 @@ class GetActionsTestCase(CMSTestCase):
         expected = {
             'default': DefaultAction,
             'email_only': EmailAction,
+            'webhook_only': WebhookAction,
             'none': NoAction,
         }
 
@@ -108,6 +109,7 @@ class ActionChoicesTestCase(CMSTestCase):
         expected = [
             ('default', _('Default')),
             ('email_only', _('Email only')),
+            ('webhook_only', _('Webhook')),
             ('none', _('None')),
         ]
 

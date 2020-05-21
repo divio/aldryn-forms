@@ -1,4 +1,6 @@
 # -*- coding: utf-8 -*-
+from urllib import error, parse, request
+
 from django import forms
 from django.contrib import messages
 from django.contrib.admin import TabularInline
@@ -67,6 +69,7 @@ class FormPlugin(FieldContainer):
                 'form_template',
                 'error_message',
                 'success_message',
+                'webhook_url',
                 'recipients',
                 'action_backend',
                 'custom_classes',
@@ -210,6 +213,23 @@ class FormPlugin(FieldContainer):
         users_notified = [
             (get_user_name(user), user.email) for user in recipients]
         return users_notified
+
+    def send_webhook_data(self, instance, form):
+        url = instance.webhook_url
+        if not url:
+            return
+        context = {
+            'form_name': instance.name,
+            'form_data': form.get_serialized_field_choices(),
+            'form_plugin': instance,
+        }
+        data = parse.urlencode(context).encode()
+        req = request.Request(url, data=data)
+
+        try:
+            return request.urlopen(req).code
+        except error.HTTPError as e:
+            return e.code
 
 
 class Fieldset(FieldContainer):
