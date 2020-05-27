@@ -1,9 +1,13 @@
-# -*- coding: utf-8 -*-
 import json
 import warnings
-from collections import OrderedDict, defaultdict, namedtuple
+from collections import defaultdict
+from collections import namedtuple
 from functools import partial
+from typing import List
 
+from cms.models.fields import PageField
+from cms.models.pluginmodel import CMSPlugin
+from cms.utils.plugins import downcast_plugins
 from django.conf import settings
 from django.db import models
 from django.db.models.functions import Coalesce
@@ -11,20 +15,14 @@ from django.utils.encoding import python_2_unicode_compatible
 from django.utils.functional import cached_property
 from django.utils.six import text_type
 from django.utils.translation import ugettext_lazy as _
-
-from cms.models.fields import PageField
-from cms.models.pluginmodel import CMSPlugin
-from cms.utils.plugins import downcast_plugins
-
 from djangocms_attributes_field.fields import AttributesField
 from filer.fields.folder import FilerFolderField
 
 from .compat import build_plugin_tree
 from .helpers import is_form_element
 from .sizefield.models import FileSizeField
-from .utils import (
-    ALDRYN_FORMS_ACTION_BACKEND_KEY_MAX_SIZE, action_backend_choices,
-)
+from .utils import ALDRYN_FORMS_ACTION_BACKEND_KEY_MAX_SIZE
+from .utils import action_backend_choices
 
 
 AUTH_USER_MODEL = getattr(settings, 'AUTH_USER_MODEL', 'auth.User')
@@ -228,7 +226,7 @@ class BaseFormPlugin(CMSPlugin):
                 return element
         return
 
-    def get_form_fields(self):
+    def get_form_fields(self) -> List[FormField]:
         from .cms_plugins import Field
 
         fields = []
@@ -281,15 +279,16 @@ class BaseFormPlugin(CMSPlugin):
             fields.append(field)
         return fields
 
-    def get_form_field_name(self, field):
+    def get_form_field_name(self, field: 'FieldPluginBase') -> str:
         if self._form_field_key_cache is None:
             self._form_field_key_cache = {}
 
-        if field.pk not in self._form_field_key_cache:
-            fields_by_key = self.get_form_fields_by_name()
+        is_cache_needs_update = field.pk not in self._form_field_key_cache
+        if is_cache_needs_update:
+            form_fields: List[FormField] = self.get_form_fields()
+            for form_field in form_fields:
+                self._form_field_key_cache[form_field.plugin_instance.pk] = form_field.name
 
-            for name, _field in fields_by_key.items():
-                self._form_field_key_cache[_field.plugin_instance.pk] = name
         return self._form_field_key_cache[field.pk]
 
     def get_form_fields_as_choices(self):
@@ -297,11 +296,6 @@ class BaseFormPlugin(CMSPlugin):
 
         for field in fields:
             yield (field.name, field.label)
-
-    def get_form_fields_by_name(self):
-        fields = self.get_form_fields()
-        fields_by_name = OrderedDict((field.name, field) for field in fields)
-        return fields_by_name
 
     def get_form_elements(self):
         from .utils import get_nested_plugins
@@ -421,7 +415,7 @@ class FieldPluginBase(CMSPlugin):
         abstract = True
 
     def __init__(self, *args, **kwargs):
-        super(FieldPluginBase, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
         if self.plugin_type:
             attribute = 'is_%s' % self.field_type
             setattr(self, attribute, True)
