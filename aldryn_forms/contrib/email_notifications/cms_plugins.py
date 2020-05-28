@@ -54,6 +54,7 @@ class ExistingEmailNotificationInline(admin.StackedInline):
                 'to_user',
                 ('to_name', 'to_email'),
                 ('from_name', 'from_email'),
+                ('reply_name', 'reply_email'),
             )
         }),
     )
