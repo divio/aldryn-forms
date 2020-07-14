@@ -202,12 +202,6 @@ class EmailNotification(models.Model):
 
         if self.from_email:
             from_email = render(self.from_email)
-
-            if self.from_name:
-                from_name = render(self.from_name)
-                from_email = formataddr((from_name, from_email))
-
-            kwargs['from_email'] = from_email
             kwargs['reply_to'] = [from_email]
         return kwargs
 
