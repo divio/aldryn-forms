@@ -9,6 +9,7 @@ from cms.models.fields import PageField
 from cms.models.pluginmodel import CMSPlugin
 from cms.utils.plugins import downcast_plugins
 from django.conf import settings
+from django.core.exceptions import ValidationError
 from django.db import models
 from django.db.models.functions import Coalesce
 from django.utils.encoding import python_2_unicode_compatible
@@ -429,6 +430,10 @@ class FieldPluginBase(CMSPlugin):
 
     def get_label(self):
         return self.label or self.placeholder_text
+
+    def clean(self):
+        if ' ' in self.name:
+            raise ValidationError(_('The "name" field cannot contain spaces.'))
 
 
 class FieldPlugin(FieldPluginBase):
