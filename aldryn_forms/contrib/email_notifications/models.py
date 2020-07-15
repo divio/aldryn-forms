@@ -215,7 +215,7 @@ class EmailNotification(models.Model):
             kwargs['from_email'] = from_email
 
         if self.reply_to_email:
-            reply_to_email_rendered = render(self.from_email)
+            reply_to_email_rendered = render(self.reply_to_email)
             kwargs['reply_to'] = [reply_to_email_rendered]
 
         return kwargs
