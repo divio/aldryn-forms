@@ -4,3 +4,5 @@ recursive-include aldryn_forms/locale *
 recursive-include aldryn_forms/static *
 recursive-include aldryn_forms/templates *
 recursive-exclude * *.py[co]
+recursive-exclude * *.css
+recursive-exclude * *.html
