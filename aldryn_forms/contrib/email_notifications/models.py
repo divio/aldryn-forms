@@ -94,6 +94,11 @@ class EmailNotification(models.Model):
         max_length=200,
         blank=True
     )
+    reply_to_email = models.CharField(
+        verbose_name=_('reply to email'),
+        max_length=200,
+        blank=True
+    )
     subject = models.CharField(
         verbose_name=_("subject"),
         max_length=200,
@@ -208,7 +213,11 @@ class EmailNotification(models.Model):
                 from_email = formataddr((from_name, from_email))
 
             kwargs['from_email'] = from_email
-            kwargs['reply_to'] = [from_email]
+
+        if self.reply_to_email:
+            reply_to_email_rendered = render(self.from_email)
+            kwargs['reply_to'] = [reply_to_email_rendered]
+
         return kwargs
 
     def prepare_email(self, form):

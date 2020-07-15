@@ -48,12 +48,12 @@ class ExistingEmailNotificationInline(admin.StackedInline):
             )
         }),
         (_('Recipients'), {
-            'classes': ('collapse',),
             'fields': (
                 'text_variables',
                 'to_user',
                 ('to_name', 'to_email'),
                 ('from_name', 'from_email'),
+                'reply_to_email',
             )
         }),
     )
