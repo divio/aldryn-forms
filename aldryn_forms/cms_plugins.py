@@ -191,14 +191,6 @@ class FormPlugin(FieldContainer):
     def get_success_url(self, instance):
         return instance.success_url
 
-    def send_success_message(self, instance, request):
-        """
-        Sends a success message to the request user
-        using django's contrib.messages app.
-        """
-        message = instance.success_message or ugettext('The form has been sent.')
-        messages.success(request, mark_safe(message))
-
     def send_notifications(self, instance, form):
         users = instance.recipients.exclude(email='')
 

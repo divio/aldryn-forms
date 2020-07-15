@@ -16,7 +16,6 @@ class DefaultAction(BaseAction):
         recipients = cmsplugin.send_notifications(instance, form)
         form.instance.set_recipients(recipients)
         form.save()
-        cmsplugin.send_success_message(instance, request)
 
 
 class EmailAction(BaseAction):
