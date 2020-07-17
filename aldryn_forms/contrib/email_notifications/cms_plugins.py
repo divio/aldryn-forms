@@ -135,6 +135,7 @@ class EmailNotificationForm(FormPlugin):
         NewEmailNotificationInline
     ]
     notification_conf_class = DefaultNotificationConf
+    child_ckeditor_body_css_class = 'aldryn-forms-form-plugin'
 
     fieldsets = (
         (None, {
