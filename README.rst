@@ -65,6 +65,15 @@ To use https://github.com/aldryn/aldryn-boilerplate-standard (recommended, will 
 
 Also ensure you define an `e-mail backend <https://docs.djangoproject.com/en/dev/topics/email/#dummy-backend>`_ for your app.
 
+Using Django Simple Captcha
+--------------------
+To use Aldryn Forms with Django Simple Captcha you have to add ``captcha`` to INSTALLED_APPS and add an entry to your urls.py file:
+
+    urlpatterns += [
+        url(r'^captcha/', include('captcha.urls')),
+    ]
+    
+See also (https://django-simple-captcha.readthedocs.io/en/latest/usage.html#installation) for more information.
 
 Creating a Form
 ===============
