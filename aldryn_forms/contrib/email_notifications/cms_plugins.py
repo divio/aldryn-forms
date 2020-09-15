@@ -148,6 +148,7 @@ class EmailNotificationForm(FormPlugin):
         (_('Advanced Settings'), {
             'classes': ('collapse',),
             'fields': (
+                'is_enable_autofill_from_url_params',
                 'form_template',
                 'error_message',
                 'success_message',

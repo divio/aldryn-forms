@@ -176,6 +176,16 @@ class BaseFormPlugin(CMSPlugin):
         on_delete=models.SET_NULL,
     )
 
+    is_enable_autofill_from_url_params = models.BooleanField(
+        default=False,
+        verbose_name=_("Enable autofill from url parameters"),
+        help_text=_(
+            "Eg if you open the form with a url that contains parameters as "
+            "'https://example.com/sub-page/?email=hello@example.com&name=Alex', "
+            "then the fields 'email' and 'name' are going to to be filled in automatically."
+        )
+    )
+
     cmsplugin_ptr = CMSPluginField(
         on_delete=models.CASCADE,
     )

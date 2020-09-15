@@ -28,7 +28,6 @@ EMAIL_THEMES = getattr(
 
 
 class EmailNotificationFormPlugin(FormPlugin):
-
     class Meta:
         proxy = True
 
