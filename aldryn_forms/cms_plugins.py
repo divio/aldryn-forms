@@ -35,6 +35,7 @@ from .forms import SelectFieldForm
 from .forms import TextAreaFieldForm
 from .forms import TextFieldForm
 from .helpers import get_user_name
+from .models import FileUploadFieldPlugin
 from .models import SerializedFormField
 from .signals import form_post_save
 from .signals import form_pre_save
@@ -298,7 +299,7 @@ class Field(FormElement):
         value = self.serialize_value(
             instance=field.plugin_instance,
             value=form.cleaned_data[field.name],
-            is_confirmation=is_confirmation
+            is_confirmation=is_confirmation,
         )
         serialized_field = SerializedFormField(
             name=field.name,
@@ -608,8 +609,7 @@ class FileField(Field):
 
     def serialize_value(self, instance, value, is_confirmation=False):
         if value:
-            return (value.original_filename if is_confirmation
-                    else value.absolute_uri)
+            return value.absolute_uri
         else:
             return '-'
 
