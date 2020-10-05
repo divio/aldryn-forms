@@ -7,6 +7,8 @@ Changelog
 ==================
 
 * Scroll the page to the submitted form success text (before the page would just reload without a success message)
+* Allow to autofill the form using url parameters, eg as https://example.com/sub-page/?email=hello@example.com&name=Alex
+* Fix the render of the file url in the email notifications, were just the file name was rendered before
 * Fix the email notification variables render (it wasn't working for a year)
 * Fix `reply_to_email` field - it wasn't possible to configure before
 * Fix the form submission success message that was appearing on a non-related to the form page
