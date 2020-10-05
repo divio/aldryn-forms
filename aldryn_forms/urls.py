@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 from django.conf.urls import url
 
 from .views import submit_form_view

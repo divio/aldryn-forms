@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 from email.utils import parseaddr
 
 from django.core.exceptions import ValidationError

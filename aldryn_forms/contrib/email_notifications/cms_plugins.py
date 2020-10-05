@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 import logging
 from email.utils import parseaddr
 from typing import List

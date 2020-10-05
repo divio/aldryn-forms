@@ -12,9 +12,7 @@ from django.conf import settings
 from django.core.exceptions import ValidationError
 from django.db import models
 from django.db.models.functions import Coalesce
-from django.utils.encoding import python_2_unicode_compatible
 from django.utils.functional import cached_property
-from django.utils.six import text_type
 from django.utils.translation import ugettext_lazy as _
 from djangocms_attributes_field.fields import AttributesField
 from filer.fields.folder import FilerFolderField
@@ -92,7 +90,6 @@ class SerializedFormField(BaseSerializedFormField):
         return self.name.rpartition('_')[0]
 
 
-@python_2_unicode_compatible
 class BaseFormPlugin(CMSPlugin):
     FALLBACK_FORM_TEMPLATE = 'aldryn_forms/form.html'
     DEFAULT_FORM_TEMPLATE = getattr(
@@ -335,7 +332,6 @@ class BaseFormPlugin(CMSPlugin):
         return self._form_elements
 
 
-@python_2_unicode_compatible
 class FormPlugin(BaseFormPlugin):
 
     class Meta:
@@ -345,7 +341,6 @@ class FormPlugin(BaseFormPlugin):
         return self.name
 
 
-@python_2_unicode_compatible
 class FieldsetPlugin(CMSPlugin):
 
     legend = models.CharField(_('Legend'), max_length=255, blank=True)
@@ -356,10 +351,9 @@ class FieldsetPlugin(CMSPlugin):
     )
 
     def __str__(self):
-        return self.legend or text_type(self.pk)
+        return self.legend or str(self.pk)
 
 
-@python_2_unicode_compatible
 class FieldPluginBase(CMSPlugin):
     name = models.CharField(
         _('Name'),
@@ -520,7 +514,6 @@ class ImageUploadFieldPlugin(FileFieldPluginBase):
     )
 
 
-@python_2_unicode_compatible
 class Option(models.Model):
     field = models.ForeignKey(FieldPlugin, editable=False, on_delete=models.CASCADE)
     value = models.CharField(_('Value'), max_length=255)
@@ -546,7 +539,6 @@ class Option(models.Model):
         return super(Option, self).save(*args, **kwargs)
 
 
-@python_2_unicode_compatible
 class FormButtonPlugin(CMSPlugin):
     label = models.CharField(_('Label'), max_length=255)
     custom_classes = models.CharField(
@@ -559,7 +551,6 @@ class FormButtonPlugin(CMSPlugin):
         return self.label
 
 
-@python_2_unicode_compatible
 class FormSubmission(models.Model):
     name = models.CharField(
         max_length=255,
