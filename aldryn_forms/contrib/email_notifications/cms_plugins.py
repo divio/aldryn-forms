@@ -66,7 +66,7 @@ class ExistingEmailNotificationInline(admin.StackedInline):
         'and other notification fields'
     )
 
-    def has_add_permission(self, request):
+    def has_add_permission(self, request, obj=None):
         return False
 
     def get_fieldsets(self, request, obj=None):
