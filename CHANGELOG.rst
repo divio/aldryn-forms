@@ -3,7 +3,7 @@ Changelog
 =========
 
 
-6.2.0.rc1 (2020-10-05)
+6.2.0 (2020-11-14)
 ==================
 
 * Scroll the page to the submitted form success text (before the page would just reload without a success message)
