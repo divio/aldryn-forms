@@ -509,6 +509,8 @@ class TextAreaField(BaseTextField):
 
     def get_form_field_widget_attrs(self, instance):
         attrs = super(TextAreaField, self).get_form_field_widget_attrs(instance)
+        
+        del attrs['type']
 
         if instance.text_area_columns:
             attrs['cols'] = instance.text_area_columns
@@ -527,7 +529,7 @@ class HiddenField(BaseTextField):
 
 class PhoneField(BaseTextField):
     name = _('Phone Field')
-    form_field_widget_input_type = 'phone'
+    form_field_widget_input_type = 'tel'
 
 
 class NumberField(BaseTextField):
