@@ -1,3 +1,6 @@
+.. image:: https://secure.travis-ci.org/zbohm/aldryn-forms.png?branch=fix-travis-ci
+   :target: http://travis-ci.com/zbohm/aldryn-forms
+
 ================
 Aldryn Forms App
 ================

@@ -33,9 +33,9 @@ class SubmitFormViewTest(CMSTestCase):
             published=True,
             apphook='FormsApp',
         )
-        try:
+        if CMS_3_6:
             self.placeholder = self.page.placeholders.get(slot='content')
-        except AttributeError:
+        else:
             self.placeholder = self.page.get_placeholders('en').get(slot='content')
 
         self.redirect_url = 'http://www.google.com'
@@ -91,11 +91,9 @@ class SubmitFormViewTest(CMSTestCase):
     def test_form_view_and_submission_with_apphook_django_gte_111(self):
         if CMS_3_6:
             public_page = self.page.publisher_public
+            public_placeholder = public_page.placeholders.first()
         else:
             public_page = self.page
-        try:
-            public_placeholder = public_page.placeholders.first()
-        except AttributeError:
             public_placeholder = public_page.get_placeholders('en').first()
 
         public_page_form_plugin = (
@@ -148,7 +146,10 @@ class SubmitFormViewTest(CMSTestCase):
             published=True,
             apphook='FormsApp',
         )
-        placeholder = page.placeholders.get(slot='content')
+        if CMS_3_6:
+            placeholder = page.placeholders.get(slot='content')
+        else:
+            placeholder = page.get_placeholders('en').get(slot='content')
 
         form_plugin = add_plugin(
             placeholder,
@@ -200,7 +201,8 @@ class SubmitFormViewTest(CMSTestCase):
         form_plugin2.action_backend = 'default'
         form_plugin2.save()
 
-        page.publish('en')
+        if CMS_3_6:
+            page.publish('en')
         self.reload_urls()
         self.apphook_clear()
 
@@ -219,7 +221,10 @@ class SubmitFormViewTest(CMSTestCase):
             published=True,
             apphook='FormsApp',
         )
-        placeholder = page.placeholders.get(slot='content')
+        if CMS_3_6:
+            placeholder = page.placeholders.get(slot='content')
+        else:
+            placeholder = page.get_placeholders('en').get(slot='content')
 
         form_plugin = add_plugin(
             placeholder,
@@ -273,7 +278,8 @@ class SubmitFormViewTest(CMSTestCase):
         form_plugin2.action_backend = 'default'
         form_plugin2.save()
 
-        page.publish('en')
+        if CMS_3_6:
+            page.publish('en')
         self.reload_urls()
         self.apphook_clear()
 

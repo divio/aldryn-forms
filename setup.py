@@ -4,7 +4,7 @@ from aldryn_forms import __version__
 
 
 REQUIREMENTS = [
-    'django>=2.0',
+    'django>=1.11',
     'aldryn-boilerplates>=0.7.5',
     'django-cms>=3.5',
     'django-emailit',
