@@ -70,6 +70,14 @@ class FormPlugin(FieldContainer):
                 'url',
             )
         }),
+        (_('Condition Logic'), {
+            'classes': ('collapse',),
+            'fields': (
+                'redirect_page_negative_condition',
+                'condition_field',
+                'condition_value',
+            )
+        }),
         (_('Advanced Settings'), {
             'classes': ('collapse',),
             'fields': (
@@ -92,7 +100,12 @@ class FormPlugin(FieldContainer):
 
         if request.POST.get('form_plugin_id') == str(instance.id) and form.is_valid():
             context['post_success'] = True
-            context['form_success_url'] = self.get_success_url(instance)
+            condition_value = None
+            field_data = form.get_cleaned_data()
+            if instance.condition_field in field_data:
+                condition_value = field_data[instance.condition_field]
+
+            context['form_success_url'] = self.get_success_url(instance, condition_value)
         context['form'] = form
         return context
 
@@ -186,7 +199,10 @@ class FormPlugin(FieldContainer):
             kwargs['files'] = request.FILES
         return kwargs
 
-    def get_success_url(self, instance):
+    def get_success_url(self, instance, condition_value):
+        if instance.redirect_page_negative_condition and instance.condition_field:
+            if instance.condition_value == condition_value:
+                return instance.redirect_page_negative_condition.get_absolute_url()
         return instance.success_url
 
     def send_notifications(self, instance, form):

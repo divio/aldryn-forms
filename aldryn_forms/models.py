@@ -173,6 +173,25 @@ class BaseFormPlugin(CMSPlugin):
         on_delete=models.SET_NULL,
     )
 
+    redirect_page_negative_condition = PageField(
+        verbose_name=_('CMS Page (condition is false)'),
+        related_name="page_condition_false",
+        blank=True,
+        null=True,
+        on_delete=models.SET_NULL,
+    )
+
+    condition_field = models.CharField(
+        verbose_name=_('Condition field'),
+        help_text=_('This field is used to enable condition logic. '
+                    'If field doesn\'t match the condition value then redirect and notification works as usual. '
+                    'If value of the field matches the condition value field then custom redirect '
+                    'and notification will be used.'),
+        max_length=512, null=True, blank=True)
+
+    condition_value = models.CharField(
+        verbose_name=_('Condition field value'), max_length=512, null=True, blank=True)
+
     is_enable_autofill_from_url_params = models.BooleanField(
         default=False,
         verbose_name=_("Enable autofill from url parameters"),

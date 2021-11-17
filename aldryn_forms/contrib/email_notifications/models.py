@@ -115,6 +115,12 @@ class EmailNotification(models.Model):
         related_name='email_notifications',
         on_delete=models.CASCADE,
     )
+    is_use_in_condition = models.BooleanField(
+        default=False,
+        verbose_name=_('Use if condition succeeded'),
+        help_text=_('This email notification will be used if condition field for the form is the same '
+                    'as condition value (See Form plugin configuration -> Condition Logic)')
+    )
 
     def __str__(self):
         to_name = self.get_recipient_name()

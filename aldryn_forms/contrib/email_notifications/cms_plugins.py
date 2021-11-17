@@ -46,6 +46,7 @@ class ExistingEmailNotificationInline(admin.StackedInline):
         (None, {
             'fields': (
                 'theme',
+                'is_use_in_condition',
             )
         }),
         (_('Recipients'), {
@@ -144,6 +145,14 @@ class EmailNotificationForm(FormPlugin):
                 ('redirect_page', 'url'),
             )
         }),
+        (_('Condition Logic'), {
+            'classes': ('collapse',),
+            'fields': (
+                'redirect_page_negative_condition',
+                'condition_field',
+                'condition_value',
+            )
+        }),
         (_('Advanced Settings'), {
             'classes': ('collapse',),
             'fields': (
@@ -179,10 +188,30 @@ class EmailNotificationForm(FormPlugin):
 
         notifications = instance.email_notifications.select_related('form')
 
+        check_use_condition = False
+        condition_result = False
+
+        if instance.condition_field and instance.condition_value:
+            check_use_condition = True
+
+            form_data = form.cleaned_data
+            if instance.condition_field in form_data:
+                condition_result = str(form_data[instance.condition_field]) == str(instance.condition_value)
+
         emails = []
         recipients = []
 
-        for notification in notifications:
+        filtered_notifications = []
+
+        if check_use_condition:
+            for notification in notifications:
+                if notification.is_use_in_condition == condition_result:
+                    filtered_notifications.append(notification)
+        else:
+            filtered_notifications = notifications
+
+        for notification in filtered_notifications:
+
             email = notification.prepare_email(form=form)
 
             to_email = email.to[0]
