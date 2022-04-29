@@ -1,11 +1,9 @@
-# -*- coding: utf-8 -*-
 from email.utils import formataddr
 from functools import partial
 
 from django.conf import settings
 from django.core.exceptions import ValidationError
 from django.db import models
-from django.utils.encoding import python_2_unicode_compatible
 from django.utils.translation import ugettext
 from django.utils.translation import ugettext_lazy as _
 
@@ -28,7 +26,6 @@ EMAIL_THEMES = getattr(
 
 
 class EmailNotificationFormPlugin(FormPlugin):
-
     class Meta:
         proxy = True
 
@@ -53,7 +50,6 @@ class EmailNotificationFormPlugin(FormPlugin):
         return choices
 
 
-@python_2_unicode_compatible
 class EmailNotification(models.Model):
 
     class Meta:
@@ -91,6 +87,11 @@ class EmailNotification(models.Model):
     )
     from_email = models.CharField(
         verbose_name=_('from email'),
+        max_length=200,
+        blank=True
+    )
+    reply_to_email = models.CharField(
+        verbose_name=_('reply to email'),
         max_length=200,
         blank=True
     )
@@ -208,7 +209,11 @@ class EmailNotification(models.Model):
                 from_email = formataddr((from_name, from_email))
 
             kwargs['from_email'] = from_email
-            kwargs['reply_to'] = [from_email]
+
+        if self.reply_to_email:
+            reply_to_email_rendered = render(self.reply_to_email)
+            kwargs['reply_to'] = [reply_to_email_rendered]
+
         return kwargs
 
     def prepare_email(self, form):

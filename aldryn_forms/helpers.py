@@ -1,6 +1,3 @@
-# -*- coding: utf-8 -*-
-
-
 def get_user_name(user):
     try:
         name = user.get_full_name()

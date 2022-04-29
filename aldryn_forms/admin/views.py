@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 from django import get_version
 from django.contrib import messages
 from django.http import HttpResponse
@@ -92,11 +91,8 @@ class FormExportWizardView(SessionWizardView):
         dataset = Exporter(queryset=queryset).get_dataset(fields=fields)
 
         filename = step_1_form.get_filename(extension=self.file_type)
-        
-        response_kwargs = {
-            'content_type': self.get_content_type()
-        }
 
-        response = HttpResponse(dataset.xls, **response_kwargs)
+        content_type = self.get_content_type()
+        response = HttpResponse(dataset.xls, content_type=content_type)
         response['Content-Disposition'] = 'attachment; filename=%s' % filename
         return response

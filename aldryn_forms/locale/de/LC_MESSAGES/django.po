@@ -2,7 +2,7 @@
 # Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the PACKAGE package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
-# 
+#
 # Translators:
 # Angelo Dini <finalangeljp@hotmail.com>, 2016
 # Peter W <peter.wischer@lwl.org>, 2016
@@ -10,681 +10,656 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-08-25 21:09+0000\n"
+"POT-Creation-Date: 2020-08-29 12:13+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: Peter W <peter.wischer@lwl.org>, 2016\n"
 "Language-Team: German (https://www.transifex.com/divio/teams/58664/de/)\n"
+"Language: de\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Language: de\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
-#: admin/base.py:39
+#: addons-dev/aldryn-forms/aldryn_forms/action_backends.py:13
+#: addons-dev/aldryn-forms/aldryn_forms/models.py:100
+#: addons-dev/aldryn-forms/aldryn_forms/models.py:512
+msgid "Default"
+msgstr "Standard"
+
+#: addons-dev/aldryn-forms/aldryn_forms/action_backends.py:23
+#, fuzzy
+#| msgid "Email Field"
+msgid "Email only"
+msgstr "E-Mail-Feld"
+
+#: addons-dev/aldryn-forms/aldryn_forms/action_backends.py:31
+msgid "None"
+msgstr ""
+
+#: addons-dev/aldryn-forms/aldryn_forms/admin/base.py:40
 msgid "data"
 msgstr "Daten"
 
-#: admin/base.py:55
+#: addons-dev/aldryn-forms/aldryn_forms/admin/base.py:56
 msgid "people notified"
 msgstr "Benachrichtigte Personen"
 
-#: admin/forms.py:33
+#: addons-dev/aldryn-forms/aldryn_forms/admin/forms.py:34
 msgid "from date"
 msgstr "Datum von"
 
-#: admin/forms.py:38
+#: addons-dev/aldryn-forms/aldryn_forms/admin/forms.py:39
 msgid "to date"
 msgstr "Datum bis"
 
-#: admin/forms.py:43
+#: addons-dev/aldryn-forms/aldryn_forms/admin/forms.py:44
 msgid "language"
 msgstr "Sprache"
 
-#: admin/forms.py:58
-msgid ""
-"Export failed! More than 65,536 entries found, exceeded Excel limitation!"
-msgstr ""
-"Export fehlgeschlagen! Mehr als 65,536 Einträge gefunden, Excel-Limit "
-"erreicht!"
+#: addons-dev/aldryn-forms/aldryn_forms/admin/forms.py:59
+msgid "Export failed! More than 65,536 entries found, exceeded Excel limitation!"
+msgstr "Export fehlgeschlagen! Mehr als 65,536 Einträge gefunden, Excel-Limit erreicht!"
 
-#: admin/forms.py:132
+#: addons-dev/aldryn-forms/aldryn_forms/admin/forms.py:133
 msgid "Please select at least one field to export."
 msgstr "Es muss mindestens ein Feld zum Exportieren gewählt sein."
 
-#: admin/views.py:69
+#: addons-dev/aldryn-forms/aldryn_forms/admin/views.py:69
 msgid "No records found"
 msgstr "Keine Einträge gefunden"
 
-#: boilerplates/bootstrap3/templates/admin/aldryn_forms/display/submission_data.html:3
-#: boilerplates/legacy/templates/admin/aldryn_forms/display/submission_data.html:3
-#: templates/admin/aldryn_forms/display/submission_data.html:3
-msgid "Field"
-msgstr "Feld"
+#: addons-dev/aldryn-forms/aldryn_forms/cms_apps.py:9
+#: addons-dev/aldryn-forms/aldryn_forms/cms_plugins.py:51
+msgid "Forms"
+msgstr "Formulare"
 
-#: boilerplates/bootstrap3/templates/admin/aldryn_forms/display/submission_data.html:4
-#: boilerplates/legacy/templates/admin/aldryn_forms/display/submission_data.html:4
-#: models.py:306 models.py:461
-#: templates/admin/aldryn_forms/display/submission_data.html:4
+#: addons-dev/aldryn-forms/aldryn_forms/cms_plugins.py:60
+msgid "Form"
+msgstr "Formular"
+
+#: addons-dev/aldryn-forms/aldryn_forms/cms_plugins.py:61
+#, fuzzy
+#| msgid "Form fields"
+msgid "Form types"
+msgstr "Formularfelder"
+
+#: addons-dev/aldryn-forms/aldryn_forms/cms_plugins.py:75
+#: addons-dev/aldryn-forms/aldryn_forms/cms_plugins.py:237
+#: addons-dev/aldryn-forms/aldryn_forms/cms_plugins.py:412
+#: addons-dev/aldryn-forms/aldryn_forms/contrib/email_notifications/cms_plugins.py:136
+msgid "Advanced Settings"
+msgstr "Erweiterte Einstellungen"
+
+#: addons-dev/aldryn-forms/aldryn_forms/cms_plugins.py:199
+msgid "The form has been sent."
+msgstr "Das Formular wurde versendet."
+
+#: addons-dev/aldryn-forms/aldryn_forms/cms_plugins.py:228
+msgid "Fieldset"
+msgstr "Feldergruppe"
+
+#: addons-dev/aldryn-forms/aldryn_forms/cms_plugins.py:265
+msgid "Form fields"
+msgstr "Formularfelder"
+
+#: addons-dev/aldryn-forms/aldryn_forms/cms_plugins.py:486
+msgid "Text Field"
+msgstr "Textfeld"
+
+#: addons-dev/aldryn-forms/aldryn_forms/cms_plugins.py:490
+msgid "Text Area Field"
+msgstr "Mehrzeiliges Textfeld"
+
+#: addons-dev/aldryn-forms/aldryn_forms/cms_plugins.py:531
+#, fuzzy
+#| msgid "Text Field"
+msgid "Hidden Field"
+msgstr "Textfeld"
+
+#: addons-dev/aldryn-forms/aldryn_forms/cms_plugins.py:539
+#, fuzzy
+#| msgid "Text Field"
+msgid "Phone Field"
+msgstr "Textfeld"
+
+#: addons-dev/aldryn-forms/aldryn_forms/cms_plugins.py:544
+#, fuzzy
+#| msgid "Text Field"
+msgid "Number Field"
+msgstr "Textfeld"
+
+#: addons-dev/aldryn-forms/aldryn_forms/cms_plugins.py:549
+msgid "Email Field"
+msgstr "E-Mail-Feld"
+
+#: addons-dev/aldryn-forms/aldryn_forms/cms_plugins.py:585
+msgid "File upload field"
+msgstr "Datei-Hochladen-Feld"
+
+#: addons-dev/aldryn-forms/aldryn_forms/cms_plugins.py:665
+msgid "Image upload field"
+msgstr "Bild-Hochladen-Feld"
+
+#: addons-dev/aldryn-forms/aldryn_forms/cms_plugins.py:703
+msgid "Yes/No Field"
+msgstr "Checkbox-Feld"
+
+#: addons-dev/aldryn-forms/aldryn_forms/cms_plugins.py:727
+msgid "Yes"
+msgstr "Ja"
+
+#: addons-dev/aldryn-forms/aldryn_forms/cms_plugins.py:727
+msgid "No"
+msgstr "Nein"
+
+#: addons-dev/aldryn-forms/aldryn_forms/cms_plugins.py:735
+msgid "Select Field"
+msgstr "Auswahlfeld"
+
+#: addons-dev/aldryn-forms/aldryn_forms/cms_plugins.py:771
+msgid "Multiple Select Field"
+msgstr "Mehrfach-Auswahlfeld"
+
+#: addons-dev/aldryn-forms/aldryn_forms/cms_plugins.py:810
+msgid "Multiple Checkbox Field"
+msgstr "Mehrfaches Checkbox-Feld"
+
+#: addons-dev/aldryn-forms/aldryn_forms/cms_plugins.py:814
+msgid "Radio Select Field"
+msgstr "Radio-Button-Auswahlfeld"
+
+#: addons-dev/aldryn-forms/aldryn_forms/cms_plugins.py:857
+msgid "Captcha Field"
+msgstr "Captcha-Feld"
+
+#: addons-dev/aldryn-forms/aldryn_forms/cms_plugins.py:878
+msgid "Submit Button"
+msgstr "Senden-Button"
+
+#: addons-dev/aldryn-forms/aldryn_forms/contrib/email_notifications/cms_plugins.py:25
+msgid "new email notification"
+msgstr "Neue E-Mail-Benachrichtigung"
+
+#: addons-dev/aldryn-forms/aldryn_forms/contrib/email_notifications/cms_plugins.py:26
+msgid "new email notifications"
+msgstr "Neue E-Mail-Benachrichtigungen"
+
+#: addons-dev/aldryn-forms/aldryn_forms/contrib/email_notifications/cms_plugins.py:50
+#: addons-dev/aldryn-forms/aldryn_forms/models.py:153
+msgid "Recipients"
+msgstr "Empfänger"
+
+#: addons-dev/aldryn-forms/aldryn_forms/contrib/email_notifications/cms_plugins.py:62
+#, python-brace-format
+msgid "variables can be used with by wrapping with \"${variable}\" like ${variable}"
+msgstr "Variabeln können benutzt werden, indem Sie Ausführungszeichen hinzufügen. Aus ${variable} wird \"${variable}\". "
+
+#: addons-dev/aldryn-forms/aldryn_forms/contrib/email_notifications/cms_plugins.py:91
+msgid "Email"
+msgstr "E-Mail"
+
+#: addons-dev/aldryn-forms/aldryn_forms/contrib/email_notifications/cms_plugins.py:116
+msgid "available text variables"
+msgstr "Verfügbare Textvariabeln"
+
+#: addons-dev/aldryn-forms/aldryn_forms/contrib/email_notifications/cms_plugins.py:120
+msgid "Form (Advanced)"
+msgstr "Formular (Erweitert)"
+
+#: addons-dev/aldryn-forms/aldryn_forms/contrib/email_notifications/models.py:26
+msgid "default"
+msgstr "Standard"
+
+#: addons-dev/aldryn-forms/aldryn_forms/contrib/email_notifications/models.py:60
+msgid "Email notification"
+msgstr "E-Mail-Benachrichtigung"
+
+#: addons-dev/aldryn-forms/aldryn_forms/contrib/email_notifications/models.py:61
+msgid "Email notifications"
+msgstr "E-Mail-Benachrichtigungen"
+
+#: addons-dev/aldryn-forms/aldryn_forms/contrib/email_notifications/models.py:64
+msgid "theme"
+msgstr "Vorlage"
+
+#: addons-dev/aldryn-forms/aldryn_forms/contrib/email_notifications/models.py:66
+msgid "Provides the base theme for the email."
+msgstr "Stellt das Standard-Template für die E-Mail zur Verfügung."
+
+#: addons-dev/aldryn-forms/aldryn_forms/contrib/email_notifications/models.py:70
+msgid "to name"
+msgstr "Name des Empfängers"
+
+#: addons-dev/aldryn-forms/aldryn_forms/contrib/email_notifications/models.py:75
+msgid "to email"
+msgstr "E-Mail des Empfängers"
+
+#: addons-dev/aldryn-forms/aldryn_forms/contrib/email_notifications/models.py:81
+msgid "to user"
+msgstr "an Benutzer"
+
+#: addons-dev/aldryn-forms/aldryn_forms/contrib/email_notifications/models.py:88
+msgid "from name"
+msgstr "Name des Absenders"
+
+#: addons-dev/aldryn-forms/aldryn_forms/contrib/email_notifications/models.py:93
+msgid "from email"
+msgstr "E-Mail des Absenders"
+
+#: addons-dev/aldryn-forms/aldryn_forms/contrib/email_notifications/models.py:98
+msgid "subject"
+msgstr "Betreff"
+
+#: addons-dev/aldryn-forms/aldryn_forms/contrib/email_notifications/models.py:103
+msgid "email body (txt)"
+msgstr "E-Mail-Inhalt (Text)"
+
+#: addons-dev/aldryn-forms/aldryn_forms/contrib/email_notifications/models.py:105
+msgid "used when rendering the email in text only mode."
+msgstr "wird benutzt, wenn die E-Mail als Text dargestellt wird."
+
+#: addons-dev/aldryn-forms/aldryn_forms/contrib/email_notifications/models.py:108
+msgid "email body (html)"
+msgstr "E-Mail-Inhalt (HTML)"
+
+#: addons-dev/aldryn-forms/aldryn_forms/contrib/email_notifications/models.py:110
+msgid "used when rendering the email in html."
+msgstr "wird benutzt, wenn die E-Mail in HTML dargestellt wird."
+
+#: addons-dev/aldryn-forms/aldryn_forms/contrib/email_notifications/models.py:127
+msgid "Please provide a recipient."
+msgstr "Bitte einen Empfänger angeben."
+
+#: addons-dev/aldryn-forms/aldryn_forms/contrib/email_notifications/notification.py:54
+msgid "Fields"
+msgstr "Felder"
+
+#: addons-dev/aldryn-forms/aldryn_forms/forms.py:29
+#, python-format
+msgid "File size must be under %(max_size)s. Current file size is %(actual_size)s."
+msgstr "Dateigröße muss unter %(max_size)s sein. Aktuelle Größe ist %(actual_size)s."
+
+#: addons-dev/aldryn-forms/aldryn_forms/forms.py:64
+#, python-format
+msgid "Image width must be under %(max_size)s pixels. Current width is %(actual_size)s pixels."
+msgstr "Bildbreite muss unter %(max_size)s Pixel groß sein. Aktuelle Breite ist %(actual_size)s Pixel."
+
+#: addons-dev/aldryn-forms/aldryn_forms/forms.py:74
+#, python-format
+msgid "Image height must be under %(max_size)s pixels. Current height is %(actual_size)s pixels."
+msgstr "Bildhöhe muss unter %(max_size)s Pixel groß sein. Aktuelle Höhe ist %(actual_size)s Pixel."
+
+#: addons-dev/aldryn-forms/aldryn_forms/forms.py:170
+msgid "Please provide CMS page for redirect."
+msgstr "Bitte CMS-Seite angeben für die Weiterleitung."
+
+#: addons-dev/aldryn-forms/aldryn_forms/forms.py:175
+msgid "Please provide an absolute URL for redirect."
+msgstr "Bitte eine absolute URL angeben für die Weiterleitung."
+
+#: addons-dev/aldryn-forms/aldryn_forms/forms.py:222
+msgid "Min value can not be greater than max value."
+msgstr "Der Mindestwert kann nicht größer sein als der Maximalwert."
+
+#: addons-dev/aldryn-forms/aldryn_forms/forms.py:231
+msgid "Min length"
+msgstr "Mindestlänge"
+
+#: addons-dev/aldryn-forms/aldryn_forms/forms.py:232
+msgid "Required number of characters to type."
+msgstr "Benötigte Anzahl von getippten Zeichen."
+
+#: addons-dev/aldryn-forms/aldryn_forms/forms.py:234
+msgid "Max length"
+msgstr "Maximale Länge"
+
+#: addons-dev/aldryn-forms/aldryn_forms/forms.py:235
+msgid "Maximum number of characters to type."
+msgstr "Maximale Anzahl von getippten Zeichen."
+
+#: addons-dev/aldryn-forms/aldryn_forms/forms.py:275
+msgid "Explanatory text displayed next to input field. Just like this one. You can use MAXSIZE as a placeholder for the maximum size configured below."
+msgstr "Erläuterungstext, der neben dem Eingabefeld angezeigt wird - so wie dieser. MAXSIZE kann als Platzhalter benutzt werden, um die Maximallänge zu konfigurieren."
+
+#: addons-dev/aldryn-forms/aldryn_forms/forms.py:288
+msgid "Explanatory text displayed next to input field. Just like this one. You can use MAXSIZE, MAXWIDTH, MAXHEIGHT as a placeholders for the maximum file size and dimensions configured below."
+msgstr "Erläuterungstext, der neben dem Eingabefeld angezeigt wird - so wie dieser. MAXSIZE, MAXWIDTH und MAXHEIGHT können als Platzhalter definiert werden, um die maximale Dateigröße oder Dimensionen zu konfigurieren."
+
+#: addons-dev/aldryn-forms/aldryn_forms/forms.py:312
+msgid "Min choices"
+msgstr "Mindestauswahl"
+
+#: addons-dev/aldryn-forms/aldryn_forms/forms.py:313
+msgid "Required amount of elements to chose."
+msgstr "Benötigte Anzahl von auszuwählenden Elementen."
+
+#: addons-dev/aldryn-forms/aldryn_forms/forms.py:315
+msgid "Max choices"
+msgstr "Maximale Auswahlmöglichkeiten"
+
+#: addons-dev/aldryn-forms/aldryn_forms/forms.py:316
+msgid "Maximum amount of elements to chose."
+msgstr "Maximale Anzahl auszuwählender Elemente."
+
+#: addons-dev/aldryn-forms/aldryn_forms/models.py:108
+#: addons-dev/aldryn-forms/aldryn_forms/models.py:172
+msgid "CMS Page"
+msgstr "CMS-Seite"
+
+#: addons-dev/aldryn-forms/aldryn_forms/models.py:109
+#: addons-dev/aldryn-forms/aldryn_forms/models.py:140
+msgid "Absolute URL"
+msgstr "Absolute URL"
+
+#: addons-dev/aldryn-forms/aldryn_forms/models.py:116
+#: addons-dev/aldryn-forms/aldryn_forms/models.py:354
+msgid "Name"
+msgstr "Name"
+
+#: addons-dev/aldryn-forms/aldryn_forms/models.py:118
+msgid "Used to filter out form submissions."
+msgstr "Benutzt um Formulareinträge zu filtern."
+
+#: addons-dev/aldryn-forms/aldryn_forms/models.py:121
+#: addons-dev/aldryn-forms/aldryn_forms/models.py:362
+msgid "Error message"
+msgstr "Fehlermeldung"
+
+#: addons-dev/aldryn-forms/aldryn_forms/models.py:124
+msgid "An error message that will be displayed if the form doesn't validate."
+msgstr "Eine Fehlermeldung, die angezeigt wird, wenn das Formular ungültig ist."
+
+#: addons-dev/aldryn-forms/aldryn_forms/models.py:128
+msgid "Success message"
+msgstr "Erfolgsmeldung"
+
+#: addons-dev/aldryn-forms/aldryn_forms/models.py:131
+msgid "An success message that will be displayed."
+msgstr "Erfolgsmeldung, die angezeigt wird."
+
+#: addons-dev/aldryn-forms/aldryn_forms/models.py:134
+msgid "Redirect to"
+msgstr "Weiterleiten nach"
+
+#: addons-dev/aldryn-forms/aldryn_forms/models.py:137
+msgid "Where to redirect the user when the form has been successfully sent?"
+msgstr "Wohin soll der Benutzer weitergeleitet werden, wenn das Formular erfolgreich versandt wurde?"
+
+#: addons-dev/aldryn-forms/aldryn_forms/models.py:142
+#: addons-dev/aldryn-forms/aldryn_forms/models.py:342
+#: addons-dev/aldryn-forms/aldryn_forms/models.py:409
+#: addons-dev/aldryn-forms/aldryn_forms/models.py:538
+msgid "custom css classes"
+msgstr "Benutzerdefinierte CSS-Klassen"
+
+#: addons-dev/aldryn-forms/aldryn_forms/models.py:144
+msgid "form template"
+msgstr "Formularvorlage"
+
+#: addons-dev/aldryn-forms/aldryn_forms/models.py:156
+msgid "People who will get the form content via e-mail."
+msgstr "Personen, welche den Formularinhalt per E-Mail erhalten."
+
+#: addons-dev/aldryn-forms/aldryn_forms/models.py:160
+msgid "Action backend"
+msgstr ""
+
+#: addons-dev/aldryn-forms/aldryn_forms/models.py:167
+#: addons-dev/aldryn-forms/aldryn_forms/models.py:383
+msgid "Attributes"
+msgstr ""
+
+#: addons-dev/aldryn-forms/aldryn_forms/models.py:340
+msgid "Legend"
+msgstr "Legende"
+
+#: addons-dev/aldryn-forms/aldryn_forms/models.py:356
+msgid "Used to set the field name"
+msgstr ""
+
+#: addons-dev/aldryn-forms/aldryn_forms/models.py:359
+#: addons-dev/aldryn-forms/aldryn_forms/models.py:536
+#: addons-dev/aldryn-forms/aldryn_forms/templates/admin/aldryn_forms/display/submission_data.html:4
 msgid "Label"
 msgstr "Beschreibung"
 
-#: boilerplates/bootstrap3/templates/admin/aldryn_forms/display/submission_data.html:5
-#: boilerplates/legacy/templates/admin/aldryn_forms/display/submission_data.html:5
-#: models.py:451 templates/admin/aldryn_forms/display/submission_data.html:5
+#: addons-dev/aldryn-forms/aldryn_forms/models.py:360
+msgid "Field is required"
+msgstr "Feld ist zwingend erforderlich"
+
+#: addons-dev/aldryn-forms/aldryn_forms/models.py:365
+msgid "Error message displayed if the required field is left empty. Default: \"This field is required\"."
+msgstr "Fehlermeldung, die angezeigt wird, wenn das erforderliche Feld leer gelassen wird. Standard: \"Dieses Feld muss ausgefüllt werden\"."
+
+#: addons-dev/aldryn-forms/aldryn_forms/models.py:369
+msgid "Placeholder text"
+msgstr "Platzhaltertext"
+
+#: addons-dev/aldryn-forms/aldryn_forms/models.py:372
+msgid "Default text in a form. Disappears when user starts typing. Example: \"email@example.com\""
+msgstr "Standardtext im Formular. Verschwindet, sobald der Benutzer zu tippen anfängt. Beispiel: \"email@example.com\""
+
+#: addons-dev/aldryn-forms/aldryn_forms/models.py:376
+msgid "Help text"
+msgstr "Hilfetext"
+
+#: addons-dev/aldryn-forms/aldryn_forms/models.py:379
+msgid "Explanatory text displayed next to input field. Just like this one."
+msgstr "Erläuterungstext, der neben dem Eingabefeld angezeigt wird. Genau wie dieser Text."
+
+#: addons-dev/aldryn-forms/aldryn_forms/models.py:391
+msgid "Min value"
+msgstr "Mindestwert"
+
+#: addons-dev/aldryn-forms/aldryn_forms/models.py:397
+msgid "Max value"
+msgstr "Maximalwert"
+
+#: addons-dev/aldryn-forms/aldryn_forms/models.py:402
+#, fuzzy
+#| msgid "Min value"
+msgid "Initial value"
+msgstr "Mindestwert"
+
+#: addons-dev/aldryn-forms/aldryn_forms/models.py:405
+msgid "Default value of field."
+msgstr ""
+
+#: addons-dev/aldryn-forms/aldryn_forms/models.py:444
+msgid "columns"
+msgstr "Spalten"
+
+#: addons-dev/aldryn-forms/aldryn_forms/models.py:446
+msgid "rows"
+msgstr "Zeilen"
+
+#: addons-dev/aldryn-forms/aldryn_forms/models.py:451
+msgid "send notification when form is submitted"
+msgstr "Benachrichtigung senden, wenn das Formular abgeschickt wird"
+
+#: addons-dev/aldryn-forms/aldryn_forms/models.py:453
+msgid "When checked, the value of this field will be used to send an email notification."
+msgstr "Wenn aktiviert, wird der Wert dieses Feldes verwendet, um eine E-Mail-Benachrichtigung zu senden."
+
+#: addons-dev/aldryn-forms/aldryn_forms/models.py:457
+msgid "email subject"
+msgstr "E-Mail-Betreff"
+
+#: addons-dev/aldryn-forms/aldryn_forms/models.py:461
+msgid "Used as the email subject when email_send_notification is checked."
+msgstr "Wird als E-Mail-Betreff verwendet, wenn \"email_send_notification\" aktiviert ist."
+
+#: addons-dev/aldryn-forms/aldryn_forms/models.py:465
+msgid "Additional email body"
+msgstr "Zusätzlicher E-Mail-Inhalt"
+
+#: addons-dev/aldryn-forms/aldryn_forms/models.py:468
+msgid "Additional body text used when email notifications are active."
+msgstr "Zusätzlicher Inhaltstext wird dargestellt, wenn E-Mail-Benachrichtigungen aktiv sind."
+
+#: addons-dev/aldryn-forms/aldryn_forms/models.py:475
+msgid "Upload files to"
+msgstr "Dateien hochladen nach"
+
+#: addons-dev/aldryn-forms/aldryn_forms/models.py:476
+msgid "Select a folder to which all files submitted through this field will be uploaded to."
+msgstr "Verzeichnis auswählen, in das alle über dieses Feld übermittelten Dateien hochgeladen werden."
+
+#: addons-dev/aldryn-forms/aldryn_forms/models.py:481
+msgid "Maximum file size"
+msgstr "Maximale Dateigröße"
+
+#: addons-dev/aldryn-forms/aldryn_forms/models.py:483
+msgid "The maximum file size of the upload, in bytes. You can use common size suffixes (kB, MB, GB, ...)."
+msgstr "Die maximale Dateigröße des Upload in bytes. Es können gebräuchliche Suffixe für die Größe  verwendet werden (kB, MB, GB, ...)."
+
+#: addons-dev/aldryn-forms/aldryn_forms/models.py:497
+msgid "Maximum image width"
+msgstr "Maximale Bildbreite"
+
+#: addons-dev/aldryn-forms/aldryn_forms/models.py:499
+msgid "The maximum width of the uploaded image, in pixels."
+msgstr "Die maximale Breite des hochgeladenen Bildes in Pixel."
+
+#: addons-dev/aldryn-forms/aldryn_forms/models.py:502
+msgid "Maximum image height"
+msgstr "Maximale Bildhöhe"
+
+#: addons-dev/aldryn-forms/aldryn_forms/models.py:504
+msgid "The maximum height of the uploaded image, in pixels."
+msgstr "Die maximale Höhe des hochgeladenen Bildes in Pixel."
+
+#: addons-dev/aldryn-forms/aldryn_forms/models.py:511
+#: addons-dev/aldryn-forms/aldryn_forms/templates/admin/aldryn_forms/display/submission_data.html:5
 msgid "Value"
 msgstr "Wert"
 
-#: boilerplates/bootstrap3/templates/admin/aldryn_forms/export.html:5
-#: boilerplates/legacy/templates/admin/aldryn_forms/export.html:4
-#: boilerplates/legacy/templates/admin/aldryn_forms/export_wizard.html:4
-#: templates/admin/aldryn_forms/export.html:5
+#: addons-dev/aldryn-forms/aldryn_forms/models.py:513
+msgid "Position"
+msgstr ""
+
+#: addons-dev/aldryn-forms/aldryn_forms/models.py:516
+msgid "Option"
+msgstr "Option"
+
+#: addons-dev/aldryn-forms/aldryn_forms/models.py:517
+msgid "Options"
+msgstr "Optionen"
+
+#: addons-dev/aldryn-forms/aldryn_forms/models.py:551
+msgid "form name"
+msgstr "Formularname"
+
+#: addons-dev/aldryn-forms/aldryn_forms/models.py:557
+msgid "users notified"
+msgstr "Benachrichtigte Benutzer"
+
+#: addons-dev/aldryn-forms/aldryn_forms/models.py:559
+msgid "People who got a notification when form was submitted."
+msgstr "Personen, die eine Benachrichtigung erhalten, sobald ein Formular gesendet wurde."
+
+#: addons-dev/aldryn-forms/aldryn_forms/models.py:563
+msgid "form language"
+msgstr "Formularsprache"
+
+#: addons-dev/aldryn-forms/aldryn_forms/models.py:569
+msgid "form url"
+msgstr "URL des Formulars"
+
+#: addons-dev/aldryn-forms/aldryn_forms/models.py:577
+msgid "Form submission"
+msgstr "Formulareintrag"
+
+#: addons-dev/aldryn-forms/aldryn_forms/models.py:578
+msgid "Form submissions"
+msgstr "Formulareinträge"
+
+#: addons-dev/aldryn-forms/aldryn_forms/sizefield/models.py:11
+msgid "Incorrect file size format."
+msgstr ""
+
+#: addons-dev/aldryn-forms/aldryn_forms/sizefield/utils.py:81
+#, python-format
+msgid "Size '%s' has incorrect format"
+msgstr ""
+
+#: addons-dev/aldryn-forms/aldryn_forms/templates/admin/aldryn_forms/display/submission_data.html:3
+msgid "Field"
+msgstr "Feld"
+
+#: addons-dev/aldryn-forms/aldryn_forms/templates/admin/aldryn_forms/export.html:5
 msgid "Export form submissions"
 msgstr "Formularübermittlungen exportieren"
 
-#: boilerplates/bootstrap3/templates/admin/aldryn_forms/export.html:8
-#: boilerplates/legacy/templates/admin/aldryn_forms/export.html:7
-#: boilerplates/legacy/templates/admin/aldryn_forms/export_wizard.html:7
-#: templates/admin/aldryn_forms/export.html:8
+#: addons-dev/aldryn-forms/aldryn_forms/templates/admin/aldryn_forms/export.html:8
 msgid "Please correct the error below."
 msgid_plural "Please correct the errors below."
 msgstr[0] "Bitte korrigieren Sie den unten aufgeführten Fehler."
 msgstr[1] "Bitte korrigieren Sie die unten aufgeführten Fehler."
 
-#: boilerplates/bootstrap3/templates/admin/aldryn_forms/export.html:30
-#: boilerplates/bootstrap3/templates/admin/aldryn_forms/export_wizard.html:11
-#: boilerplates/legacy/templates/admin/aldryn_forms/export.html:27
-#: boilerplates/legacy/templates/admin/aldryn_forms/export_wizard.html:30
-#: templates/admin/aldryn_forms/export.html:30
-#: templates/admin/aldryn_forms/export_wizard.html:11
+#: addons-dev/aldryn-forms/aldryn_forms/templates/admin/aldryn_forms/export.html:30
+#: addons-dev/aldryn-forms/aldryn_forms/templates/admin/aldryn_forms/export_wizard.html:11
 msgid "Export"
 msgstr "Exportieren"
 
-#: boilerplates/bootstrap3/templates/admin/aldryn_forms/export_wizard.html:13
-#: boilerplates/legacy/templates/admin/aldryn_forms/export_wizard.html:32
-#: templates/admin/aldryn_forms/export_wizard.html:13
+#: addons-dev/aldryn-forms/aldryn_forms/templates/admin/aldryn_forms/export_wizard.html:13
 msgid "Continue"
 msgstr "Fortfahren"
 
-#: boilerplates/bootstrap3/templates/admin/aldryn_forms/formsubmission/change_list.html:9
-#: boilerplates/legacy/templates/admin/aldryn_forms/formsubmission/change_list.html:9
-#: templates/admin/aldryn_forms/formsubmission/change_list.html:9
+#: addons-dev/aldryn-forms/aldryn_forms/templates/admin/aldryn_forms/formsubmission/change_list.html:9
 msgid "Export Form Entries"
 msgstr "Formulareinträge exportieren"
 
-#: boilerplates/bootstrap3/templates/aldryn_forms/email_notifications/emails/notification.body.html:9
-#: boilerplates/bootstrap3/templates/aldryn_forms/email_notifications/emails/notification.body.txt:8
-#: boilerplates/bootstrap3/templates/aldryn_forms/emails/notification.body.html:3
-#: boilerplates/bootstrap3/templates/aldryn_forms/emails/notification.body.txt:2
-#: boilerplates/bootstrap3/templates/aldryn_forms/emails/user/notification.body.txt:5
-#: boilerplates/legacy/templates/aldryn_forms/email_notifications/emails/notification.body.html:9
-#: boilerplates/legacy/templates/aldryn_forms/email_notifications/emails/notification.body.txt:8
-#: boilerplates/legacy/templates/aldryn_forms/emails/notification.body.html:3
-#: boilerplates/legacy/templates/aldryn_forms/emails/notification.body.txt:2
-#: boilerplates/legacy/templates/aldryn_forms/emails/user/notification.body.txt:5
-#: templates/aldryn_forms/email_notifications/emails/notification.body.html:9
-#: templates/aldryn_forms/email_notifications/emails/notification.body.txt:8
-#: templates/aldryn_forms/emails/notification.body.html:3
-#: templates/aldryn_forms/emails/notification.body.txt:2
-#: templates/aldryn_forms/emails/user/notification.body.txt:5
+#: addons-dev/aldryn-forms/aldryn_forms/templates/aldryn_forms/email_notifications/emails/notification.body.html:9
+#: addons-dev/aldryn-forms/aldryn_forms/templates/aldryn_forms/email_notifications/emails/notification.body.txt:8
+#: addons-dev/aldryn-forms/aldryn_forms/templates/aldryn_forms/emails/notification.body.html:3
+#: addons-dev/aldryn-forms/aldryn_forms/templates/aldryn_forms/emails/notification.body.txt:2
+#: addons-dev/aldryn-forms/aldryn_forms/templates/aldryn_forms/emails/user/notification.body.txt:7
 #, python-format
 msgid "Form name: %(form_name)s"
 msgstr "Formular Name: %(form_name)s"
 
-#: boilerplates/bootstrap3/templates/aldryn_forms/email_notifications/emails/notification.subject.txt:1
-#: boilerplates/bootstrap3/templates/aldryn_forms/emails/notification.subject.txt:1
-#: boilerplates/bootstrap3/templates/aldryn_forms/emails/user/notification.subject.txt:1
-#: boilerplates/legacy/templates/aldryn_forms/email_notifications/emails/notification.subject.txt:1
-#: boilerplates/legacy/templates/aldryn_forms/emails/notification.subject.txt:1
-#: boilerplates/legacy/templates/aldryn_forms/emails/user/notification.subject.txt:1
-#: templates/aldryn_forms/email_notifications/emails/notification.subject.txt:1
-#: templates/aldryn_forms/emails/notification.subject.txt:1
-#: templates/aldryn_forms/emails/user/notification.subject.txt:1
+#: addons-dev/aldryn-forms/aldryn_forms/templates/aldryn_forms/email_notifications/emails/notification.subject.txt:1
+#: addons-dev/aldryn-forms/aldryn_forms/templates/aldryn_forms/emails/notification.subject.txt:1
+#: addons-dev/aldryn-forms/aldryn_forms/templates/aldryn_forms/emails/user/notification.subject.txt:1
 #, python-format
 msgid "[Form submission] %(form_name)s"
 msgstr "[Form Eintrag] %(form_name)s"
 
-#: boilerplates/bootstrap3/templates/aldryn_forms/field.html:7
-#: boilerplates/bootstrap3/templates/aldryn_forms/fields/emailfield.html:9
-#: boilerplates/bootstrap3/templates/aldryn_forms/fields/filefield.html:9
-#: boilerplates/bootstrap3/templates/aldryn_forms/fields/imagefield.html:9
-#: boilerplates/bootstrap3/templates/aldryn_forms/fields/multiplecheckboxselectfield.html:9
-#: boilerplates/bootstrap3/templates/aldryn_forms/fields/multipleselectfield.html:9
-#: boilerplates/bootstrap3/templates/aldryn_forms/fields/radioselectfield.html:8
-#: boilerplates/bootstrap3/templates/aldryn_forms/fields/selectfield.html:9
-#: boilerplates/bootstrap3/templates/aldryn_forms/fields/textareafield.html:9
-#: boilerplates/bootstrap3/templates/aldryn_forms/fields/textfield.html:9
-#: templates/aldryn_forms/field.html:14
-#: templates/aldryn_forms/fields/multiplecheckboxselectfield.html:9
+#: addons-dev/aldryn-forms/aldryn_forms/templates/aldryn_forms/field.html:14
+#: addons-dev/aldryn-forms/aldryn_forms/templates/aldryn_forms/fields/multiplecheckboxselectfield.html:9
 msgid "Required field"
 msgstr "Feld erforderlich"
 
-#: boilerplates/bootstrap3/templates/aldryn_forms/form.html:19
+#: addons-dev/aldryn-forms/aldryn_forms/templates/aldryn_forms/form.html:17
+#, fuzzy, python-format
+#| msgid "Thank you for submitting your information, you will be <a href=\"%(form_success_url)s\">redirected shortly</a>."
+msgid "You will be <a href=\"%(form_success_url)s\">redirected shortly</a>."
+msgstr "Vielen Dank, dass Sie sich Zeit genommen haben, dieses Formular auszufüllen. Sie werden umgehend <a href=\"%(form_success_url)s\">weitergeleitet</a>."
+
+#: addons-dev/aldryn-forms/aldryn_forms/templates/aldryn_forms/form.html:21
+msgid "Thank you for submitting your information."
+msgstr ""
+
+#: addons-dev/aldryn-forms/aldryn_forms/validators.py:33
 #, python-format
-msgid ""
-"Thank you for submitting your information, you will be <a "
-"href=\"%(form_success_url)s\">redirected shortly</a>."
-msgstr ""
-"Vielen Dank, dass Sie sich Zeit genommen haben, dieses Formular auszufüllen."
-" Sie werden umgehend <a href=\"%(form_success_url)s\">weitergeleitet</a>."
+msgid "You have to choose at least %(limit_value)d options (chosen %(show_value)d)."
+msgstr "Sie müssen mindestens %(limit_value)d Optionen (gewählt %(show_value)d) angeben."
 
-#: cms_apps.py:9 cms_plugins.py:51
-msgid "Forms"
-msgstr "Formulare"
-
-#: cms_plugins.py:60
-msgid "Form"
-msgstr "Formular"
-
-#: cms_plugins.py:74 cms_plugins.py:242 cms_plugins.py:383
-#: contrib/email_notifications/cms_plugins.py:137
-msgid "Advanced Settings"
-msgstr "Erweiterte Einstellungen"
-
-#: cms_plugins.py:204
-msgid "The form has been sent."
-msgstr "Das Formular wurde versendet."
-
-#: cms_plugins.py:233
-msgid "Fieldset"
-msgstr "Feldergruppe"
-
-#: cms_plugins.py:252
-msgid "Form fields"
-msgstr "Formularfelder"
-
-#: cms_plugins.py:420
-msgid "Text Field"
-msgstr "Textfeld"
-
-#: cms_plugins.py:444
-msgid "Text Area Field"
-msgstr "Mehrzeiliges Textfeld"
-
-#: cms_plugins.py:485
-msgid "Email Field"
-msgstr "E-Mail-Feld"
-
-#: cms_plugins.py:520
-msgid "File upload field"
-msgstr "Datei-Hochladen-Feld"
-
-#: cms_plugins.py:600
-msgid "Image upload field"
-msgstr "Bild-Hochladen-Feld"
-
-#: cms_plugins.py:638
-msgid "Yes/No Field"
-msgstr "Checkbox-Feld"
-
-#: cms_plugins.py:659
-msgid "Yes"
-msgstr "Ja"
-
-#: cms_plugins.py:659
-msgid "No"
-msgstr "Nein"
-
-#: cms_plugins.py:667
-msgid "Select Field"
-msgstr "Auswahlfeld"
-
-#: cms_plugins.py:701
-msgid "Multiple Select Field"
-msgstr "Mehrfach-Auswahlfeld"
-
-#: cms_plugins.py:737
-msgid "Multiple Checkbox Field"
-msgstr "Mehrfaches Checkbox-Feld"
-
-#: cms_plugins.py:741
-msgid "Radio Select Field"
-msgstr "Radio-Button-Auswahlfeld"
-
-#: cms_plugins.py:782
-msgid "Captcha Field"
-msgstr "Captcha-Feld"
-
-#: cms_plugins.py:803
-msgid "Submit Button"
-msgstr "Senden-Button"
-
-#: contrib/email_notifications/cms_plugins.py:26
-msgid "new email notification"
-msgstr "Neue E-Mail-Benachrichtigung"
-
-#: contrib/email_notifications/cms_plugins.py:27
-msgid "new email notifications"
-msgstr "Neue E-Mail-Benachrichtigungen"
-
-#: contrib/email_notifications/cms_plugins.py:51 models.py:165
-msgid "Recipients"
-msgstr "Empfänger"
-
-#: contrib/email_notifications/cms_plugins.py:63
-#, python-brace-format
-msgid ""
-"variables can be used with by wrapping with \"${variable}\" like ${variable}"
-msgstr ""
-"Variabeln können benutzt werden, indem Sie Ausführungszeichen hinzufügen. "
-"Aus ${variable} wird \"${variable}\". "
-
-#: contrib/email_notifications/cms_plugins.py:92
-msgid "Email"
-msgstr "E-Mail"
-
-#: contrib/email_notifications/cms_plugins.py:117
-msgid "available text variables"
-msgstr "Verfügbare Textvariabeln"
-
-#: contrib/email_notifications/cms_plugins.py:121
-msgid "Form (Advanced)"
-msgstr "Formular (Erweitert)"
-
-#: contrib/email_notifications/models.py:28
-msgid "default"
-msgstr "Standard"
-
-#: contrib/email_notifications/models.py:62
-msgid "Email notification"
-msgstr "E-Mail-Benachrichtigung"
-
-#: contrib/email_notifications/models.py:63
-msgid "Email notifications"
-msgstr "E-Mail-Benachrichtigungen"
-
-#: contrib/email_notifications/models.py:66
-msgid "theme"
-msgstr "Vorlage"
-
-#: contrib/email_notifications/models.py:68
-msgid "Provides the base theme for the email."
-msgstr "Stellt das Standard-Template für die E-Mail zur Verfügung."
-
-#: contrib/email_notifications/models.py:72
-msgid "to name"
-msgstr "Name des Empfängers"
-
-#: contrib/email_notifications/models.py:77
-msgid "to email"
-msgstr "E-Mail des Empfängers"
-
-#: contrib/email_notifications/models.py:83
-msgid "to user"
-msgstr "an Benutzer"
-
-#: contrib/email_notifications/models.py:89
-msgid "from name"
-msgstr "Name des Absenders"
-
-#: contrib/email_notifications/models.py:94
-msgid "from email"
-msgstr "E-Mail des Absenders"
-
-#: contrib/email_notifications/models.py:99
-msgid "subject"
-msgstr "Betreff"
-
-#: contrib/email_notifications/models.py:104
-msgid "email body (txt)"
-msgstr "E-Mail-Inhalt (Text)"
-
-#: contrib/email_notifications/models.py:106
-msgid "used when rendering the email in text only mode."
-msgstr "wird benutzt, wenn die E-Mail als Text dargestellt wird."
-
-#: contrib/email_notifications/models.py:109
-msgid "email body (html)"
-msgstr "E-Mail-Inhalt (HTML)"
-
-#: contrib/email_notifications/models.py:111
-msgid "used when rendering the email in html."
-msgstr "wird benutzt, wenn die E-Mail in HTML dargestellt wird."
-
-#: contrib/email_notifications/models.py:127
-msgid "Please provide a recipient."
-msgstr "Bitte einen Empfänger angeben."
-
-#: contrib/email_notifications/notification.py:54
-msgid "Fields"
-msgstr "Felder"
-
-#: forms.py:28
+#: addons-dev/aldryn-forms/aldryn_forms/validators.py:39
 #, python-format
-msgid ""
-"File size must be under %(max_size)s. Current file size is %(actual_size)s."
-msgstr ""
-"Dateigröße muss unter %(max_size)s sein. Aktuelle Größe ist %(actual_size)s."
+msgid "You can't choose more than %(limit_value)d options (chosen %(show_value)d)."
+msgstr "Sie können nicht mehr als %(limit_value)d Optionen (gewählt %(show_value)d) angeben."
 
-#: forms.py:63
 #, python-format
-msgid ""
-"Image width must be under %(max_size)s pixels. Current width is "
-"%(actual_size)s pixels."
-msgstr ""
-"Bildbreite muss unter %(max_size)s Pixel groß sein. Aktuelle Breite ist "
-"%(actual_size)s Pixel."
-
-#: forms.py:73
-#, python-format
-msgid ""
-"Image height must be under %(max_size)s pixels. Current height is "
-"%(actual_size)s pixels."
-msgstr ""
-"Bildhöhe muss unter %(max_size)s Pixel groß sein. Aktuelle Höhe ist "
-"%(actual_size)s Pixel."
-
-#: forms.py:168
-msgid "Please provide CMS page for redirect."
-msgstr "Bitte CMS-Seite angeben für die Weiterleitung."
-
-#: forms.py:172
-msgid "Please provide an absolute URL for redirect."
-msgstr "Bitte eine absolute URL angeben für die Weiterleitung."
-
-#: forms.py:216
-msgid "Min value can not be greater than max value."
-msgstr "Der Mindestwert kann nicht größer sein als der Maximalwert."
-
-#: forms.py:225
-msgid "Min length"
-msgstr "Mindestlänge"
-
-#: forms.py:226
-msgid "Required number of characters to type."
-msgstr "Benötigte Anzahl von getippten Zeichen."
-
-#: forms.py:228
-msgid "Max length"
-msgstr "Maximale Länge"
-
-#: forms.py:229
-msgid "Maximum number of characters to type."
-msgstr "Maximale Anzahl von getippten Zeichen."
-
-#: forms.py:264
-msgid ""
-"Explanatory text displayed next to input field. Just like this one. You can "
-"use MAXSIZE as a placeholder for the maximum size configured below."
-msgstr ""
-"Erläuterungstext, der neben dem Eingabefeld angezeigt wird - so wie dieser. "
-"MAXSIZE kann als Platzhalter benutzt werden, um die Maximallänge zu "
-"konfigurieren."
-
-#: forms.py:277
-msgid ""
-"Explanatory text displayed next to input field. Just like this one. You can "
-"use MAXSIZE, MAXWIDTH, MAXHEIGHT as a placeholders for the maximum file size"
-" and dimensions configured below."
-msgstr ""
-"Erläuterungstext, der neben dem Eingabefeld angezeigt wird - so wie dieser. "
-"MAXSIZE, MAXWIDTH und MAXHEIGHT können als Platzhalter definiert werden, um "
-"die maximale Dateigröße oder Dimensionen zu konfigurieren."
-
-#: forms.py:301
-msgid "Min choices"
-msgstr "Mindestauswahl"
-
-#: forms.py:302
-msgid "Required amount of elements to chose."
-msgstr "Benötigte Anzahl von auszuwählenden Elementen."
-
-#: forms.py:304
-msgid "Max choices"
-msgstr "Maximale Auswahlmöglichkeiten"
-
-#: forms.py:305
-msgid "Maximum amount of elements to chose."
-msgstr "Maximale Anzahl auszuwählender Elemente."
-
-#: models.py:111 models.py:452
-msgid "Default"
-msgstr "Standard"
-
-#: models.py:119 models.py:151
-msgid "CMS Page"
-msgstr "CMS-Seite"
-
-#: models.py:120 models.py:152
-msgid "Absolute URL"
-msgstr "Absolute URL"
-
-#: models.py:127
-msgid "Name"
-msgstr "Name"
-
-#: models.py:129
-msgid "Used to filter out form submissions."
-msgstr "Benutzt um Formulareinträge zu filtern."
-
-#: models.py:132 models.py:309
-msgid "Error message"
-msgstr "Fehlermeldung"
-
-#: models.py:135
-msgid "An error message that will be displayed if the form doesn't validate."
-msgstr ""
-"Eine Fehlermeldung, die angezeigt wird, wenn das Formular ungültig ist."
-
-#: models.py:139
-msgid "Success message"
-msgstr "Erfolgsmeldung"
-
-#: models.py:142
-msgid "An success message that will be displayed."
-msgstr "Erfolgsmeldung, die angezeigt wird."
-
-#: models.py:145
-msgid "Redirect to"
-msgstr "Weiterleiten nach"
-
-#: models.py:148
-msgid "Where to redirect the user when the form has been successfully sent?"
-msgstr ""
-"Wohin soll der Benutzer weitergeleitet werden, wenn das Formular erfolgreich"
-" versandt wurde?"
-
-#: models.py:154 models.py:296 models.py:345 models.py:463
-msgid "custom css classes"
-msgstr "Benutzerdefinierte CSS-Klassen"
-
-#: models.py:156
-msgid "form template"
-msgstr "Formularvorlage"
-
-#: models.py:168
-msgid "People who will get the form content via e-mail."
-msgstr "Personen, welche den Formularinhalt per E-Mail erhalten."
-
-#: models.py:294
-msgid "Legend"
-msgstr "Legende"
-
-#: models.py:307
-msgid "Field is required"
-msgstr "Feld ist zwingend erforderlich"
-
-#: models.py:312
-msgid ""
-"Error message displayed if the required field is left empty. Default: \"This"
-" field is required\"."
-msgstr ""
-"Fehlermeldung, die angezeigt wird, wenn das erforderliche Feld leer gelassen"
-" wird. Standard: \"Dieses Feld muss ausgefüllt werden\"."
-
-#: models.py:316
-msgid "Placeholder text"
-msgstr "Platzhaltertext"
-
-#: models.py:319
-msgid ""
-"Default text in a form. Disappears when user starts typing. Example: "
-"\"email@example.com\""
-msgstr ""
-"Standardtext im Formular. Verschwindet, sobald der Benutzer zu tippen "
-"anfängt. Beispiel: \"email@example.com\""
-
-#: models.py:323
-msgid "Help text"
-msgstr "Hilfetext"
-
-#: models.py:326
-msgid "Explanatory text displayed next to input field. Just like this one."
-msgstr ""
-"Erläuterungstext, der neben dem Eingabefeld angezeigt wird. Genau wie dieser"
-" Text."
-
-#: models.py:333
-msgid "Min value"
-msgstr "Mindestwert"
-
-#: models.py:339
-msgid "Max value"
-msgstr "Maximalwert"
-
-#: models.py:380
-msgid "columns"
-msgstr "Spalten"
-
-#: models.py:382
-msgid "rows"
-msgstr "Zeilen"
-
-#: models.py:387
-msgid "send notification when form is submitted"
-msgstr "Benachrichtigung senden, wenn das Formular abgeschickt wird"
-
-#: models.py:389
-msgid ""
-"When checked, the value of this field will be used to send an email "
-"notification."
-msgstr ""
-"Wenn aktiviert, wird der Wert dieses Feldes verwendet, um eine E-Mail-"
-"Benachrichtigung zu senden."
-
-#: models.py:393
-msgid "email subject"
-msgstr "E-Mail-Betreff"
-
-#: models.py:397
-msgid "Used as the email subject when email_send_notification is checked."
-msgstr ""
-"Wird als E-Mail-Betreff verwendet, wenn \"email_send_notification\" "
-"aktiviert ist."
-
-#: models.py:401
-msgid "Additional email body"
-msgstr "Zusätzlicher E-Mail-Inhalt"
-
-#: models.py:404
-msgid "Additional body text used when email notifications are active."
-msgstr ""
-"Zusätzlicher Inhaltstext wird dargestellt, wenn E-Mail-Benachrichtigungen "
-"aktiv sind."
-
-#: models.py:411
-msgid "Upload files to"
-msgstr "Dateien hochladen nach"
-
-#: models.py:412
-msgid ""
-"Select a folder to which all files submitted through this field will be "
-"uploaded to."
-msgstr ""
-"Verzeichnis auswählen, in das alle über dieses Feld übermittelten Dateien "
-"hochgeladen werden."
-
-#: models.py:416
-msgid "Maximum file size"
-msgstr "Maximale Dateigröße"
-
-#: models.py:418
-msgid ""
-"The maximum file size of the upload, in bytes. You can use common size "
-"suffixes (kB, MB, GB, ...)."
-msgstr ""
-"Die maximale Dateigröße des Upload in bytes. Es können gebräuchliche Suffixe"
-" für die Größe  verwendet werden (kB, MB, GB, ...)."
-
-#: models.py:432
-msgid "Maximum image width"
-msgstr "Maximale Bildbreite"
-
-#: models.py:434
-msgid "The maximum width of the uploaded image, in pixels."
-msgstr "Die maximale Breite des hochgeladenen Bildes in Pixel."
-
-#: models.py:437
-msgid "Maximum image height"
-msgstr "Maximale Bildhöhe"
-
-#: models.py:439
-msgid "The maximum height of the uploaded image, in pixels."
-msgstr "Die maximale Höhe des hochgeladenen Bildes in Pixel."
-
-#: models.py:447
-msgid "Option"
-msgstr "Option"
-
-#: models.py:448
-msgid "Options"
-msgstr "Optionen"
-
-#: models.py:474
-msgid "form name"
-msgstr "Formularname"
-
-#: models.py:480
-msgid "users notified"
-msgstr "Benachrichtigte Benutzer"
-
-#: models.py:482
-msgid "People who got a notification when form was submitted."
-msgstr ""
-"Personen, die eine Benachrichtigung erhalten, sobald ein Formular gesendet "
-"wurde."
-
-#: models.py:486
-msgid "form language"
-msgstr "Formularsprache"
-
-#: models.py:492
-msgid "form url"
-msgstr "URL des Formulars"
-
-#: models.py:500
-msgid "Form submission"
-msgstr "Formulareintrag"
-
-#: models.py:501
-msgid "Form submissions"
-msgstr "Formulareinträge"
-
-#: templates/aldryn_forms/form.html:15
-#, python-format
-msgid ""
-"\n"
-"                Thank you for submitting your information, you will be\n"
-"                <a href=\"%(form_success_url)s\">redirected shortly</a>.\n"
-"            "
-msgstr ""
-"\n"
-"Vielen Dank, dass Sie sich die Zeit genommen haben, dieses Formular auszufüllen. Sie werden umgehend <a href=\"%(form_success_url)s\">weitergeleitet</a>."
-
-#: validators.py:35
-#, python-format
-msgid ""
-"You have to choose at least %(limit_value)d options (chosen %(show_value)d)."
-msgstr ""
-"Sie müssen mindestens %(limit_value)d Optionen (gewählt %(show_value)d) "
-"angeben."
-
-#: validators.py:41
-#, python-format
-msgid ""
-"You can't choose more than %(limit_value)d options (chosen %(show_value)d)."
-msgstr ""
-"Sie können nicht mehr als %(limit_value)d Optionen (gewählt %(show_value)d) "
-"angeben."
+#~ msgid ""
+#~ "\n"
+#~ "                Thank you for submitting your information, you will be\n"
+#~ "                <a href=\"%(form_success_url)s\">redirected shortly</a>.\n"
+#~ "            "
+#~ msgstr ""
+#~ "\n"
+#~ "Vielen Dank, dass Sie sich die Zeit genommen haben, dieses Formular auszufüllen. Sie werden umgehend <a href=\"%(form_success_url)s\">weitergeleitet</a>."
 
 #~ msgid ""
 #~ "\n"
