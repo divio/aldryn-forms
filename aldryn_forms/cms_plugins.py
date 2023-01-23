@@ -1,37 +1,46 @@
-# -*- coding: utf-8 -*-
+from typing import Dict
+
+from PIL import Image
+from aldryn_forms.models import FormPlugin
+from cms.plugin_base import CMSPluginBase
+from cms.plugin_pool import plugin_pool
 from django import forms
-from django.contrib import messages
 from django.contrib.admin import TabularInline
 from django.core.validators import MinLengthValidator
 from django.db.models import query
 from django.template.loader import select_template
-from django.utils.safestring import mark_safe
-from django.utils.six import text_type
 from django.utils.translation import ugettext
 from django.utils.translation import ugettext_lazy as _
-
-from cms.plugin_base import CMSPluginBase
-from cms.plugin_pool import plugin_pool
-
 from emailit.api import send_mail
-from filer.models import filemodels, imagemodels
-from PIL import Image
+from filer.models import filemodels
+from filer.models import imagemodels
 
 from . import models
-from .forms import (
-    BooleanFieldForm, CaptchaFieldForm, EmailFieldForm, FileFieldForm,
-    FormPluginForm, FormSubmissionBaseForm, HiddenFieldForm, ImageFieldForm,
-    MultipleSelectFieldForm, RadioFieldForm, RestrictedFileField,
-    RestrictedImageField, SelectFieldForm, TextAreaFieldForm, TextFieldForm,
-)
+from .forms import BooleanFieldForm
+from .forms import CaptchaFieldForm
+from .forms import EmailFieldForm
+from .forms import FileFieldForm
+from .forms import FormPluginForm
+from .forms import FormSubmissionBaseForm
+from .forms import HiddenFieldForm
+from .forms import ImageFieldForm
+from .forms import MultipleSelectFieldForm
+from .forms import RadioFieldForm
+from .forms import RestrictedFileField
+from .forms import RestrictedImageField
+from .forms import SelectFieldForm
+from .forms import TextAreaFieldForm
+from .forms import TextFieldForm
 from .helpers import get_user_name
+from .models import FileUploadFieldPlugin
 from .models import SerializedFormField
-from .signals import form_post_save, form_pre_save
+from .signals import form_post_save
+from .signals import form_pre_save
 from .sizefield.utils import filesizeformat
 from .utils import get_action_backends
-from .validators import (
-    MaxChoicesValidator, MinChoicesValidator, is_valid_recipient,
-)
+from .validators import MaxChoicesValidator
+from .validators import MinChoicesValidator
+from .validators import is_valid_recipient
 
 
 class FormElement(CMSPluginBase):
@@ -154,7 +163,7 @@ class FormPlugin(FieldContainer):
         )
         return formClass
 
-    def get_form_fields(self, instance):
+    def get_form_fields(self, instance: models.FormPlugin) -> Dict:
         form_fields = {}
         fields = instance.get_form_fields()
 
@@ -179,14 +188,6 @@ class FormPlugin(FieldContainer):
 
     def get_success_url(self, instance):
         return instance.success_url
-
-    def send_success_message(self, instance, request):
-        """
-        Sends a success message to the request user
-        using django's contrib.messages app.
-        """
-        message = instance.success_message or ugettext('The form has been sent.')
-        messages.success(request, mark_safe(message))
 
     def send_notifications(self, instance, form):
         users = instance.recipients.exclude(email='')
@@ -285,17 +286,17 @@ class Field(FormElement):
 
     def serialize_value(self, instance, value, is_confirmation=False):
         if isinstance(value, query.QuerySet):
-            value = ', '.join(map(text_type, value))
+            value = ', '.join(map(str, value))
         elif value is None:
             value = '-'
-        return text_type(value)
+        return str(value)
 
     def serialize_field(self, form, field, is_confirmation=False):
         """Returns a (key, label, value) named tuple for the given field."""
         value = self.serialize_value(
             instance=field.plugin_instance,
             value=form.cleaned_data[field.name],
-            is_confirmation=is_confirmation
+            is_confirmation=is_confirmation,
         )
         serialized_field = SerializedFormField(
             name=field.name,
@@ -605,8 +606,7 @@ class FileField(Field):
 
     def serialize_value(self, instance, value, is_confirmation=False):
         if value:
-            return (value.original_filename if is_confirmation
-                    else value.absolute_uri)
+            return value.absolute_uri
         else:
             return '-'
 
@@ -876,7 +876,6 @@ plugin_pool.register_plugin(PhoneField)
 plugin_pool.register_plugin(NumberField)
 plugin_pool.register_plugin(ImageField)
 plugin_pool.register_plugin(Fieldset)
-plugin_pool.register_plugin(FormPlugin)
 plugin_pool.register_plugin(MultipleSelectField)
 plugin_pool.register_plugin(MultipleCheckboxSelectField)
 plugin_pool.register_plugin(RadioSelectField)

@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 from setuptools import find_packages, setup
 
 from aldryn_forms import __version__
@@ -16,7 +15,6 @@ REQUIREMENTS = [
     'pillow',
     'django-filer',
     'django-sizefield',
-    'openpyxl<=2.4.9',  # 2.5.0b1 is raising "ImportError: cannot import name '__version__'"
     'six>=1.0',
 ]
 

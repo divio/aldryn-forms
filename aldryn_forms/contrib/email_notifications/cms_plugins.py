@@ -1,9 +1,10 @@
-# -*- coding: utf-8 -*-
 import logging
 from email.utils import parseaddr
+from typing import List
 
 from django.contrib import admin
 from django.core.mail import get_connection
+from django.template.defaultfilters import safe
 
 from django.utils.html import format_html
 from django.utils.translation import ugettext_lazy as _
@@ -50,21 +51,24 @@ class ExistingEmailNotificationInline(admin.StackedInline):
             )
         }),
         (_('Recipients'), {
-            'classes': ('collapse',),
             'fields': (
                 'text_variables',
                 'to_user',
                 ('to_name', 'to_email'),
                 ('from_name', 'from_email'),
+                'reply_to_email',
             )
         }),
     )
 
     readonly_fields = ['text_variables']
-    text_variables_help_text = _('variables can be used with by '
-                                 'wrapping with "${variable}" like ${variable}')
 
-    def has_add_permission(self, request):
+    text_variables_help_text = _(
+        'the variables can be used within the email body, email sender,'
+        'and other notification fields'
+    )
+
+    def has_add_permission(self, request, obj=None):
         return False
 
     def get_fieldsets(self, request, obj=None):
@@ -95,37 +99,44 @@ class ExistingEmailNotificationInline(admin.StackedInline):
             'fields': fields
         })]
 
-    def text_variables(self, obj):
+    def text_variables(self, obj: EmailNotification) -> str:
         if obj.pk is None:
             return ''
 
         # list of tuples - [('category', [('value', 'label')])]
         choices_by_category = obj.form.get_notification_text_context_keys_as_choices()
 
-        li_items = []
-
+        var_items: List[str] = []
         for category, choices in choices_by_category:
-            # <li>field_1</li><li>field_2</li>
-            fields_li = ''.join(('<li>{0} | {1}</li>'.format(*var) for var in choices))
+            for choice_tuple in choices:
+                field_value = choice_tuple[0]
+                var_items += '<li>${' + field_value + '}</li>'
 
-            if fields_li:
-                li_item = '<li>{0}</li><ul>{1}</ul>'.format(category, fields_li)
-                li_items.append(li_item)
-        unordered_list = '<ul>{0}</ul>'.format(''.join(li_items))
-        help_text = '<p class="help">{0}</p>'.format(self.text_variables_help_text)
-        return format_html(unordered_list + '\n' + help_text)
+        vars_html_list = f'<p>{"".join(var_items)}</p>'
+        help_text = (
+            f'<p class="help">'
+            f'{_("the variables can be used within the email body, email sender, and other notification fields")}'
+            f'</p>'
+        )
+        return safe(vars_html_list + u'\n' + help_text)
     text_variables.allow_tags = True
     text_variables.short_description = _('available text variables')
 
+    class Media:
+        css = {
+            'all': ['email_notifications/admin/email-notifications.css']
+        }
+
 
 class EmailNotificationForm(FormPlugin):
-    name = _('Form (Advanced)')
+    name = _('Form')
     model = EmailNotificationFormPlugin
     inlines = [
         ExistingEmailNotificationInline,
         NewEmailNotificationInline
     ]
     notification_conf_class = DefaultNotificationConf
+    child_ckeditor_body_css_class = 'aldryn-forms-form-plugin'
 
     fieldsets = (
         (None, {
@@ -138,6 +149,7 @@ class EmailNotificationForm(FormPlugin):
         (_('Advanced Settings'), {
             'classes': ('collapse',),
             'fields': (
+                'is_enable_autofill_from_url_params',
                 'form_template',
                 'error_message',
                 'success_message',

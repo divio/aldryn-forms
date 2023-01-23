@@ -1,6 +1,8 @@
 {% load i18n cms_tags sekizai_tags %}
 
 <form method="post"
+    id="cms-form"
+    class="cms-form"
     {% if form.is_multipart %}enctype="multipart/form-data"{% endif %}
     {% if instance.form_attributes %} {{ instance.form_attributes_str }}{% endif %}
     {% if instance.custom_classes %} class="{{ instance.custom_classes }}"{% endif %}>
@@ -12,7 +14,7 @@
     {% endif %}
 
     {% if post_success %}
-        <p>
+        <p class="cms-form-success-message">
             {% if form_success_url %}
                 {% blocktrans %}You will be <a href="{{ form_success_url }}">redirected shortly</a>.{% endblocktrans %}
             {% elif instance.success_message %}
@@ -39,6 +41,32 @@
             setTimeout(function () {
                 window.location.href = '{{ form_success_url }}';
             }, 5000);
+        </script>
+    {% endaddtoblock %}
+{% endif %}
+
+{% if post_success %}
+    {% addtoblock "js" %}
+        <script>
+            document.addEventListener('DOMContentLoaded', function() {
+                document.querySelector('#cms-form').scrollIntoView();
+            }, {once: true});
+        </script>
+    {% endaddtoblock %}
+{% endif %}
+
+{% if instance.is_enable_autofill_from_url_params %}
+    {% addtoblock "js" %}
+        <script>
+            document.addEventListener('DOMContentLoaded', function() {
+                const searchParams = (new URLSearchParams(window.location.search));
+                const formInputs = document.querySelectorAll('.cms-form input');
+                for (const input of formInputs) {
+                    if (searchParams.has(input.name)) {
+                        input.value = searchParams.get(input.name);
+                    }
+                }
+            });
         </script>
     {% endaddtoblock %}
 {% endif %}

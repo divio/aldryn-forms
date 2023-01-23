@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 import logging
 
 from django.utils.translation import ugettext_lazy as _
@@ -16,7 +15,6 @@ class DefaultAction(BaseAction):
         recipients = cmsplugin.send_notifications(instance, form)
         form.instance.set_recipients(recipients)
         form.save()
-        cmsplugin.send_success_message(instance, request)
 
 
 class EmailAction(BaseAction):

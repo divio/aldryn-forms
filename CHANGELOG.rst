@@ -3,6 +3,21 @@ Changelog
 =========
 
 
+6.2.0 (2020-11-14)
+==================
+
+* Scroll the page to the submitted form success text (before the page would just reload without a success message)
+* Allow to autofill the form using url parameters, eg as https://example.com/sub-page/?email=hello@example.com&name=Alex
+* Fix the render of the file url in the email notifications, were just the file name was rendered before
+* Fix the email notification variables render (it wasn't working for a year)
+* Fix `reply_to_email` field - it wasn't possible to configure before
+* Fix the form submission success message that was appearing on a non-related to the form page
+* Fix a bug that would break the form when the user added spaces to a field's name
+* Fix the caching bug that was breaking the page when a field was added outside of a form plugin
+* Drop Python 2 support, make compatible with Django 3
+* Drop the form plugin that doesn't allow to send email notifications
+
+
 5.0.4 (2020-05-19)
 ==================
 
