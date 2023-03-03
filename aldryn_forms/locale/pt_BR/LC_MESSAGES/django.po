@@ -1,0 +1,643 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2020-05-27 02:29-0300\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: Aydano Machado <aydano.machado@gmail.com>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: pt\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#: action_backends.py:13 models.py:102 models.py:518
+msgid "Default"
+msgstr "Por padrão"
+
+#: admin/base.py:40
+msgid "data"
+msgstr "dados"
+
+#: admin/base.py:56
+msgid "people notified"
+msgstr "pessoas notificadas"
+
+#: admin/forms.py:34
+msgid "from date"
+msgstr "desde"
+
+#: admin/forms.py:39
+msgid "to date"
+msgstr "até"
+
+#: admin/forms.py:44
+msgid "language"
+msgstr "língua"
+
+#: admin/forms.py:59
+msgid ""
+"Export failed! More than 65,536 entries found, exceeded Excel limitation!"
+msgstr "A exportação falhou. O número de linhas excedeu a limitação do Excel de 65.536 linhas!"
+
+#: admin/forms.py:133
+msgid "Please select at least one field to export."
+msgstr "Favor selecionar ao menos um campo para exportar"
+
+#: admin/views.py:69
+msgid "No records found"
+msgstr "Nenhum registro encontrado"
+
+#: cms_apps.py:9 cms_plugins.py:40
+msgid "Forms"
+msgstr "Formulários"
+
+#: cms_plugins.py:49
+msgid "Form"
+msgstr "Formulário"
+
+#: cms_plugins.py:50
+msgid "Form types"
+msgstr "Tipos de formulários"
+
+#: cms_plugins.py:64 cms_plugins.py:226 cms_plugins.py:401
+#: contrib/email_notifications/cms_plugins.py:136
+msgid "Advanced Settings"
+msgstr "Configuração avançada"
+
+#: cms_plugins.py:188
+msgid "The form has been sent."
+msgstr "O formulário foi enviado"
+
+#: cms_plugins.py:217
+msgid "Fieldset"
+msgstr "Conjunto de campos"
+
+#: cms_plugins.py:254
+msgid "Form fields"
+msgstr "Campos de fomrulário"
+
+#: cms_plugins.py:475
+msgid "Text Field"
+msgstr "Campo de texto"
+
+#: cms_plugins.py:479
+msgid "Text Area Field"
+msgstr "Campo de área de texto"
+
+#: cms_plugins.py:520
+msgid "Hidden Field"
+msgstr "Campo oculto"
+
+#: cms_plugins.py:528
+msgid "Phone Field"
+msgstr "Campo de telefone"
+
+#: cms_plugins.py:533
+msgid "Number Field"
+msgstr "Campo numérico"
+
+#: cms_plugins.py:538
+msgid "Email Field"
+msgstr "Campo de e-mail"
+
+#: cms_plugins.py:574
+msgid "File upload field"
+msgstr "Campo de envio de arquivo"
+
+#: cms_plugins.py:654
+msgid "Image upload field"
+msgstr "Campo de envio de imagem"
+
+#: cms_plugins.py:692
+msgid "Yes/No Field"
+msgstr "Campod de Sim/Não"
+
+#: cms_plugins.py:716
+msgid "Yes"
+msgstr "Sim"
+
+#: cms_plugins.py:716
+msgid "No"
+msgstr "Não"
+
+#: cms_plugins.py:724
+msgid "Select Field"
+msgstr "Campo de seleção"
+
+#: cms_plugins.py:760
+msgid "Multiple Select Field"
+msgstr "Campo de Seleção múltipla"
+
+#: cms_plugins.py:799
+msgid "Multiple Checkbox Field"
+msgstr "Campo Checkbox de seleção múltipla"
+
+#: cms_plugins.py:803
+msgid "Radio Select Field"
+msgstr "Campo Ratio de seleção"
+
+#: cms_plugins.py:846
+msgid "Captcha Field"
+msgstr "Campo de Captcha"
+
+#: cms_plugins.py:867
+msgid "Submit Button"
+msgstr "Botão de submissão"
+
+#: contrib/email_notifications/cms_plugins.py:25
+msgid "new email notification"
+msgstr "notificação de novo e-mail"
+
+#: contrib/email_notifications/cms_plugins.py:26
+msgid "new email notifications"
+msgstr "notificação de novo e-mail"
+
+#: contrib/email_notifications/cms_plugins.py:50 models.py:155
+msgid "Recipients"
+msgstr "Destinatários"
+
+#: contrib/email_notifications/cms_plugins.py:62
+#, python-brace-format
+msgid ""
+"variables can be used with by wrapping with \"${variable}\" like ${variable}"
+msgstr "varáveis podem ser utilizadas entre chaves \"${variable}\" como ${variable}"
+
+#: contrib/email_notifications/cms_plugins.py:91
+msgid "Email"
+msgstr "E-mail"
+
+#: contrib/email_notifications/cms_plugins.py:116
+msgid "available text variables"
+msgstr "variáveis de texto disponíveis"
+
+#: contrib/email_notifications/cms_plugins.py:120
+msgid "Form (Advanced)"
+msgstr "Formulário (Avançado)"
+
+#: contrib/email_notifications/models.py:26
+msgid "default"
+msgstr "por padrão"
+
+#: contrib/email_notifications/models.py:60
+msgid "Email notification"
+msgstr "Notificação de e-email"
+
+#: contrib/email_notifications/models.py:61
+msgid "Email notifications"
+msgstr "Notificações de e-mail"
+
+#: contrib/email_notifications/models.py:64
+msgid "theme"
+msgstr "tema"
+
+#: contrib/email_notifications/models.py:66
+msgid "Provides the base theme for the email."
+msgstr "Utilise o tema de base para o e-mail"
+
+#: contrib/email_notifications/models.py:70
+msgid "to name"
+msgstr "ao nome"
+
+#: contrib/email_notifications/models.py:75
+msgid "to email"
+msgstr "para o e-mail"
+
+#: contrib/email_notifications/models.py:81
+msgid "to user"
+msgstr "para o usuário"
+
+#: contrib/email_notifications/models.py:88
+msgid "from name"
+msgstr "do nome"
+
+#: contrib/email_notifications/models.py:93
+msgid "from email"
+msgstr "do e-mail"
+
+#: contrib/email_notifications/models.py:98
+msgid "subject"
+msgstr "assunto"
+
+#: contrib/email_notifications/models.py:103
+msgid "email body (txt)"
+msgstr "corpo do e-mail (txt)"
+
+#: contrib/email_notifications/models.py:105
+msgid "used when rendering the email in text only mode."
+msgstr "utilizado quando o e-mail é exibido em modo somente texto"
+
+#: contrib/email_notifications/models.py:108
+msgid "email body (html)"
+msgstr "corpo do email (html)"
+
+#: contrib/email_notifications/models.py:110
+msgid "used when rendering the email in html."
+msgstr "utilizado quando o e-mail é exibido em html"
+
+#: contrib/email_notifications/models.py:127
+msgid "Please provide a recipient."
+msgstr "Favor indicar um destinatário"
+
+#: contrib/email_notifications/notification.py:54
+msgid "Fields"
+msgstr "Campos"
+
+#: forms.py:29
+#, python-format
+msgid ""
+"File size must be under %(max_size)s. Current file size is %(actual_size)s."
+msgstr "O tamanho do arquivo deve ser inferior à %(max_size)s. O atual tem %(actual_size)s."
+
+#: forms.py:64
+#, python-format
+msgid ""
+"Image width must be under %(max_size)s pixels. Current width is "
+"%(actual_size)s pixels."
+msgstr "A largura da imagem deve ser inferior à %(max_size)s pixels. A largura da imagem atual é  de %(actual_size)s pixels."
+
+#: forms.py:74
+#, python-format
+msgid ""
+"Image height must be under %(max_size)s pixels. Current height is "
+"%(actual_size)s pixels."
+msgstr "A altura da imagem deve ser inferior à %(max_size)s pixels. A altura da imagem atual é  de %(actual_size)s pixels."
+
+#: forms.py:170
+msgid "Please provide CMS page for redirect."
+msgstr "Favor indicar a página do CMS para o redirecionamento"
+
+#: forms.py:175
+msgid "Please provide an absolute URL for redirect."
+msgstr "Favor indicar a URL absoluta para o redirecionamento"
+
+#: forms.py:222
+msgid "Min value can not be greater than max value."
+msgstr "O valor mínimo não pode ser maior que o valor máximo"
+
+#: forms.py:231
+msgid "Min length"
+msgstr "Tamanho mínimo"
+
+#: forms.py:232
+msgid "Required number of characters to type."
+msgstr "Número definido de caracteres a ser digitado"
+
+#: forms.py:234
+msgid "Max length"
+msgstr "Tamanho máximo"
+
+#: forms.py:235
+msgid "Maximum number of characters to type."
+msgstr ""
+
+#: forms.py:275
+msgid ""
+"Explanatory text displayed next to input field. Just like this one. You can "
+"use MAXSIZE as a placeholder for the maximum size configured below."
+msgstr ""
+
+#: forms.py:288
+msgid ""
+"Explanatory text displayed next to input field. Just like this one. You can "
+"use MAXSIZE, MAXWIDTH, MAXHEIGHT as a placeholders for the maximum file size "
+"and dimensions configured below."
+msgstr "Texdo explanatório mostrado ao lado do campo. Tal como esse aqui. Você "
+"pode utilizar MAXSIZE, MAXWIDTH, MAXHEIGHT para recuperar o tamanho máximo e as "
+"dimensões máximas configuradas a seguir."
+
+#: forms.py:312
+msgid "Min choices"
+msgstr "Escolhas mínimas"
+
+#: forms.py:313
+msgid "Required amount of elements to chose."
+msgstr "Númemo mínimo de elementos a serem escolhidos"
+
+#: forms.py:315
+msgid "Max choices"
+msgstr "Escolhas máximas"
+
+#: forms.py:316
+msgid "Maximum amount of elements to chose."
+msgstr "Número máximo de elementos a serem escolhidos"
+
+#: models.py:110 models.py:174
+msgid "CMS Page"
+msgstr "Página do CMS"
+
+#: models.py:111 models.py:142
+msgid "Absolute URL"
+msgstr "URL absoluta"
+
+#: models.py:118 models.py:360
+msgid "Name"
+msgstr "Nome"
+
+#: models.py:120
+msgid "Used to filter out form submissions."
+msgstr "Utilizado para filtrar as submissões de formulário."
+
+#: models.py:123 models.py:368
+msgid "Error message"
+msgstr "Mensagem de erro"
+
+#: models.py:126
+msgid "An error message that will be displayed if the form doesn't validate."
+msgstr "Uma mensagem de erro será mostrada se a submissão do formulário falhar."
+
+#: models.py:130
+msgid "Success message"
+msgstr "Mensagem de sucesso"
+
+#: models.py:133
+msgid "An success message that will be displayed."
+msgstr "Uma mensagem que será exibida com o sucesso da submissão do formulário."
+
+#: models.py:136
+msgid "Redirect to"
+msgstr "Redirecionar para"
+
+#: models.py:139
+msgid "Where to redirect the user when the form has been successfully sent?"
+msgstr "Onde redirecinar o usuário quando o formulário tiver sido enviado com sucesso?"
+
+#: models.py:144 models.py:348 models.py:415 models.py:544
+msgid "custom css classes"
+msgstr "classes css personalizadas"
+
+#: models.py:146
+msgid "form template"
+msgstr "modelo de formulário"
+
+#: models.py:158
+msgid "People who will get the form content via e-mail."
+msgstr "Pessoas que irão receber o conteúdo do fomulário via e-mail"
+
+#: models.py:162
+msgid "Action backend"
+msgstr "Ação/atividade de backend"
+
+#: models.py:169 models.py:389
+msgid "Attributes"
+msgstr "Atributos"
+
+#: models.py:346
+msgid "Legend"
+msgstr "Legenda"
+
+#: models.py:362
+msgid "Used to set the field name"
+msgstr "Utilizado para atribuir o nome do campo"
+
+#: models.py:365 models.py:542
+#: templates/admin/aldryn_forms/display/submission_data.html:4
+msgid "Label"
+msgstr "Rótulo"
+
+#: models.py:366
+msgid "Field is required"
+msgstr "O campo é obrigatório"
+
+#: models.py:371
+msgid ""
+"Error message displayed if the required field is left empty. Default: \"This "
+"field is required\"."
+msgstr "Mensagem de erro caso o campo obrigatório esteja vazio. Padrão: \"Este "
+"campo é obrigatório\"."
+#: models.py:375
+msgid "Placeholder text"
+msgstr "Espaço reservado para o texto"
+
+#: models.py:378
+msgid ""
+"Default text in a form. Disappears when user starts typing. Example: "
+"\"email@example.com\""
+msgstr "Texto padrão. Desaparece quando o usuário começa a digitar. Exemplo: "
+"\"email@example.com\""
+
+#: models.py:382
+msgid "Help text"
+msgstr "Texto de ajuda"
+
+#: models.py:385
+msgid "Explanatory text displayed next to input field. Just like this one."
+msgstr "Texto explicativo mostrado ao lado do campo. Tal como esse aqui."
+
+#: models.py:397
+msgid "Min value"
+msgstr "Valor mínimo"
+
+#: models.py:403
+msgid "Max value"
+msgstr "Valor máximo"
+
+#: models.py:408
+msgid "Initial value"
+msgstr "Valor inicial"
+
+#: models.py:411
+msgid "Default value of field."
+msgstr "Valor padrão do campo."
+
+#: models.py:450
+msgid "columns"
+msgstr "colunas"
+
+#: models.py:452
+msgid "rows"
+msgstr "linhas"
+
+#: models.py:457
+msgid "send notification when form is submitted"
+msgstr "envia notificação quando fomrulário é submetido"
+
+#: models.py:459
+msgid ""
+"When checked, the value of this field will be used to send an email "
+"notification."
+msgstr "Quando selecionado, o valor desse campo será utilizado para enviar um e-mail "
+"de notificação."
+
+#: models.py:463
+msgid "email subject"
+msgstr "assunto do e-mail"
+
+#: models.py:467
+msgid "Used as the email subject when email_send_notification is checked."
+msgstr "Utilizado como o assunto do email quando o envio de email de notificação é selecionado."
+
+#: models.py:471
+msgid "Additional email body"
+msgstr "Corpo de e-mail adicional"
+
+#: models.py:474
+msgid "Additional body text used when email notifications are active."
+msgstr "Texto adicional para o corpo de e-mail utilizado quando as notificações estão ativadas."
+
+#: models.py:481
+msgid "Upload files to"
+msgstr "Upload de arquivos para"
+
+#: models.py:482
+msgid ""
+"Select a folder to which all files submitted through this field will be "
+"uploaded to."
+msgstr "Selecione uma pasta para qual todos os arquivos submetidos por meio "
+"desse campo serão salvos."
+
+#: models.py:487
+msgid "Maximum file size"
+msgstr "Tamanho máximo do arquivo"
+
+#: models.py:489
+msgid ""
+"The maximum file size of the upload, in bytes. You can use common size "
+"suffixes (kB, MB, GB, ...)."
+msgstr "Tamanho máximo do arquivo transferido, em bytes. Você pode "
+"utilizar os sufixos (kB, MB, GB, ...)."
+
+#: models.py:503
+msgid "Maximum image width"
+msgstr "Largura máxima da imagem"
+
+#: models.py:505
+msgid "The maximum width of the uploaded image, in pixels."
+msgstr "A largura máqixa da imagem transferida, em pixels."
+
+#: models.py:508
+msgid "Maximum image height"
+msgstr "Altura máxima da imagem"
+
+#: models.py:510
+msgid "The maximum height of the uploaded image, in pixels."
+msgstr "A alturam máqixa da imagem tranferida, em pixels."
+
+#: models.py:517 templates/admin/aldryn_forms/display/submission_data.html:5
+msgid "Value"
+msgstr "Valor"
+
+#: models.py:519
+msgid "Position"
+msgstr "Posição"
+
+#: models.py:522
+msgid "Option"
+msgstr "Opção"
+
+#: models.py:523
+msgid "Options"
+msgstr "Opções"
+
+#: models.py:557
+msgid "form name"
+msgstr "nome do formulário"
+
+#: models.py:563
+msgid "users notified"
+msgstr "usuários notificados"
+
+#: models.py:565
+msgid "People who got a notification when form was submitted."
+msgstr "Pessoas que receberam a notificação quando o formulário foi enviado."
+
+#: models.py:569
+msgid "form language"
+msgstr "Língua do formulário"
+
+#: models.py:575
+msgid "form url"
+msgstr "Url do formulário"
+
+#: models.py:583
+msgid "Form submission"
+msgstr "Submissão de formulário"
+
+#: models.py:584
+msgid "Form submissions"
+msgstr "Submissões de formulário"
+
+#: sizefield/models.py:11
+msgid "Incorrect file size format."
+msgstr "Formato de tamanho de arquivo incorreto."
+
+#: sizefield/utils.py:81
+#, python-format
+msgid "Size '%s' has incorrect format"
+msgstr "O tamanho '%s' tem um formato incorreto"
+
+#: templates/admin/aldryn_forms/display/submission_data.html:3
+msgid "Field"
+msgstr "Campo"
+
+#: templates/admin/aldryn_forms/export.html:5
+msgid "Export form submissions"
+msgstr "Exportação de formulários submetidos"
+
+#: templates/admin/aldryn_forms/export.html:8
+msgid "Please correct the error below."
+msgid_plural "Please correct the errors below."
+msgstr[0] "Por favor corriga o erro abaixo."
+msgstr[1] "Por fabor corriga os erros abaixo."
+
+#: templates/admin/aldryn_forms/export.html:30
+#: templates/admin/aldryn_forms/export_wizard.html:11
+msgid "Export"
+msgstr "Exportar"
+
+#: templates/admin/aldryn_forms/export_wizard.html:13
+msgid "Continue"
+msgstr "Continuar"
+
+#: templates/admin/aldryn_forms/formsubmission/change_list.html:9
+msgid "Export Form Entries"
+msgstr "Exportar o conteúdo dos formulários"
+
+#: templates/aldryn_forms/email_notifications/emails/notification.body.html:9
+#: templates/aldryn_forms/email_notifications/emails/notification.body.txt:8
+#: templates/aldryn_forms/emails/notification.body.html:3
+#: templates/aldryn_forms/emails/notification.body.txt:2
+#: templates/aldryn_forms/emails/user/notification.body.txt:7
+#, python-format
+msgid "Form name: %(form_name)s"
+msgstr "Nome do formulário: %(form_name)s"
+
+#: templates/aldryn_forms/email_notifications/emails/notification.subject.txt:1
+#: templates/aldryn_forms/emails/notification.subject.txt:1
+#: templates/aldryn_forms/emails/user/notification.subject.txt:1
+#, python-format
+msgid "[Form submission] %(form_name)s"
+msgstr "[Submissão do formulário] %(form_name)s"
+
+#: templates/aldryn_forms/field.html:14
+#: templates/aldryn_forms/fields/multiplecheckboxselectfield.html:9
+msgid "Required field"
+msgstr "Campo obrigatório"
+
+#: templates/aldryn_forms/form.html:17
+#, python-format
+msgid "You will be <a href=\"%(form_success_url)s\">redirected shortly</a>."
+msgstr "Você será <a href=\"%(form_success_url)s\">redirecionado em breve</a>."
+
+#: templates/aldryn_forms/form.html:21
+msgid "Thank you for submitting your information."
+msgstr "Obrigado por ter submetido suas informações."
+
+#: validators.py:33
+#, python-format
+msgid ""
+"You have to choose at least %(limit_value)d options (chosen %(show_value)d)."
+msgstr "Você tem que escolher ao menos %(limit_value)d opções (%(show_value)d escolhidas)."
+
+#: validators.py:39
+#, python-format
+msgid ""
+"You can't choose more than %(limit_value)d options (chosen %(show_value)d)."
+msgstr "Você não pode escolher mais de %(limit_value)d opções (%(show_value)d escolhidas)."
