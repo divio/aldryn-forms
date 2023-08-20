@@ -7,7 +7,7 @@ from django.core.mail import get_connection
 from django.template.defaultfilters import safe
 
 from django.utils.html import format_html
-from django.utils.translation import ugettext_lazy as _
+from django.utils.translation import gettext_lazy as _
 
 from cms.plugin_pool import plugin_pool
 

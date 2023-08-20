@@ -4,7 +4,7 @@ from django.core.exceptions import ValidationError
 from django.core.validators import (
     MaxLengthValidator, MinLengthValidator, validate_email,
 )
-from django.utils.translation import ugettext_lazy as _
+from django.utils.translation import gettext_lazy as _
 
 
 def is_valid_recipient(recipient):

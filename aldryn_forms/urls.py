@@ -1,8 +1,8 @@
-from django.conf.urls import url
+from django.urls import re_path
 
 from .views import submit_form_view
 
 
 urlpatterns = [
-    url(r'^$', submit_form_view, name='aldryn_forms_submit_form'),
+    re_path(r'^$', submit_form_view, name='aldryn_forms_submit_form'),
 ]

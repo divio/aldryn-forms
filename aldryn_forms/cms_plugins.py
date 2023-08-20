@@ -9,8 +9,8 @@ from django.contrib.admin import TabularInline
 from django.core.validators import MinLengthValidator
 from django.db.models import query
 from django.template.loader import select_template
-from django.utils.translation import ugettext
-from django.utils.translation import ugettext_lazy as _
+from django.utils.translation import gettext
+from django.utils.translation import gettext_lazy as _
 from emailit.api import send_mail
 from filer.models import filemodels
 from filer.models import imagemodels
@@ -713,7 +713,7 @@ class BooleanField(Field):
     ]
 
     def serialize_value(self, instance, value, is_confirmation=False):
-        return ugettext('Yes') if value else ugettext('No')
+        return gettext('Yes') if value else gettext('No')
 
 
 class SelectOptionInline(TabularInline):
