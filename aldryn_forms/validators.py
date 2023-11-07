@@ -1,3 +1,4 @@
+import os
 from email.utils import parseaddr
 
 from django.core.exceptions import ValidationError
@@ -6,6 +7,30 @@ from django.core.validators import (
 )
 from django.utils.translation import gettext_lazy as _
 
+from aldryn_forms.utils import serialize_delimiter_separated_values_string
+
+
+def generate_file_extension_validator(allowed_extensions_str: str = ""):
+    allowed_extensions = serialize_delimiter_separated_values_string(
+        allowed_extensions_str, delimiter=",", strip=True, lower=True
+    )
+    allowed_extensions = [
+        extension if extension.startswith(".") else f".{extension}"
+        for extension in allowed_extensions
+    ]
+
+    if not allowed_extensions:
+        return lambda value: None
+
+    def validator(value):
+        extension = os.path.splitext(value.name)[1]  # [0] returns path+filename
+        if not extension.lower() in allowed_extensions:
+            raise ValidationError(
+                _(f"File extension '{extension}' is not allowed for this field."),
+                code="invalid_extension",
+            )
+
+    return validator
 
 def is_valid_recipient(recipient):
     """

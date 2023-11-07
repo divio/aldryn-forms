@@ -59,6 +59,15 @@ class BaseNotificationConf(object):
             choices += list(self.custom_context_choices)
         return choices
 
+    def get_context_file_keys_as_choices(self):
+        choices = [
+            (
+                gettext('Fields'),
+                list(self.form_plugin.get_form_file_fields_as_choices())
+            ),
+        ]
+        return choices
+
 
 class DefaultNotificationConf(BaseNotificationConf):
     html_email_format_enabled = True

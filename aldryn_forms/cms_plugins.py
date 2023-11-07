@@ -38,9 +38,12 @@ from .signals import form_post_save
 from .signals import form_pre_save
 from .sizefield.utils import filesizeformat
 from .utils import get_action_backends
-from .validators import MaxChoicesValidator
-from .validators import MinChoicesValidator
-from .validators import is_valid_recipient
+from .validators import (
+    MaxChoicesValidator,
+    MinChoicesValidator,
+    is_valid_recipient,
+    generate_file_extension_validator,
+)
 
 
 class FormElement(CMSPluginBase):
@@ -591,6 +594,7 @@ class FileField(Field):
     fieldset_advanced_fields = [
         'help_text',
         'max_size',
+        'allowed_extensions',
         'required_message',
         'custom_classes',
     ]
@@ -603,6 +607,11 @@ class FileField(Field):
                     'MAXSIZE', filesizeformat(instance.max_size))
             kwargs['max_size'] = instance.max_size
         return kwargs
+
+    def get_form_field_validators(self, instance: models.FileFieldPluginBase):
+        validators = super().get_form_field_validators(instance)
+        validators.append(generate_file_extension_validator(instance.allowed_extensions))
+        return validators
 
     def serialize_value(self, instance, value, is_confirmation=False):
         if value:

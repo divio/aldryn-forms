@@ -1,5 +1,7 @@
 from __future__ import unicode_literals
 
+import typing
+
 from django.conf import settings
 from django.core.exceptions import ImproperlyConfigured
 from django.forms.forms import NON_FIELD_ERRORS
@@ -123,3 +125,23 @@ def add_form_error(form, message, field=NON_FIELD_ERRORS):
         form._errors[field].append(message)
     except KeyError:
         form._errors[field] = form.error_class([message])
+
+
+def serialize_delimiter_separated_values_string(
+    csl: str = "", delimiter=",", strip=True, lower=True
+) -> typing.List[str]:
+    """Convert a comma-separated string of values to list of strings"""
+    if not csl:
+        return []
+
+    values_list = [item for item in csl.split(delimiter)]
+
+    if strip:
+        values_list = [item.strip() for item in values_list]
+    if lower:
+        values_list = [item.lower() for item in values_list]
+
+    values_list = [item for item in values_list if item]
+    return values_list
+
+

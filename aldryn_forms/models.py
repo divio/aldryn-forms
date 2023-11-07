@@ -305,6 +305,12 @@ class BaseFormPlugin(CMSPlugin):
         for field in fields:
             yield (field.name, field.label)
 
+    def get_form_file_fields_as_choices(self):
+        fields = self.get_form_fields()
+        for field in fields:
+            if field.plugin_instance.IS_FILE_FIELD:
+                yield field.name, field.label
+
     def get_form_elements(self):
         from .utils import get_nested_plugins
 
@@ -416,6 +422,8 @@ class FieldPluginBase(CMSPlugin):
         on_delete=models.CASCADE,
     )
 
+    IS_FILE_FIELD = False
+
     class Meta:
         abstract = True
 
@@ -492,6 +500,20 @@ class FileFieldPluginBase(FieldPluginBase):
         help_text=_('The maximum file size of the upload, in bytes. You can '
                     'use common size suffixes (kB, MB, GB, ...).')
     )
+    allowed_extensions = models.CharField(
+        max_length=255,
+        verbose_name=_("Allowed extensions"),
+        blank=True,
+        default="",
+        help_text=(
+            _(
+                "Comma-separated list of file extensions allowed for this file field. "
+                "Leave it empty to allow any extension."
+            ),
+        ),
+    )
+
+    IS_FILE_FIELD = True
 
     class Meta:
         abstract = True

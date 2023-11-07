@@ -1,14 +1,18 @@
+import mimetypes
 from email.utils import formataddr
 from functools import partial
 
 from django.conf import settings
 from django.core.exceptions import ValidationError
+from django.core.files.storage import default_storage
+from django.core.mail import EmailMultiAlternatives
 from django.db import models
 from django.utils.translation import gettext
 from django.utils.translation import gettext_lazy as _
 
 from djangocms_text_ckeditor.fields import HTMLField
 from emailit.api import construct_mail
+from filer.models import File
 
 from aldryn_forms.helpers import get_user_name
 from aldryn_forms.models import FormPlugin
@@ -16,7 +20,7 @@ from aldryn_forms.models import FormPlugin
 from .helpers import (
     get_email_template_name, get_theme_template_name, render_text,
 )
-
+from aldryn_forms.utils import serialize_delimiter_separated_values_string
 
 EMAIL_THEMES = getattr(
     settings,
@@ -47,6 +51,11 @@ class EmailNotificationFormPlugin(FormPlugin):
     def get_notification_text_context_keys_as_choices(self):
         notification_conf = self.get_notification_conf()
         choices = notification_conf.get_context_keys_as_choices()
+        return choices
+
+    def get_notification_text_context_file_keys_as_choices(self):
+        notification_conf = self.get_notification_conf()
+        choices = notification_conf.get_context_file_keys_as_choices()
         return choices
 
 
@@ -109,6 +118,13 @@ class EmailNotification(models.Model):
         verbose_name=_('email body (html)'),
         blank=True,
         help_text=_('used when rendering the email in html.')
+    )
+    files_to_attach_to_email = models.CharField(
+        max_length=255,
+        verbose_name=_('Files to attach to the email'),
+        blank=True,
+        default="",
+        help_text=_('Comma-separated list of file fields that should be attached directly to the email.')
     )
     form = models.ForeignKey(
         to=EmailNotificationFormPlugin,
@@ -216,9 +232,30 @@ class EmailNotification(models.Model):
 
         return kwargs
 
+    def attach_files(self, email: EmailMultiAlternatives, form):
+        """Attach files if any are needed"""
+        files_to_attach = serialize_delimiter_separated_values_string(
+            self.files_to_attach_to_email, delimiter=",", strip=True, lower=True
+        )
+        if not files_to_attach:
+            return
+        for field_name in form.fields:
+            if field_name in files_to_attach:
+                file_field: File = form.cleaned_data.get(field_name)
+                if not file_field:
+                    continue
+                with default_storage.open(file_field.path, "rb") as file:
+                    email.attach(
+                        filename=file_field.original_filename,
+                        content=file.read(),
+                        mimetype=mimetypes.guess_type(file_field.original_filename)[0],
+                    )
+
     def prepare_email(self, form):
         email_kwargs = self.get_email_kwargs(form)
-        return construct_mail(**email_kwargs)
+        email: EmailMultiAlternatives = construct_mail(**email_kwargs)
+        self.attach_files(email, form)
+        return email
 
     def render_body_text(self, context):
         return render_text(self.body_text, context)
