@@ -1,10 +1,11 @@
 import mimetypes
+import typing
 from email.utils import formataddr
 from functools import partial
 
 from django.conf import settings
 from django.core.exceptions import ValidationError
-from django.core.files.storage import default_storage
+from django.core.files.uploadedfile import InMemoryUploadedFile
 from django.core.mail import EmailMultiAlternatives
 from django.db import models
 from django.utils.translation import gettext
@@ -12,10 +13,9 @@ from django.utils.translation import gettext_lazy as _
 
 from djangocms_text_ckeditor.fields import HTMLField
 from emailit.api import construct_mail
-from filer.models import File
 
 from aldryn_forms.helpers import get_user_name
-from aldryn_forms.models import FormPlugin
+from aldryn_forms.models import FormPlugin, FileFieldPluginBase
 
 from .helpers import (
     get_email_template_name, get_theme_template_name, render_text,
@@ -237,19 +237,31 @@ class EmailNotification(models.Model):
         files_to_attach = serialize_delimiter_separated_values_string(
             self.files_to_attach_to_email, delimiter=",", strip=True, lower=False
         )
+
         if not files_to_attach:
             return
-        for field_name in form.fields:
+
+        # noinspection PyProtectedMember
+        fields = [
+            field
+            for field in form.base_fields.values()
+            if hasattr(field, "_model_instance") and field._model_instance.IS_FILE_FIELD
+        ]
+
+        for field in fields:
+            # noinspection PyProtectedMember
+            field_name = field._model_instance.name
+
             if field_name in files_to_attach:
-                file_field: File = form.cleaned_data.get(field_name)
-                if not file_field:
+                field_file_handler_name = f"{field_name}__in_memory"
+                file: InMemoryUploadedFile = form.cleaned_data.get(field_file_handler_name)
+                if not file:
                     continue
-                with default_storage.open(file_field.path, "rb") as file:
-                    email.attach(
-                        filename=file_field.original_filename,
-                        content=file.read(),
-                        mimetype=mimetypes.guess_type(file_field.original_filename)[0],
-                    )
+                email.attach(
+                    filename=file.name,
+                    content=file.read(),
+                    mimetype=mimetypes.guess_type(file.name)[0],
+                )
 
     def prepare_email(self, form):
         email_kwargs = self.get_email_kwargs(form)

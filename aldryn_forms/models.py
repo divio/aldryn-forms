@@ -509,7 +509,18 @@ class FileFieldPluginBase(FieldPluginBase):
             _(
                 "Comma-separated list of file extensions allowed for this file field. "
                 "Leave it empty to allow any extension."
-            ),
+            )
+        ),
+    )
+    store_to_filer = models.BooleanField(
+        verbose_name=_("Store this file to filer"),
+        default=True,
+        help_text=(
+            _(
+                "Whether to store this file to filer. If this is unchecked and this file is not attached to any email "
+                "notification, the file will be lost forever and using it as a template variable in any email template "
+                "will return empty result."
+            )
         ),
     )
 

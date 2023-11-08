@@ -1,6 +1,8 @@
 from typing import Dict
 
 from PIL import Image
+from django.core.files.uploadedfile import InMemoryUploadedFile
+
 from aldryn_forms.models import FormPlugin
 from cms.plugin_base import CMSPluginBase
 from cms.plugin_pool import plugin_pool
@@ -32,7 +34,6 @@ from .forms import SelectFieldForm
 from .forms import TextAreaFieldForm
 from .forms import TextFieldForm
 from .helpers import get_user_name
-from .models import FileUploadFieldPlugin
 from .models import SerializedFormField
 from .signals import form_post_save
 from .signals import form_pre_save
@@ -592,6 +593,7 @@ class FileField(Field):
         'upload_to',
     ] + Field.fieldset_general_fields
     fieldset_advanced_fields = [
+        'store_to_filer',
         'help_text',
         'max_size',
         'allowed_extensions',
@@ -614,49 +616,53 @@ class FileField(Field):
         return validators
 
     def serialize_value(self, instance, value, is_confirmation=False):
-        if value:
+        if value and hasattr(value, "absolute_uri"):
             return value.absolute_uri
         else:
             return '-'
 
-    def form_pre_save(self, instance, form, **kwargs):
+    def form_pre_save(self, instance: models.FileUploadFieldPlugin, form, **kwargs):
         """Save the uploaded file to django-filer
 
         The type of model (file or image) is automatically chosen by trying to
         open the uploaded file.
         """
+
         request = kwargs['request']
 
         field_name = form.form_plugin.get_form_field_name(field=instance)
 
-        uploaded_file = form.cleaned_data[field_name]
+        uploaded_file: InMemoryUploadedFile = form.cleaned_data[field_name]
 
         if uploaded_file is None:
             return
 
-        try:
-            with Image.open(uploaded_file) as img:
-                img.verify()
-        except:  # noqa
-            model = filemodels.File
-        else:
-            model = imagemodels.Image
+        if instance.store_to_filer:
+            try:
+                with Image.open(uploaded_file) as img:
+                    img.verify()
+            except:  # noqa
+                model = filemodels.File
+            else:
+                model = imagemodels.Image
 
-        filer_file = model(
-            folder=instance.upload_to,
-            file=uploaded_file,
-            name=uploaded_file.name,
-            original_filename=uploaded_file.name,
-            is_public=True,
-        )
-        filer_file.save()
+            filer_file = model(
+                folder=instance.upload_to,
+                file=uploaded_file,
+                name=uploaded_file.name,
+                original_filename=uploaded_file.name,
+                is_public=True,
+            )
+            filer_file.save()
 
-        # NOTE: This is a hack to make the full URL available later when we
-        # need to serialize this field. We avoid to serialize it here directly
-        # as we could still need access to the original filer File instance.
-        filer_file.absolute_uri = request.build_absolute_uri(filer_file.url)
+            # NOTE: This is a hack to make the full URL available later when we
+            # need to serialize this field. We avoid to serialize it here directly
+            # as we could still need access to the original filer File instance.
+            filer_file.absolute_uri = request.build_absolute_uri(filer_file.url)
 
-        form.cleaned_data[field_name] = filer_file
+            form.cleaned_data[field_name] = filer_file
+
+        form.cleaned_data[f"{field_name}__in_memory"] = uploaded_file
 
 
 class ImageField(FileField):
@@ -670,6 +676,7 @@ class ImageField(FileField):
         'upload_to',
     ] + Field.fieldset_general_fields
     fieldset_advanced_fields = [
+        'store_to_filer',
         'help_text',
         'max_size',
         ('max_width', 'max_height',),
