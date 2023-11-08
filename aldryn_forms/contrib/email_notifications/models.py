@@ -235,7 +235,7 @@ class EmailNotification(models.Model):
     def attach_files(self, email: EmailMultiAlternatives, form):
         """Attach files if any are needed"""
         files_to_attach = serialize_delimiter_separated_values_string(
-            self.files_to_attach_to_email, delimiter=",", strip=True, lower=True
+            self.files_to_attach_to_email, delimiter=",", strip=True, lower=False
         )
         if not files_to_attach:
             return
