@@ -1,3 +1,4 @@
+import io
 import mimetypes
 import typing
 from email.utils import formataddr
@@ -253,14 +254,20 @@ class EmailNotification(models.Model):
             field_name = field._model_instance.name
 
             if field_name in files_to_attach:
-                field_file_handler_name = f"{field_name}__in_memory"
-                file: InMemoryUploadedFile = form.cleaned_data.get(field_file_handler_name)
+                field_file_key = f"{field_name}__in_memory"
+                filed_file_data: typing.Dict[str, typing.Union[str, io.BytesIO]] = form.cleaned_data.get(field_file_key)
+                file = filed_file_data["file"]
+                file_name = filed_file_data["name"]
                 if not file:
                     continue
+
+                # Redundant precaution
+                file.seek(0)
+
                 email.attach(
-                    filename=file.name,
+                    filename=file_name,
                     content=file.read(),
-                    mimetype=mimetypes.guess_type(file.name)[0],
+                    mimetype=mimetypes.guess_type(file_name)[0],
                 )
 
     def prepare_email(self, form):

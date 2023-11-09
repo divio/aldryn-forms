@@ -1,3 +1,4 @@
+import io
 from typing import Dict
 
 from PIL import Image
@@ -547,9 +548,9 @@ class EmailField(BaseTextField):
     form_field_widget = forms.EmailInput
     form_field_widget_input_type = 'email'
     fieldset_advanced_fields = [
-        'email_send_notification',
-        'email_subject',
-        'email_body',
+        "email_send_notification",
+        "email_subject",
+        "email_body",
     ] + Field.fieldset_advanced_fields
     email_template_base = 'aldryn_forms/emails/user/notification'
 
@@ -590,7 +591,7 @@ class FileField(Field):
         'validators',
     ]
     fieldset_general_fields = [
-        'upload_to',
+        "upload_to",
     ] + Field.fieldset_general_fields
     fieldset_advanced_fields = [
         'store_to_filer',
@@ -633,6 +634,8 @@ class FileField(Field):
         field_name = form.form_plugin.get_form_field_name(field=instance)
 
         uploaded_file: InMemoryUploadedFile = form.cleaned_data[field_name]
+        copy = io.BytesIO(uploaded_file.read())
+        uploaded_file.seek(0)
 
         if uploaded_file is None:
             return
@@ -662,7 +665,8 @@ class FileField(Field):
 
             form.cleaned_data[field_name] = filer_file
 
-        form.cleaned_data[f"{field_name}__in_memory"] = uploaded_file
+        uploaded_file.close()
+        form.cleaned_data[f"{field_name}__in_memory"] = {"name": uploaded_file.name, "file": copy}
 
 
 class ImageField(FileField):
@@ -673,7 +677,7 @@ class ImageField(FileField):
     form_field = RestrictedImageField
     form_field_widget = RestrictedImageField.widget
     fieldset_general_fields = [
-        'upload_to',
+        "upload_to",
     ] + Field.fieldset_general_fields
     fieldset_advanced_fields = [
         'store_to_filer',
@@ -874,6 +878,7 @@ else:
         def serialize_field(self, *args, **kwargs):
             # None means don't serialize me
             return None
+
 
     plugin_pool.register_plugin(CaptchaField)
 
