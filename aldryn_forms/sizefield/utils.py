@@ -4,7 +4,7 @@ import sys
 
 from django.conf import settings
 from django.utils import formats
-from django.utils.translation import ugettext as _
+from django.utils.translation import gettext as _
 
 
 if sys.version_info >= (3, 0):

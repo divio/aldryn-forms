@@ -1,6 +1,6 @@
 from django.core import exceptions
 from django.db import models
-from django.utils.translation import ugettext_lazy as _
+from django.utils.translation import gettext_lazy as _
 
 from .utils import parse_size
 from .widgets import FileSizeWidget
@@ -8,7 +8,7 @@ from .widgets import FileSizeWidget
 
 class FileSizeField(models.BigIntegerField):
     default_error_messages = {
-        'invalid': _(u'Incorrect file size format.'),
+        'invalid': _('Incorrect file size format.'),
     }
 
     def formfield(self, **kwargs):

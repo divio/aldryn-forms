@@ -1,4 +1,4 @@
-from django.utils.translation import ugettext
+from django.utils.translation import gettext
 
 from .helpers import get_email_template_name
 
@@ -50,13 +50,22 @@ class BaseNotificationConf(object):
     def get_context_keys_as_choices(self):
         choices = [
             (
-                ugettext('Fields'),
+                gettext('Fields'),
                 list(self.form_plugin.get_form_fields_as_choices())
             ),
         ]
 
         if self.custom_context_choices:
             choices += list(self.custom_context_choices)
+        return choices
+
+    def get_context_file_keys_as_choices(self):
+        choices = [
+            (
+                gettext('Fields'),
+                list(self.form_plugin.get_form_file_fields_as_choices())
+            ),
+        ]
         return choices
 
 

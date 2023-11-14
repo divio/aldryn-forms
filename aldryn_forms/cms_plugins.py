@@ -1,6 +1,9 @@
+import io
 from typing import Dict
 
 from PIL import Image
+from django.core.files.uploadedfile import InMemoryUploadedFile
+
 from aldryn_forms.models import FormPlugin
 from cms.plugin_base import CMSPluginBase
 from cms.plugin_pool import plugin_pool
@@ -9,8 +12,8 @@ from django.contrib.admin import TabularInline
 from django.core.validators import MinLengthValidator
 from django.db.models import query
 from django.template.loader import select_template
-from django.utils.translation import ugettext
-from django.utils.translation import ugettext_lazy as _
+from django.utils.translation import gettext
+from django.utils.translation import gettext_lazy as _
 from emailit.api import send_mail
 from filer.models import filemodels
 from filer.models import imagemodels
@@ -32,15 +35,17 @@ from .forms import SelectFieldForm
 from .forms import TextAreaFieldForm
 from .forms import TextFieldForm
 from .helpers import get_user_name
-from .models import FileUploadFieldPlugin
 from .models import SerializedFormField
 from .signals import form_post_save
 from .signals import form_pre_save
 from .sizefield.utils import filesizeformat
 from .utils import get_action_backends
-from .validators import MaxChoicesValidator
-from .validators import MinChoicesValidator
-from .validators import is_valid_recipient
+from .validators import (
+    MaxChoicesValidator,
+    MinChoicesValidator,
+    is_valid_recipient,
+    generate_file_extension_validator,
+)
 
 
 class FormElement(CMSPluginBase):
@@ -286,7 +291,7 @@ class Field(FormElement):
 
     def serialize_value(self, instance, value, is_confirmation=False):
         if isinstance(value, query.QuerySet):
-            value = u', '.join(map(str, value))
+            value = ', '.join(map(str, value))
         elif value is None:
             value = '-'
         return str(value)
@@ -543,9 +548,9 @@ class EmailField(BaseTextField):
     form_field_widget = forms.EmailInput
     form_field_widget_input_type = 'email'
     fieldset_advanced_fields = [
-        'email_send_notification',
-        'email_subject',
-        'email_body',
+        "email_send_notification",
+        "email_subject",
+        "email_body",
     ] + Field.fieldset_advanced_fields
     email_template_base = 'aldryn_forms/emails/user/notification'
 
@@ -586,11 +591,14 @@ class FileField(Field):
         'validators',
     ]
     fieldset_general_fields = [
-        'upload_to',
+        "upload_to",
     ] + Field.fieldset_general_fields
     fieldset_advanced_fields = [
+        'store_to_filer',
         'help_text',
         'max_size',
+        'allowed_extensions',
+        'invalid_extension_message',
         'required_message',
         'custom_classes',
     ]
@@ -602,52 +610,70 @@ class FileField(Field):
                 kwargs['help_text'] = kwargs['help_text'].replace(
                     'MAXSIZE', filesizeformat(instance.max_size))
             kwargs['max_size'] = instance.max_size
+        if instance.allowed_extensions:
+            kwargs['allowed_extensions'] = instance.allowed_extensions
         return kwargs
 
+    def get_form_field_validators(self, instance: models.FileFieldPluginBase):
+        validators = super().get_form_field_validators(instance)
+        validators.append(
+            generate_file_extension_validator(
+                instance.allowed_extensions, instance.invalid_extension_message
+            )
+        )
+        return validators
+
     def serialize_value(self, instance, value, is_confirmation=False):
-        if value:
+        if value and hasattr(value, "absolute_uri"):
             return value.absolute_uri
         else:
             return '-'
 
-    def form_pre_save(self, instance, form, **kwargs):
+    def form_pre_save(self, instance: models.FileUploadFieldPlugin, form, **kwargs):
         """Save the uploaded file to django-filer
 
         The type of model (file or image) is automatically chosen by trying to
         open the uploaded file.
         """
+
         request = kwargs['request']
 
         field_name = form.form_plugin.get_form_field_name(field=instance)
 
-        uploaded_file = form.cleaned_data[field_name]
+        uploaded_file: InMemoryUploadedFile = form.cleaned_data[field_name]
+        copy = io.BytesIO(uploaded_file.read())
+        uploaded_file.seek(0)
 
         if uploaded_file is None:
             return
 
-        try:
-            with Image.open(uploaded_file) as img:
-                img.verify()
-        except:  # noqa
-            model = filemodels.File
-        else:
-            model = imagemodels.Image
+        if instance.store_to_filer:
+            try:
+                with Image.open(uploaded_file) as img:
+                    img.verify()
+            except:  # noqa
+                model = filemodels.File
+            else:
+                model = imagemodels.Image
 
-        filer_file = model(
-            folder=instance.upload_to,
-            file=uploaded_file,
-            name=uploaded_file.name,
-            original_filename=uploaded_file.name,
-            is_public=True,
-        )
-        filer_file.save()
+            filer_file = model(
+                folder=instance.upload_to,
+                file=uploaded_file,
+                name=uploaded_file.name,
+                original_filename=uploaded_file.name,
+                is_public=True,
+            )
+            filer_file.save()
 
-        # NOTE: This is a hack to make the full URL available later when we
-        # need to serialize this field. We avoid to serialize it here directly
-        # as we could still need access to the original filer File instance.
-        filer_file.absolute_uri = request.build_absolute_uri(filer_file.url)
+            # NOTE: This is a hack to make the full URL available later when we
+            # need to serialize this field. We avoid to serialize it here directly
+            # as we could still need access to the original filer File instance.
+            filer_file.absolute_uri = request.build_absolute_uri(filer_file.url)
 
-        form.cleaned_data[field_name] = filer_file
+            form.cleaned_data[field_name] = filer_file
+
+        uploaded_file.close()
+        form.cleaned_data[f"{field_name}__in_memory"] = {"name": uploaded_file.name, "file": copy}
 
 
 class ImageField(FileField):
@@ -658,9 +684,10 @@ class ImageField(FileField):
     form_field = RestrictedImageField
     form_field_widget = RestrictedImageField.widget
     fieldset_general_fields = [
-        'upload_to',
+        "upload_to",
     ] + Field.fieldset_general_fields
     fieldset_advanced_fields = [
+        'store_to_filer',
         'help_text',
         'max_size',
         ('max_width', 'max_height',),
@@ -713,7 +740,7 @@ class BooleanField(Field):
     ]
 
     def serialize_value(self, instance, value, is_confirmation=False):
-        return ugettext('Yes') if value else ugettext('No')
+        return gettext('Yes') if value else gettext('No')
 
 
 class SelectOptionInline(TabularInline):
@@ -858,6 +885,7 @@ else:
         def serialize_field(self, *args, **kwargs):
             # None means don't serialize me
             return None
+
 
     plugin_pool.register_plugin(CaptchaField)
 

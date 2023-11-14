@@ -2,7 +2,7 @@ from django import get_version
 from django.contrib import messages
 from django.http import HttpResponse
 from django.shortcuts import redirect
-from django.utils.translation import get_language_from_request, ugettext
+from django.utils.translation import get_language_from_request, gettext
 
 from ..compat import SessionWizardView
 from .exporter import Exporter
@@ -65,7 +65,7 @@ class FormExportWizardView(SessionWizardView):
 
         if next_step == self.steps.last and not form.get_queryset().exists():
             self.storage.reset()
-            self.admin.message_user(self.request, ugettext("No records found"), level=messages.WARNING)
+            self.admin.message_user(self.request, gettext("No records found"), level=messages.WARNING)
             export_url = 'admin:{}'.format(self.admin.get_admin_url('export'))
             return redirect(export_url)
         return super(FormExportWizardView, self).render_next_step(form, **kwargs)
