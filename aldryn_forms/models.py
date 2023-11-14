@@ -370,7 +370,7 @@ class FieldPluginBase(CMSPlugin):
     label = models.CharField(_('Label'), max_length=255, blank=True)
     required = models.BooleanField(_('Field is required'), default=False)
     required_message = models.TextField(
-        verbose_name=_('Error message'),
+        verbose_name=_('Field required error message'),
         blank=True,
         null=True,
         help_text=_('Error message displayed if the required field is left '
@@ -511,6 +511,13 @@ class FileFieldPluginBase(FieldPluginBase):
                 "Leave it empty to allow any extension."
             )
         ),
+    )
+    invalid_extension_message = models.TextField(
+        verbose_name=_('Invalid extension error message'),
+        blank=True,
+        null=True,
+        help_text=_('Error message displayed if extensions are constrained and the uploaded file fails that validation.'
+                    'Default: "File extension [extension] is not allowed for this field."')
     )
     store_to_filer = models.BooleanField(
         verbose_name=_("Store this file to filer"),

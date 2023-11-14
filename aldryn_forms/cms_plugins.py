@@ -598,6 +598,7 @@ class FileField(Field):
         'help_text',
         'max_size',
         'allowed_extensions',
+        'invalid_extension_message',
         'required_message',
         'custom_classes',
     ]
@@ -609,11 +610,17 @@ class FileField(Field):
                 kwargs['help_text'] = kwargs['help_text'].replace(
                     'MAXSIZE', filesizeformat(instance.max_size))
             kwargs['max_size'] = instance.max_size
+        if instance.allowed_extensions:
+            kwargs['allowed_extensions'] = instance.allowed_extensions
         return kwargs
 
     def get_form_field_validators(self, instance: models.FileFieldPluginBase):
         validators = super().get_form_field_validators(instance)
-        validators.append(generate_file_extension_validator(instance.allowed_extensions))
+        validators.append(
+            generate_file_extension_validator(
+                instance.allowed_extensions, instance.invalid_extension_message
+            )
+        )
         return validators
 
     def serialize_value(self, instance, value, is_confirmation=False):
