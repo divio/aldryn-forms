@@ -13,7 +13,7 @@ from django.core.exceptions import ValidationError
 from django.db import models
 from django.db.models.functions import Coalesce
 from django.utils.functional import cached_property
-from django.utils.translation import ugettext_lazy as _
+from django.utils.translation import gettext_lazy as _
 from djangocms_attributes_field.fields import AttributesField
 from filer.fields.folder import FilerFolderField
 
@@ -75,10 +75,10 @@ class SerializedFormField(BaseSerializedFormField):
         field_label = self.label.strip()
 
         if field_label:
-            field_as_string = u'{}-{}'.format(field_label, self.field_type)
+            field_as_string = '{}-{}'.format(field_label, self.field_type)
         else:
             field_as_string = self.name
-        field_id = u'{}:{}'.format(field_as_string, self.field_occurrence)
+        field_id = '{}:{}'.format(field_as_string, self.field_occurrence)
         return field_id
 
     @property
@@ -286,10 +286,10 @@ class BaseFormPlugin(CMSPlugin):
             if field_plugin.name:
                 field_name = field_plugin.name
             else:
-                field_name = u'{0}_{1}'.format(field_type, field_type_occurrence)
+                field_name = '{0}_{1}'.format(field_type, field_type_occurrence)
 
             if field_label:
-                field_id = u'{0}_{1}'.format(field_type, field_label)
+                field_id = '{0}_{1}'.format(field_type, field_label)
             else:
                 field_id = field_name
 
@@ -323,6 +323,12 @@ class BaseFormPlugin(CMSPlugin):
 
         for field in fields:
             yield (field.name, field.label)
+
+    def get_form_file_fields_as_choices(self):
+        fields = self.get_form_fields()
+        for field in fields:
+            if field.plugin_instance.IS_FILE_FIELD:
+                yield field.name, field.label
 
     def get_form_elements(self):
         from .utils import get_nested_plugins
@@ -383,7 +389,7 @@ class FieldPluginBase(CMSPlugin):
     label = models.CharField(_('Label'), max_length=255, blank=True)
     required = models.BooleanField(_('Field is required'), default=False)
     required_message = models.TextField(
-        verbose_name=_('Error message'),
+        verbose_name=_('Field required error message'),
         blank=True,
         null=True,
         help_text=_('Error message displayed if the required field is left '
@@ -434,6 +440,8 @@ class FieldPluginBase(CMSPlugin):
     cmsplugin_ptr = CMSPluginField(
         on_delete=models.CASCADE,
     )
+
+    IS_FILE_FIELD = False
 
     class Meta:
         abstract = True
@@ -511,6 +519,38 @@ class FileFieldPluginBase(FieldPluginBase):
         help_text=_('The maximum file size of the upload, in bytes. You can '
                     'use common size suffixes (kB, MB, GB, ...).')
     )
+    allowed_extensions = models.CharField(
+        max_length=255,
+        verbose_name=_("Allowed extensions"),
+        blank=True,
+        default="",
+        help_text=(
+            _(
+                "Comma-separated list of file extensions allowed for this file field. "
+                "Leave it empty to allow any extension."
+            )
+        ),
+    )
+    invalid_extension_message = models.TextField(
+        verbose_name=_('Invalid extension error message'),
+        blank=True,
+        null=True,
+        help_text=_('Error message displayed if extensions are constrained and the uploaded file fails that validation.'
+                    'Default: "File extension [extension] is not allowed for this field."')
+    )
+    store_to_filer = models.BooleanField(
+        verbose_name=_("Store this file to filer"),
+        default=True,
+        help_text=(
+            _(
+                "Whether to store this file to filer. If this is unchecked and this file is not attached to any email "
+                "notification, the file will be lost forever and using it as a template variable in any email template "
+                "will return empty result."
+            )
+        ),
+    )
+
+    IS_FILE_FIELD = True
 
     class Meta:
         abstract = True
@@ -610,7 +650,7 @@ class FormSubmission(models.Model):
 
         if field_label:
             field_type = data['name'].rpartition('_')[0]
-            field_id = u'{}_{}'.format(field_type, field_label)
+            field_id = '{}_{}'.format(field_type, field_label)
         else:
             field_id = data['name']
 
