@@ -70,3 +70,34 @@
         </script>
     {% endaddtoblock %}
 {% endif %}
+<script>
+    (function() {
+        const form = document.querySelector('#cms-form');
+        const isInsideAccordion = form.querySelector('.accordion') !== null;
+        if (isInsideAccordion) {
+            document.querySelector('#cms-form [type="submit"]').addEventListener('click', (event) => {          
+                let isValid = true;
+                const fields = form.querySelectorAll('input');
+                fields.forEach(field => {
+                    if (!field.validity.valid || field.classList.contains('is-invalid')) {
+                        isValid = false;
+                        const accordionItem = field.closest('.accordion-item');
+                        if (accordionItem) {
+                            const collapseElement = accordionItem.querySelector('.collapse');
+                            if (collapseElement && !collapseElement.classList.contains('show')) {
+                                $(collapseElement).collapse('show');
+                            }
+                        }
+                        field.focus();
+                    }
+                });
+        
+                if (isValid) {
+                    console.log('Form is valid. Submitting...');
+                } else {
+                    event.preventDefault();
+                }
+            });
+        }
+    })();
+</script>
