@@ -77,7 +77,7 @@
         if (isInsideAccordion) {
             document.querySelector('#cms-form [type="submit"]').addEventListener('click', (event) => {          
                 let isValid = true;
-                const fields = form.querySelectorAll('input');
+                const fields = form.querySelectorAll('input, select, textarea');
                 fields.forEach(field => {
                     if (!field.validity.valid || field.classList.contains('is-invalid')) {
                         isValid = false;
