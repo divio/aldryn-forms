@@ -76,10 +76,14 @@
         const isInsideAccordion = form.querySelector('.accordion') !== null;
         if (isInsideAccordion) {
             document.querySelector('#cms-form [type="submit"]').addEventListener('click', (event) => {          
-                let isValid = true;
                 const fields = form.querySelectorAll('input, select, textarea');
                 fields.forEach(field => {
-                    if (!field.validity.valid || field.classList.contains('is-invalid')) {
+                    let isInvalidField = !field.validity.valid;
+
+                    if ($(field).hasClass('selectpicker') && !$(field).val()) {
+                        isInvalidField = true;
+                    }
+                    if (isInvalidField || field.classList.contains('is-invalid')) {
                         isValid = false;
                         const accordionItem = field.closest('.accordion-item');
                         if (accordionItem) {
@@ -88,13 +92,18 @@
                                 $(collapseElement).collapse('show');
                             }
                         }
-                        field.focus();
+                        if (field.tagName.toLowerCase() === 'select') {
+                            $(field).closest('.bootstrap-select').find('button').focus();
+                        } else {
+                            field.focus();
+                        }
                     }
                 });
         
                 if (isValid) {
                     console.log('Form is valid. Submitting...');
                 } else {
+                    console.log('Form is invalid. Preventing submission...');
                     event.preventDefault();
                 }
             });
