@@ -657,11 +657,12 @@ class FileField(Field):
         field_name = form.form_plugin.get_form_field_name(field=instance)
 
         uploaded_file: InMemoryUploadedFile = form.cleaned_data[field_name]
-        copy = io.BytesIO(uploaded_file.read())
-        uploaded_file.seek(0)
 
         if uploaded_file is None:
             return
+
+        copy = io.BytesIO(uploaded_file.read())
+        uploaded_file.seek(0)
 
         if instance.store_to_filer:
             try:
