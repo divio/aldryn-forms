@@ -5,8 +5,8 @@ from django.conf import settings
 from django.contrib.admin.widgets import AdminDateWidget
 from django.utils import timezone
 from django.utils.text import slugify
-from django.utils.translation import ugettext
-from django.utils.translation import ugettext_lazy as _
+from django.utils.translation import gettext
+from django.utils.translation import gettext_lazy as _
 
 from ..models import FormSubmission
 from .exporter import Exporter
@@ -129,6 +129,6 @@ class FormExportStep2Form(forms.Form):
         fields = self.get_fields()
 
         if not fields:
-            message = ugettext('Please select at least one field to export.')
+            message = gettext('Please select at least one field to export.')
             raise forms.ValidationError(message)
         return self.cleaned_data

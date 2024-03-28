@@ -3,7 +3,7 @@ from email.utils import formataddr
 from django.contrib import admin
 from django.template.loader import render_to_string
 from django.urls import reverse
-from django.utils.translation import ugettext_lazy as _
+from django.utils.translation import gettext_lazy as _
 
 
 str_dunder_method = '__str__'
@@ -51,11 +51,11 @@ class BaseFormSubmissionAdmin(admin.ModelAdmin):
     get_recipients_for_display.short_description = _('people notified')
 
     def get_urls(self):
-        from django.conf.urls import url
+        from django.urls import re_path
 
         def pattern(regex, fn, name):
             args = [regex, self.admin_site.admin_view(fn)]
-            return url(*args, name=self.get_admin_url(name))
+            return re_path(*args, name=self.get_admin_url(name))
 
         url_patterns = [
             pattern(r'export/$', self.get_form_export_view(), 'export'),

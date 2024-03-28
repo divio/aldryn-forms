@@ -5,7 +5,9 @@ from typing import List
 from django.contrib import admin
 from django.core.mail import get_connection
 from django.template.defaultfilters import safe
-from django.utils.translation import ugettext_lazy as _
+
+from django.utils.html import format_html
+from django.utils.translation import gettext_lazy as _
 
 from cms.plugin_pool import plugin_pool
 
@@ -43,23 +45,31 @@ class ExistingEmailNotificationInline(admin.StackedInline):
     model = EmailNotification
 
     fieldsets = (
-        (None, {
-            'fields': (
-                'theme',
-            )
-        }),
-        (_('Recipients'), {
-            'fields': (
-                'text_variables',
-                'to_user',
-                ('to_name', 'to_email'),
-                ('from_name', 'from_email'),
-                'reply_to_email',
-            )
-        }),
+        (None, {"fields": ("theme", "is_use_in_condition")}),
+        (
+            _("Recipients"),
+            {
+                "fields": (
+                    "text_variables",
+                    "to_user",
+                    ("to_name", "to_email"),
+                    ("from_name", "from_email"),
+                    "reply_to_email",
+                )
+            },
+        ),
+        (
+            _("Attaching files to email"),
+            {
+                "fields": (
+                    "file_variables",
+                    "files_to_attach_to_email",
+                )
+            },
+        ),
     )
 
-    readonly_fields = ['text_variables']
+    readonly_fields = ['text_variables', 'file_variables']
 
     text_variables_help_text = _(
         'the variables can be used within the email body, email sender,'
@@ -120,6 +130,29 @@ class ExistingEmailNotificationInline(admin.StackedInline):
     text_variables.allow_tags = True
     text_variables.short_description = _('available text variables')
 
+    def file_variables(self, obj: EmailNotification) -> str:
+        if obj.pk is None:
+            return ''
+
+        # list of tuples - [('category', [('value', 'label')])]
+        choices_by_category = obj.form.get_notification_text_context_file_keys_as_choices()
+
+        var_items: List[str] = []
+        for category, choices in choices_by_category:
+            for choice_tuple in choices:
+                field_value = choice_tuple[0]
+                var_items += '<li>' + field_value + '</li>'
+
+        vars_html_list = f'<p>{"".join(var_items)}</p>'
+        help_text = (
+            f'<p class="help">'
+            f'{_("these are the valid file fields that can be attached to the email")}'
+            f'</p>'
+        )
+        return safe(vars_html_list + u'\n' + help_text)
+    file_variables.allow_tags = True
+    file_variables.short_description = _('available file variables')
+
     class Media:
         css = {
             'all': ['email_notifications/admin/email-notifications.css']
@@ -142,6 +175,14 @@ class EmailNotificationForm(FormPlugin):
                 'name',
                 'redirect_type',
                 ('redirect_page', 'url'),
+            )
+        }),
+        (_('Condition Logic'), {
+            'classes': ('collapse',),
+            'fields': (
+                'redirect_page_negative_condition',
+                'condition_field',
+                'condition_value',
             )
         }),
         (_('Advanced Settings'), {
@@ -179,10 +220,30 @@ class EmailNotificationForm(FormPlugin):
 
         notifications = instance.email_notifications.select_related('form')
 
+        check_use_condition = False
+        condition_result = False
+
+        if instance.condition_field and instance.condition_value:
+            check_use_condition = True
+
+            form_data = form.cleaned_data
+            if instance.condition_field in form_data:
+                condition_result = str(form_data[instance.condition_field]) == str(instance.condition_value)
+
         emails = []
         recipients = []
 
-        for notification in notifications:
+        filtered_notifications = []
+
+        if check_use_condition:
+            for notification in notifications:
+                if notification.is_use_in_condition == condition_result:
+                    filtered_notifications.append(notification)
+        else:
+            filtered_notifications = notifications
+
+        for notification in filtered_notifications:
+
             email = notification.prepare_email(form=form)
 
             to_email = email.to[0]
